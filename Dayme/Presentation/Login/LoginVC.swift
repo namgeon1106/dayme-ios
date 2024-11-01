@@ -35,6 +35,10 @@ final class LoginVC: VC {
         title: "카카오톡으로 로그인",
         image: .icSocialKakao
     )
+    private let appleBtn = SocialLoginButton(
+        title: "애플 계정으로 로그인",
+        image: .icSocialApple
+    )
     
     // MARK: Helpers
     
@@ -81,6 +85,7 @@ final class LoginVC: VC {
             flex.addItem().direction(.column).marginTop(32).define { flex in
                 flex.addItem(googleBtn).height(56)
                 flex.addItem(kakaoBtn).height(56).marginTop(16)
+                flex.addItem(appleBtn).height(56).marginTop(16)
             }
         }
     }
@@ -88,10 +93,7 @@ final class LoginVC: VC {
     override func layoutFlex() {
         flexView.pin.all()
         scrollView.pin.all()
-        contentView.pin
-            .top(view.pin.safeArea.top)
-            .bottom()
-            .horizontally()
+        contentView.pin.top(view.pin.safeArea.top).bottom().horizontally()
         contentView.flex.layout(mode: .adjustHeight)
         scrollView.contentSize = contentView.bounds.size
     }
