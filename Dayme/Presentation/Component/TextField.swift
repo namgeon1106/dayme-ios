@@ -11,12 +11,18 @@ final class FilledTextField: UITextField {
     
     var padding = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(placeholder: String) {
+        super.init(frame: .zero)
         
         layer.cornerRadius = 12
         layer.cornerCurve = .continuous
         backgroundColor = .colorBackgroundSecondary
+        attributedPlaceholder = NSAttributedString(
+            string: placeholder,
+            attributes: [
+                .font: UIFont.systemFont(ofSize: 16),
+                .foregroundColor: UIColor.colorContentSecondary,
+            ])
     }
     
     required init?(coder: NSCoder) {
