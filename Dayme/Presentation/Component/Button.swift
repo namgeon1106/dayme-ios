@@ -38,9 +38,9 @@ final class SocialLoginButton: UIButton {
         
         var config = UIButton.Configuration.plain()
         config.background.strokeWidth = 1
-        config.background.strokeColor = .border
+        config.background.strokeColor = .colorBorder
         config.background.cornerRadius = 12
-        config.baseForegroundColor = .contentPrimary
+        config.baseForegroundColor = .colorContentPrimary
         config.attributedTitle = attrString
         config.image = image
         config.imagePadding = 4

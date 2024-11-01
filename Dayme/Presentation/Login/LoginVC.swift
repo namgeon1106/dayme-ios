@@ -32,7 +32,7 @@ final class LoginVC: VC {
     // MARK: Helpers
     
     override func setup() {
-        view.backgroundColor = .background
+        view.backgroundColor = .colorBackground
         logo.text = "DAYME"
         logo.textColor = .accent
         logo.textAlignment = .center
@@ -41,7 +41,7 @@ final class LoginVC: VC {
         pwTF.placeholder = "비밀번호를 입력해주세요"
         pwTF.isSecureTextEntry = true
         separatorLbl.text = "혹은"
-        separatorLbl.textColor = .contentSecondary
+        separatorLbl.textColor = .colorContentSecondary
         separatorLbl.font = .systemFont(ofSize: 14, weight: .regular)
         separatorLbl.textAlignment = .center
     }
@@ -69,12 +69,12 @@ final class LoginVC: VC {
                     flex.addItem()
                         .width(100%)
                         .height(1)
-                        .backgroundColor(.separator)
+                        .backgroundColor(.colorSeparator)
                         .position(.absolute)
                     
                     // '혹은'
                     flex.addItem(separatorLbl)
-                        .backgroundColor(.background)
+                        .backgroundColor(.colorBackground)
                         .paddingHorizontal(10)
                 }
             

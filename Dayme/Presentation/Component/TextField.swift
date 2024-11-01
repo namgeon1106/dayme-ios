@@ -16,7 +16,7 @@ final class FilledTextField: UITextField {
         
         layer.cornerRadius = 12
         layer.cornerCurve = .continuous
-        backgroundColor = .secondaryBackground
+        backgroundColor = .colorBackgroundSecondary
     }
     
     required init?(coder: NSCoder) {
