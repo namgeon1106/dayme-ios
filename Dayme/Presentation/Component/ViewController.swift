@@ -35,14 +35,13 @@ class VC: UIViewController {
     // MARK: - Keyboard Obeserver
     
     func keyboardWillShow(_ height: CGFloat) {}
-    func keyboardWillHide(_ height: CGFloat) {}
-    func keyboardWillChange(_ height: CGFloat) {}
+    func keyboardWillHide() {}
     
     final func addKeyboardObeserver() {
         let showSelector = #selector(keyboardWillShow(notification:))
         let hideSelector = #selector(keyboardWillHide(notification:))
         let showName = UIResponder.keyboardWillShowNotification
-        let hideName = UIResponder.keyboardWillHideNotification
+        let hideName = UIResponder.keyboardDidHideNotification
         let notiCenter = NotificationCenter.default
         
         notiCenter.addObserver(self, selector: showSelector, name: showName, object: nil)
@@ -52,13 +51,10 @@ class VC: UIViewController {
     @objc private func keyboardWillShow(notification: Notification) {
         let height = keyboardHeight(notification)
         keyboardWillShow(height)
-        keyboardWillChange(height)
     }
     
     @objc private func keyboardWillHide(notification: Notification) {
-        let height = keyboardHeight(notification)
-        keyboardWillHide(height)
-        keyboardWillChange(height)
+        keyboardWillHide()
     }
     
     private func keyboardHeight(_ notification: Notification) -> CGFloat {

@@ -96,8 +96,8 @@ final class LoginVC: VC {
         scrollView.contentInset.bottom = height + view.safeAreaInsets.bottom
     }
     
-    override func keyboardWillHide(_ height: CGFloat) {
-        scrollView.contentInset.bottom = height
+    override func keyboardWillHide() {
+        scrollView.contentInset.bottom = 0
     }
     
 }
