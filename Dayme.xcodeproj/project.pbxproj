@@ -9,10 +9,15 @@
 /* Begin PBXBuildFile section */
 		9A1E35422CD3DEEA00753F8A /* PinLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 9A1E35412CD3DEEA00753F8A /* PinLayout */; };
 		9A1E35452CD3DF0200753F8A /* FlexLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 9A1E35442CD3DF0200753F8A /* FlexLayout */; };
+		9A7BFB412CD5247F00E48C31 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 9A7BFB402CD5247F00E48C31 /* GoogleSignIn */; };
+		9A7BFB4C2CD5EDA100E48C31 /* Dev.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 9A7BFB4B2CD5EDA100E48C31 /* Dev.xcconfig */; };
+		9A7BFB4E2CD5EDBE00E48C31 /* Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 9A7BFB4D2CD5EDBE00E48C31 /* Release.xcconfig */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		9A1E35222CD3CA4700753F8A /* Dayme.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dayme.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A7BFB4B2CD5EDA100E48C31 /* Dev.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Dev.xcconfig; sourceTree = "<group>"; };
+		9A7BFB4D2CD5EDBE00E48C31 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -43,6 +48,7 @@
 			files = (
 				9A1E35422CD3DEEA00753F8A /* PinLayout in Frameworks */,
 				9A1E35452CD3DF0200753F8A /* FlexLayout in Frameworks */,
+				9A7BFB412CD5247F00E48C31 /* GoogleSignIn in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -52,6 +58,8 @@
 		9A1E35192CD3CA4700753F8A = {
 			isa = PBXGroup;
 			children = (
+				9A7BFB4B2CD5EDA100E48C31 /* Dev.xcconfig */,
+				9A7BFB4D2CD5EDBE00E48C31 /* Release.xcconfig */,
 				9A1E35242CD3CA4700753F8A /* Dayme */,
 				9A1E35232CD3CA4700753F8A /* Products */,
 			);
@@ -87,6 +95,7 @@
 			packageProductDependencies = (
 				9A1E35412CD3DEEA00753F8A /* PinLayout */,
 				9A1E35442CD3DF0200753F8A /* FlexLayout */,
+				9A7BFB402CD5247F00E48C31 /* GoogleSignIn */,
 			);
 			productName = Dayme;
 			productReference = 9A1E35222CD3CA4700753F8A /* Dayme.app */;
@@ -119,6 +128,7 @@
 			packageReferences = (
 				9A1E35402CD3DEEA00753F8A /* XCRemoteSwiftPackageReference "PinLayout" */,
 				9A1E35432CD3DF0200753F8A /* XCRemoteSwiftPackageReference "FlexLayout" */,
+				9A7BFB3F2CD5247F00E48C31 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9A1E35232CD3CA4700753F8A /* Products */;
@@ -135,6 +145,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9A7BFB4E2CD5EDBE00E48C31 /* Release.xcconfig in Resources */,
+				9A7BFB4C2CD5EDA100E48C31 /* Dev.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -153,6 +165,7 @@
 /* Begin XCBuildConfiguration section */
 		9A1E35362CD3CA4800753F8A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9A7BFB4B2CD5EDA100E48C31 /* Dev.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -185,6 +198,7 @@
 		};
 		9A1E35372CD3CA4800753F8A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9A7BFB4D2CD5EDBE00E48C31 /* Release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -374,6 +388,14 @@
 				minimumVersion = 2.0.10;
 			};
 		};
+		9A7BFB3F2CD5247F00E48C31 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -386,6 +408,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 9A1E35432CD3DF0200753F8A /* XCRemoteSwiftPackageReference "FlexLayout" */;
 			productName = FlexLayout;
+		};
+		9A7BFB402CD5247F00E48C31 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9A7BFB3F2CD5247F00E48C31 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

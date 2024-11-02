@@ -9,7 +9,7 @@ import UIKit
 
 final class FilledButton: UIButton {
     
-    init(title: String) {
+    init(_ title: String) {
         super.init(frame: .zero)
         
         var attrString = AttributedString(title)
@@ -30,7 +30,7 @@ final class FilledButton: UIButton {
 
 final class SocialLoginButton: UIButton {
     
-    init(title: String, image: UIImage? = nil) {
+    init(_ image: UIImage?, _ title: String) {
         super.init(frame: .zero)
         
         var attrString = AttributedString(title)

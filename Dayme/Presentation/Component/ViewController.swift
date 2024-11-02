@@ -15,6 +15,7 @@ class VC: UIViewController {
         super.viewDidLoad()
         
         setup()
+        setupAction()
         setupFlex()
     }
     
@@ -27,6 +28,7 @@ class VC: UIViewController {
     // MARK: - Helpers
     
     func setup() {}
+    func setupAction() {}
     func setupFlex() {}
     func layoutFlex() {}
     

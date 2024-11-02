@@ -11,7 +11,7 @@ final class FilledTextField: UITextField {
     
     var padding = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
     
-    init(placeholder: String) {
+    init(_ placeholder: String) {
         super.init(frame: .zero)
         
         layer.cornerRadius = 12

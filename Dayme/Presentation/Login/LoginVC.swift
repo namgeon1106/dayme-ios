@@ -8,6 +8,7 @@
 import UIKit
 import FlexLayout
 import PinLayout
+import GoogleSignIn
 
 #Preview { LoginVC() }
 
@@ -18,43 +19,33 @@ final class LoginVC: VC {
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     
-    private let logo = UILabel()
-    private let emailTF = FilledTextField(
-        placeholder: "이메일을 입력해주세요"
-    )
-    private let pwTF = FilledTextField(
-        placeholder: "비밀번호를 입력해주세요"
-    )
-    private let loginBtn = FilledButton(title: "로그인")
-    private let separatorLbl = UILabel()
-    private let googleBtn = SocialLoginButton(
-        title: "구글 계정으로 로그인",
-        image: .icSocialGoogle
-    )
-    private let kakaoBtn = SocialLoginButton(
-        title: "카카오톡으로 로그인",
-        image: .icSocialKakao
-    )
-    private let appleBtn = SocialLoginButton(
-        title: "애플 계정으로 로그인",
-        image: .icSocialApple
-    )
+    private let logo = UILabel("DAYME")
+    private let emailTF = FilledTextField("이메일을 입력해주세요")
+    private let pwTF = FilledTextField("비밀번호를 입력해주세요")
+    private let loginBtn = FilledButton("로그인")
+    
+    private let separatorLbl = UILabel("혹은")
+    private let googleBtn = SocialLoginButton(.icSocialGoogle, "구글 계정으로 로그인")
+    private let kakaoBtn = SocialLoginButton(.icSocialKakao, "카카오톡으로 로그인")
+    private let appleBtn = SocialLoginButton(.icSocialApple, "애플 계정으로 로그인")
     
     // MARK: Helpers
     
     override func setup() {
         addKeyboardObeserver()
+        view.backgroundColor(.colorBackground)
         scrollView.keyboardDismissMode = .interactive
-        view.backgroundColor = .colorBackground
-        logo.text = "DAYME"
-        logo.textColor = .accent
-        logo.textAlignment = .center
-        logo.font = .systemFont(ofSize: 32, weight: .black)
         pwTF.isSecureTextEntry = true
-        separatorLbl.text = "혹은"
-        separatorLbl.textColor = .colorContentSecondary
-        separatorLbl.font = .systemFont(ofSize: 14, weight: .regular)
-        separatorLbl.textAlignment = .center
+        logo.textColor(.accent)
+            .font(.systemFont(ofSize: 32, weight: .black))
+            .textAlignment(.center)
+        separatorLbl.textColor(.colorContentSecondary)
+            .font(.systemFont(ofSize: 14, weight: .regular))
+            .textAlignment(.center)
+    }
+    
+    override func setupAction() {
+        googleBtn.onAction { [weak self] in await self?.loginGoogle() }
     }
     
     override func setupFlex() {
@@ -106,4 +97,19 @@ final class LoginVC: VC {
         scrollView.contentInset.bottom = height
     }
     
+}
+
+// MARK: - Action
+
+extension LoginVC {
+    
+    private func loginGoogle() async {
+        do {
+            let auth = GIDSignIn.sharedInstance
+            let result = try await auth.signIn(withPresenting: self)
+            let token = result.user.idToken?.tokenString
+        } catch {
+            print("ERROR: \(error.localizedDescription)")
+        }
+    }
 }
