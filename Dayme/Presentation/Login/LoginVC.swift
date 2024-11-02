@@ -9,6 +9,8 @@ import UIKit
 import FlexLayout
 import PinLayout
 import GoogleSignIn
+import KakaoSDKUser
+import KakaoSDKCommon
 
 #Preview { LoginVC() }
 
@@ -46,6 +48,7 @@ final class LoginVC: VC {
     
     override func setupAction() {
         googleBtn.onAction { [weak self] in await self?.loginGoogle() }
+        kakaoBtn.onAction { [weak self] in await self?.loginKakao() }
     }
     
     override func setupFlex() {
@@ -107,9 +110,46 @@ extension LoginVC {
         do {
             let auth = GIDSignIn.sharedInstance
             let result = try await auth.signIn(withPresenting: self)
-            let token = result.user.idToken?.tokenString
+            let _ = result.user.idToken?.tokenString
         } catch {
             print("ERROR: \(error.localizedDescription)")
         }
     }
+    
+    private func loginKakao() async {
+        if let kakaoKey = Bundle.main.infoDictionary?["KAKAO_APP_KEY"] as? String {
+            KakaoSDK.initSDK(appKey: kakaoKey)
+        }
+        
+        await withCheckedContinuation { continuation in
+            let auth = UserApi.shared
+            var isResumed = false
+            if UserApi.isKakaoTalkLoginAvailable() {
+                // '카카오톡'으로 로그인
+                auth.loginWithKakaoTalk { result, error in
+                    if let error {
+                        print("ERROR: \(error.localizedDescription)")
+                    }
+                    
+                    if !isResumed {
+                        isResumed = true
+                        continuation.resume()
+                    }
+                }
+            } else {
+                // '카카오 계정'으로 로그인
+                auth.loginWithKakaoAccount { result, error in
+                    if let error {
+                        print("ERROR: \(error.localizedDescription)")
+                    }
+                    
+                    if !isResumed {
+                        isResumed = true
+                        continuation.resume()
+                    }
+                }
+            }
+        }
+    }
+    
 }
