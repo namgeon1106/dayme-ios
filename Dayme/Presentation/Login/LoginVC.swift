@@ -9,12 +9,17 @@ import UIKit
 import FlexLayout
 import PinLayout
 import GoogleSignIn
-import KakaoSDKUser
+import KakaoSDKAuth
 import KakaoSDKCommon
+import KakaoSDKUser
+import AuthenticationServices
 
 #Preview { LoginVC() }
 
 final class LoginVC: VC {
+    
+    private var kakaoContinuation: CheckedContinuation<OAuthToken, Error>?
+    private var appleContinuation: CheckedContinuation<ASAuthorization, Error>?
     
     // MARK: UI properties
     
@@ -47,8 +52,9 @@ final class LoginVC: VC {
     }
     
     override func setupAction() {
-        googleBtn.onAction { [weak self] in await self?.loginGoogle() }
-        kakaoBtn.onAction { [weak self] in await self?.loginKakao() }
+        googleBtn.onAction { [weak self] in try? await self?.loginWithGoogle() }
+        kakaoBtn.onAction { [weak self] in try? await self?.loginWithKakao() }
+        appleBtn.onAction { [weak self] in try? await self?.loginWithApple() }
     }
     
     override func setupFlex() {
@@ -106,50 +112,93 @@ final class LoginVC: VC {
 
 extension LoginVC {
     
-    private func loginGoogle() async {
-        do {
-            let auth = GIDSignIn.sharedInstance
-            let result = try await auth.signIn(withPresenting: self)
-            let _ = result.user.idToken?.tokenString
-        } catch {
-            print("ERROR: \(error.localizedDescription)")
-        }
+    private func loginWithGoogle() async throws {
+        let auth = GIDSignIn.sharedInstance
+        let result = try await auth.signIn(withPresenting: self)
+        let _ = result.user.idToken?.tokenString
     }
     
-    private func loginKakao() async {
+    private func loginWithKakao() async throws {
         if let kakaoKey = Bundle.main.infoDictionary?["KAKAO_APP_KEY"] as? String {
             KakaoSDK.initSDK(appKey: kakaoKey)
         }
         
-        await withCheckedContinuation { continuation in
+        let oAuthToken = try await withCheckedThrowingContinuation { [weak self] continuation in
+            self?.kakaoContinuation = continuation
+            
             let auth = UserApi.shared
-            var isResumed = false
             if UserApi.isKakaoTalkLoginAvailable() {
                 // '카카오톡'으로 로그인
                 auth.loginWithKakaoTalk { result, error in
-                    if let error {
-                        print("ERROR: \(error.localizedDescription)")
-                    }
-                    
-                    if !isResumed {
-                        isResumed = true
-                        continuation.resume()
-                    }
+                    self?.kakaoLoginHandler(result, error)
                 }
             } else {
                 // '카카오 계정'으로 로그인
                 auth.loginWithKakaoAccount { result, error in
-                    if let error {
-                        print("ERROR: \(error.localizedDescription)")
-                    }
-                    
-                    if !isResumed {
-                        isResumed = true
-                        continuation.resume()
-                    }
+                    self?.kakaoLoginHandler(result, error)
                 }
             }
         }
+    }
+    
+    private func kakaoLoginHandler(_ result: OAuthToken?, _ error: Error?) {
+        if let result {
+            kakaoContinuation?.resume(returning: result)
+            kakaoContinuation = nil
+            return
+        }
+        
+        let error = error ?? NSError(domain: "Unexpectedly failed to sign in with kakao", code: 1001)
+        kakaoContinuation?.resume(throwing: error)
+        kakaoContinuation = nil
+    }
+    
+    
+    private func loginWithApple() async throws {
+        let provider = ASAuthorizationAppleIDProvider()
+        let request = provider.createRequest()
+        let controller = ASAuthorizationController(authorizationRequests: [request])
+        controller.delegate = self
+        controller.presentationContextProvider = self
+        
+        let authorization = try await withCheckedThrowingContinuation { [weak self] continuation in
+            self?.appleContinuation = continuation
+            controller.performRequests()
+        }
+        
+        switch authorization.credential {
+        case let credential as ASAuthorizationAppleIDCredential:
+            let _ = credential.identityToken
+            let _ = credential.authorizationCode
+            
+        case let credential as ASPasswordCredential:
+            let _ = credential.user
+            let _ = credential.password
+            
+        default: break
+        }
+    }
+    
+}
+
+extension LoginVC: ASAuthorizationControllerPresentationContextProviding {
+    
+    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+        view.window ?? UIWindow()
+    }
+    
+}
+
+extension LoginVC: ASAuthorizationControllerDelegate {
+    
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: any Error) {
+        appleContinuation?.resume(throwing: error)
+        appleContinuation = nil
+    }
+    
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+        appleContinuation?.resume(returning: authorization)
+        appleContinuation = nil
     }
     
 }
