@@ -18,8 +18,7 @@ import AuthenticationServices
 
 final class LoginVC: VC {
     
-    private var kakaoContinuation: CheckedContinuation<OAuthToken, Error>?
-    private var appleContinuation: CheckedContinuation<ASAuthorization, Error>?
+    private let authService = AuthService()
     
     // MARK: UI properties
     
@@ -32,9 +31,9 @@ final class LoginVC: VC {
     private let loginBtn = FilledButton("로그인")
     
     private let separatorLbl = UILabel("혹은")
-    private let googleBtn = SocialLoginButton(.icSocialGoogle, "구글 계정으로 로그인")
-    private let kakaoBtn = SocialLoginButton(.icSocialKakao, "카카오톡으로 로그인")
-    private let appleBtn = SocialLoginButton(.icSocialApple, "애플 계정으로 로그인")
+    private let googleBtn = SocialLoginButton(.google)
+    private let kakaoBtn = SocialLoginButton(.kakao)
+    private let appleBtn = SocialLoginButton(.apple)
     
     // MARK: Helpers
     
@@ -52,9 +51,11 @@ final class LoginVC: VC {
     }
     
     override func setupAction() {
-        googleBtn.onAction { [weak self] in try? await self?.loginWithGoogle() }
-        kakaoBtn.onAction { [weak self] in try? await self?.loginWithKakao() }
-        appleBtn.onAction { [weak self] in try? await self?.loginWithApple() }
+        for socialButton in [googleBtn, kakaoBtn, appleBtn] {
+            socialButton.onAction { [weak self] in
+                try? await self?.authService.loginWithSocial(socialButton.provider, presenter: self)
+            }
+        }
     }
     
     override func setupFlex() {
@@ -104,101 +105,6 @@ final class LoginVC: VC {
     
     override func keyboardWillHide() {
         scrollView.contentInset.bottom = 0
-    }
-    
-}
-
-// MARK: - Action
-
-extension LoginVC {
-    
-    private func loginWithGoogle() async throws {
-        let auth = GIDSignIn.sharedInstance
-        let result = try await auth.signIn(withPresenting: self)
-        let _ = result.user.idToken?.tokenString
-    }
-    
-    private func loginWithKakao() async throws {
-        if let kakaoKey = Bundle.main.infoDictionary?["KAKAO_APP_KEY"] as? String {
-            KakaoSDK.initSDK(appKey: kakaoKey)
-        }
-        
-        let oAuthToken = try await withCheckedThrowingContinuation { [weak self] continuation in
-            self?.kakaoContinuation = continuation
-            
-            let auth = UserApi.shared
-            if UserApi.isKakaoTalkLoginAvailable() {
-                // '카카오톡'으로 로그인
-                auth.loginWithKakaoTalk { result, error in
-                    self?.kakaoLoginHandler(result, error)
-                }
-            } else {
-                // '카카오 계정'으로 로그인
-                auth.loginWithKakaoAccount { result, error in
-                    self?.kakaoLoginHandler(result, error)
-                }
-            }
-        }
-    }
-    
-    private func kakaoLoginHandler(_ result: OAuthToken?, _ error: Error?) {
-        if let result {
-            kakaoContinuation?.resume(returning: result)
-            kakaoContinuation = nil
-            return
-        }
-        
-        let error = error ?? NSError(domain: "Unexpectedly failed to sign in with kakao", code: 1001)
-        kakaoContinuation?.resume(throwing: error)
-        kakaoContinuation = nil
-    }
-    
-    
-    private func loginWithApple() async throws {
-        let provider = ASAuthorizationAppleIDProvider()
-        let request = provider.createRequest()
-        let controller = ASAuthorizationController(authorizationRequests: [request])
-        controller.delegate = self
-        controller.presentationContextProvider = self
-        
-        let authorization = try await withCheckedThrowingContinuation { [weak self] continuation in
-            self?.appleContinuation = continuation
-            controller.performRequests()
-        }
-        
-        switch authorization.credential {
-        case let credential as ASAuthorizationAppleIDCredential:
-            let _ = credential.identityToken
-            let _ = credential.authorizationCode
-            
-        case let credential as ASPasswordCredential:
-            let _ = credential.user
-            let _ = credential.password
-            
-        default: break
-        }
-    }
-    
-}
-
-extension LoginVC: ASAuthorizationControllerPresentationContextProviding {
-    
-    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
-        view.window ?? UIWindow()
-    }
-    
-}
-
-extension LoginVC: ASAuthorizationControllerDelegate {
-    
-    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: any Error) {
-        appleContinuation?.resume(throwing: error)
-        appleContinuation = nil
-    }
-    
-    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
-        appleContinuation?.resume(returning: authorization)
-        appleContinuation = nil
     }
     
 }

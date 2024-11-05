@@ -30,10 +30,13 @@ final class FilledButton: UIButton {
 
 final class SocialLoginButton: UIButton {
     
-    init(_ image: UIImage?, _ title: String) {
+    private(set) var provider: OAuthProvider!
+    
+    init(_ provider: OAuthProvider) {
+        self.provider = provider
         super.init(frame: .zero)
         
-        var attrString = AttributedString(title)
+        var attrString = AttributedString(provider.title)
         attrString.font = .systemFont(ofSize: 16, weight: .bold)
         
         var config = UIButton.Configuration.plain()
@@ -42,7 +45,7 @@ final class SocialLoginButton: UIButton {
         config.background.cornerRadius = 12
         config.baseForegroundColor = .colorContentPrimary
         config.attributedTitle = attrString
-        config.image = image
+        config.image = provider.image
         config.imagePadding = 4
         configuration = config
     }
