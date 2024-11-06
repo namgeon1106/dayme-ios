@@ -8,7 +8,7 @@
 import Foundation
 import UIKit.UIImage
 
-enum OAuthProvider {
+enum OAuthProvider: String {
     case google, kakao, apple
     
     var image: UIImage {

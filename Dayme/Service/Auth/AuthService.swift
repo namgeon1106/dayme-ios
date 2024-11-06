@@ -13,23 +13,11 @@ import KakaoSDKCommon
 import KakaoSDKUser
 import AuthenticationServices
 
-enum AuthError: LocalizedError {
-    case emptySocialToken
-    case failedKakaoLogin
-    
-    var errorDescription: String? {
-        switch self {
-        case .emptySocialToken:
-            "소셜 로그인 토큰을 가져오지 못했습니다."
-        case .failedKakaoLogin:
-            "알 수 없는 이유로 카카오 로그인에 실패하였습니다."
-        }
-    }
-}
-
 class AuthService: NSObject {
     
     private weak var presenter: UIViewController!
+    
+    private let network = Network()
     
     private var kakaoContinuation: CheckedContinuation<KakaoSDKAuth.OAuthToken, Error>?
     private var appleContinuation: CheckedContinuation<ASAuthorization, Error>?
@@ -53,12 +41,24 @@ class AuthService: NSObject {
 
 private extension AuthService {
     
+    struct LoginResponse: Decodable {
+        let accessToken: String
+        let refreshToken: String
+    }
+    
     func loginSocial(_ provider: OAuthProvider, token: String) async throws {
-        // 1. 서버 로그인
+        // 서버 로그인
+        let response: LoginResponse = try await network.request(
+            .post,
+            baseUrl: Env.serverBaseUrl,
+            path: "/auth/loginBySns",
+            params: ["socialLoginType": provider.rawValue],
+            headers: ["Authorization": "Bearer \(token)"]
+        )
         
-        // 2. 키체인 토큰 저장
-//        Keychain.create(key: Env.Keychain.accessTokenKey, token: accessToken)
-//        Keychain.create(key: Env.Keychain.refreshTokenKey, token: refreshToken)
+        // 키체인 토큰 저장
+        Keychain.create(key: Env.Keychain.accessTokenKey, token: response.accessToken)
+        Keychain.create(key: Env.Keychain.refreshTokenKey, token: response.refreshToken)
     }
     
     @MainActor
