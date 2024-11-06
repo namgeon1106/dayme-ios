@@ -38,19 +38,28 @@ class AuthService: NSObject {
     func loginWithSocial(_ provider: OAuthProvider, presenter: UIViewController!) async throws {
         self.presenter = presenter
         
-        let token = switch provider {
+        let idToken = switch provider {
         case .google: try await loginWithGoogle()
         case .kakao: try await loginWithKakao()
         case .apple: try await loginWithApple()
         }
         
-        // 1. 키체인 저장
-        // 2. 서버 로그인 시도
+        try await loginSocial(provider, token: idToken)
     }
     
 }
 
+// MARK: - 소셜 로그인
+
 private extension AuthService {
+    
+    func loginSocial(_ provider: OAuthProvider, token: String) async throws {
+        // 1. 서버 로그인
+        
+        // 2. 키체인 토큰 저장
+//        Keychain.create(key: Env.Keychain.accessTokenKey, token: accessToken)
+//        Keychain.create(key: Env.Keychain.refreshTokenKey, token: refreshToken)
+    }
     
     @MainActor
     func loginWithGoogle() async throws -> String {
@@ -64,9 +73,7 @@ private extension AuthService {
     
     @MainActor
     func loginWithKakao() async throws -> String {
-        if let kakaoKey = Bundle.main.infoDictionary?["KAKAO_APP_KEY"] as? String {
-            KakaoSDK.initSDK(appKey: kakaoKey)
-        }
+        KakaoSDK.initSDK(appKey: Env.kakakoAppKey)
         
         let oAuthToken = try await withCheckedThrowingContinuation { [weak self] continuation in
             self?.kakaoContinuation = continuation
