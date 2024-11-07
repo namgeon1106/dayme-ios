@@ -42,7 +42,7 @@ class Keychain {
             })
         }
         
-        print("키체인 읽기 실패, status: \(status)")
+        Logger.error { "키체인 읽기 실패, status: \(status)" }
         return nil
     }
     
