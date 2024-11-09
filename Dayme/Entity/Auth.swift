@@ -21,9 +21,9 @@ enum OAuthProvider: String {
     
     var title: String {
         switch self {
-        case .google: "구글 계정으로 로그인"
-        case .kakao: "카카오톡으로 로그인"
-        case .apple: "애플 계정으로 로그인"
+        case .google: L10n.Login.googleLogin
+        case .kakao: L10n.Login.kakaoLogin
+        case .apple: L10n.Login.appleLogin
         }
     }
 }

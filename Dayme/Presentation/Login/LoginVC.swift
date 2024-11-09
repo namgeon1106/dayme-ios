@@ -26,11 +26,11 @@ final class LoginVC: VC {
     private let contentView = UIView()
     
     private let logo = UILabel("DAYME")
-    private let emailTF = FilledTextField("이메일을 입력해주세요")
-    private let pwTF = FilledTextField("비밀번호를 입력해주세요")
-    private let loginBtn = FilledButton("로그인")
+    private let emailTF = FilledTextField(L10n.Login.emailTF)
+    private let pwTF = FilledTextField(L10n.Login.pwTF)
+    private let loginBtn = FilledButton(L10n.Login.loginButton)
     
-    private let separatorLbl = UILabel("혹은")
+    private let separatorLbl = UILabel(L10n.Login.separataor)
     private let googleBtn = SocialLoginButton(.google)
     private let kakaoBtn = SocialLoginButton(.kakao)
     private let appleBtn = SocialLoginButton(.apple)
