@@ -53,7 +53,7 @@ final class LoginVC: VC {
     override func setupAction() {
         for socialButton in [googleBtn, kakaoBtn, appleBtn] {
             socialButton.onAction { [weak self] in
-                try? await self?.authService.loginWithSocial(socialButton.provider, presenter: self)
+                await self?.loginWithSocial(socialButton.provider)
             }
         }
     }
@@ -105,6 +105,21 @@ final class LoginVC: VC {
     
     override func keyboardWillHide() {
         scrollView.contentInset.bottom = 0
+    }
+    
+}
+
+private extension LoginVC {
+    
+    func loginWithSocial(_ provider: OAuthProvider) async {
+        do {
+            try await authService.loginWithSocial(provider, presenter: self)
+        } catch {
+            let alert = UIAlertController(title: "🚨 에러 발생", message: error.localizedDescription, preferredStyle: .alert)
+            let cancelAction = UIAlertAction(title: "확인", style: .cancel)
+            alert.addAction(cancelAction)
+            present(alert, animated: true)
+        }
     }
     
 }

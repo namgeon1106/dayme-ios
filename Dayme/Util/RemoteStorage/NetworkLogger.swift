@@ -55,4 +55,15 @@ final class NetworkLogger: EventMonitor {
         }
     }
     
+    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
+        guard let error else { return }
+        
+        Logger.network {
+            """
+            COMPLETED WITH ERROR 🔴
+            Error: \(error.localizedDescription)
+            """
+        }
+    }
+    
 }
