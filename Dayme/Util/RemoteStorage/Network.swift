@@ -14,6 +14,38 @@ enum HttpMethod {
 
 final class Network {
     
+    func request<T: Decodable>(_ endpoint: Endpoint) async throws -> T {
+        let response = await dataRequest(endpoint)
+            .serializingDecodable(T.self, decoder: decoder)
+            .response
+        
+        guard let statusCode = response.response?.statusCode else {
+            throw response.error ?? ServerError(errorCode: .unknown, message: "응답이 없습니다.")
+        }
+        
+        if !((200 ..< 300) ~= statusCode), let data = response.data {
+            throw try decoder.decode(ServerError.self, from: data)
+        }
+        
+        return try response.result.get()
+    }
+    
+    func request(_ endpoint: Endpoint) async throws {
+        let response = await dataRequest(endpoint)
+            .serializingData()
+            .response
+        
+        guard let statusCode = response.response?.statusCode else {
+            throw response.error ?? ServerError(errorCode: .unknown, message: "응답이 없습니다.")
+        }
+        
+        if !((200 ..< 300) ~= statusCode), let data = response.data {
+            throw try decoder.decode(ServerError.self, from: data)
+        }
+    }
+    
+    // MARK: - 네트워크 설정
+    
     private let session: Session = {
         let config = URLSessionConfiguration.default
         config.timeoutIntervalForRequest = 10
@@ -22,21 +54,33 @@ final class Network {
         return Session(configuration: config, eventMonitors: [logger])
     }()
     
-    func request<T: Decodable>(
-        _ method: HttpMethod,
-        baseUrl: String,
-        path: String,
-        params: [String: any Any & Sendable]? = nil,
-        headers: [String: String]? = nil
-    ) async throws -> T {
-        return try await session.request(
-            baseUrl + path,
-            method: .get,
-            parameters: params,
-            headers: headers.map(HTTPHeaders.init)
+    private let decoder: JSONDecoder = {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        return decoder
+    }()
+    
+    private let defaultHeader: [String: String] = [
+        "Accept": "*/*",
+        "Accept-Encoding": "gzip, defalte, br",
+        "Content-Type": "application/json",
+        "Connection": "keep-alive"
+    ]
+    
+}
+
+private extension Network {
+    
+    func dataRequest(_ endpoint: Endpoint) -> DataRequest {
+        let header = defaultHeader.merging(endpoint.headers.orEmpty) { $1 }
+        
+        return session.request(
+            endpoint.baseUrl + endpoint.path,
+            method: endpoint.method.af,
+            parameters: endpoint.params,
+            encoding: JSONEncoding.default,
+            headers: HTTPHeaders(header)
         )
-        .serializingDecodable()
-        .value
     }
     
 }

@@ -26,6 +26,8 @@ enum OAuthProvider: String {
         case .apple: L10n.Login.appleLogin
         }
     }
+    
+    var code: String { rawValue.uppercased() }
 }
 
 struct OAuthToken {

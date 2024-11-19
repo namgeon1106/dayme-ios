@@ -48,13 +48,14 @@ private extension AuthService {
     
     func loginSocial(_ provider: OAuthProvider, token: String) async throws {
         // 서버 로그인
-        let response: LoginResponse = try await network.request(
-            .post,
+        let endpoint = Endpoint(
+            method: .post,
             baseUrl: Env.serverBaseUrl,
             path: "/auth/loginBySns",
-            params: ["socialLoginType": provider.rawValue],
+            params: ["socialLoginType": provider.code],
             headers: ["Authorization": "Bearer \(token)"]
         )
+        let response: LoginResponse = try await network.request(endpoint)
         
         // 키체인 토큰 저장
         Keychain.create(key: Env.Keychain.accessTokenKey, token: response.accessToken)
@@ -64,10 +65,17 @@ private extension AuthService {
     @MainActor
     func loginWithGoogle() async throws -> String {
         let auth = GIDSignIn.sharedInstance
-        let result = try await auth.signIn(withPresenting: presenter)
-        if let token = result.user.idToken?.tokenString {
-            return token
+        do {
+            let result = try await auth.signIn(withPresenting: presenter)
+            if let token = result.user.idToken?.tokenString {
+                return token
+            }
+        } catch GIDSignInError.canceled {
+            throw AuthError.canceled
+        } catch {
+            throw error
         }
+        
         throw AuthError.emptySocialToken
     }
     
@@ -145,7 +153,11 @@ extension AuthService: ASAuthorizationControllerPresentationContextProviding {
 extension AuthService: ASAuthorizationControllerDelegate {
     
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: any Error) {
-        appleContinuation?.resume(throwing: error)
+        if case ASAuthorizationError.canceled = error {
+            appleContinuation?.resume(throwing: AuthError.canceled)
+        } else {
+            appleContinuation?.resume(throwing: error)
+        }
         appleContinuation = nil
     }
     
