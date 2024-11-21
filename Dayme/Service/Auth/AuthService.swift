@@ -22,17 +22,45 @@ class AuthService: NSObject {
     private var kakaoContinuation: CheckedContinuation<KakaoSDKAuth.OAuthToken, Error>?
     private var appleContinuation: CheckedContinuation<ASAuthorization, Error>?
     
+    
     @MainActor
-    func loginWithSocial(_ provider: OAuthProvider, presenter: UIViewController!) async throws {
+    func getSocialIdToken(_ provider: OAuthProvider, presenter: UIViewController!) async throws -> String {
         self.presenter = presenter
         
-        let idToken = switch provider {
+        return switch provider {
         case .google: try await loginWithGoogle()
         case .kakao: try await loginWithKakao()
         case .apple: try await loginWithApple()
         }
+    }
+    
+    @MainActor
+    func loginWithSocial(_ provider: OAuthProvider, idToken: String) async throws  {
+        let endpoint = Endpoint(
+            method: .post,
+            baseUrl: Env.serverBaseUrl,
+            path: "/auth/loginBySns",
+            params: ["socialLoginType": provider.code],
+            headers: ["Authorization": "Bearer \(idToken)"]
+        )
+        let response: LoginResponse = try await network.request(endpoint)
         
-        try await loginSocial(provider, token: idToken)
+        // 키체인 토큰 저장
+        Keychain.create(key: Env.Keychain.accessTokenKey, token: response.accessToken)
+        Keychain.create(key: Env.Keychain.refreshTokenKey, token: response.refreshToken)
+    }
+    
+    @MainActor
+    func signupWithSocial(_ provider: OAuthProvider, nickname: String, idToken: String) async throws {
+        Logger.debug("Bearer \(idToken)")
+        let endpoint = Endpoint(
+            method: .post,
+            baseUrl: Env.serverBaseUrl,
+            path: "/auth/signupBySns",
+            params: ["socialLoginType": provider.code, "nickname": nickname],
+            headers: ["Authorization": "Bearer \(idToken)"]
+        )
+        try await network.request(endpoint)
     }
     
 }
@@ -44,22 +72,6 @@ private extension AuthService {
     struct LoginResponse: Decodable {
         let accessToken: String
         let refreshToken: String
-    }
-    
-    func loginSocial(_ provider: OAuthProvider, token: String) async throws {
-        // 서버 로그인
-        let endpoint = Endpoint(
-            method: .post,
-            baseUrl: Env.serverBaseUrl,
-            path: "/auth/loginBySns",
-            params: ["socialLoginType": provider.code],
-            headers: ["Authorization": "Bearer \(token)"]
-        )
-        let response: LoginResponse = try await network.request(endpoint)
-        
-        // 키체인 토큰 저장
-        Keychain.create(key: Env.Keychain.accessTokenKey, token: response.accessToken)
-        Keychain.create(key: Env.Keychain.refreshTokenKey, token: response.refreshToken)
     }
     
     @MainActor

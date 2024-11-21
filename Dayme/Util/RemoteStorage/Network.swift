@@ -8,8 +8,10 @@
 import Foundation
 import Alamofire
 
-enum HttpMethod {
+enum HttpMethod: String {
     case get, delete, post
+    
+    var code: String { rawValue.uppercased() }
 }
 
 final class Network {
@@ -19,11 +21,19 @@ final class Network {
             .serializingDecodable(T.self, decoder: decoder)
             .response
         
-        guard let statusCode = response.response?.statusCode else {
+        guard let statusCode = response.response?.statusCode, let data = response.data else {
             throw response.error ?? ServerError(errorCode: .unknown, message: "응답이 없습니다.")
         }
         
-        if !((200 ..< 300) ~= statusCode), let data = response.data {
+        Logger.debug {
+            """
+            NETWORK RESPONSE
+            [\(endpoint.method.code)] \(endpoint.baseUrl)\(endpoint.path)
+            \(data.prettyString.orEmpty)
+            """
+        }
+        
+        if !((200 ..< 300) ~= statusCode) {
             throw try decoder.decode(ServerError.self, from: data)
         }
         
@@ -35,11 +45,19 @@ final class Network {
             .serializingData()
             .response
         
-        guard let statusCode = response.response?.statusCode else {
+        guard let statusCode = response.response?.statusCode, let data = response.data else {
             throw response.error ?? ServerError(errorCode: .unknown, message: "응답이 없습니다.")
         }
         
-        if !((200 ..< 300) ~= statusCode), let data = response.data {
+        Logger.debug {
+            """
+            NETWORK RESPONSE
+            [\(endpoint.method.code)] \(endpoint.baseUrl)\(endpoint.path)
+            \(data.prettyString.orEmpty)
+            """
+        }
+        
+        if !((200 ..< 300) ~= statusCode) {
             throw try decoder.decode(ServerError.self, from: data)
         }
     }
