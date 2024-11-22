@@ -123,9 +123,13 @@ private extension LoginVC {
             return
         }
         
+        Loader.show(in: view)
+        
         do {
             try await authService.login(email: email, password: password)
+            Loader.dismiss()
         } catch {
+            Loader.dismiss()
             Logger.error { "로그인 에러: \(error)" }
             
             showAlert(title: "🚨 로그인 에러", message: error.localizedDescription)
@@ -155,9 +159,13 @@ private extension LoginVC {
             return
         }
         
+        Loader.show(in: view)
+        
         do {
             try await authService.signupWithSocial(provider, nickname: nickname, idToken: idToken)
+            Loader.dismiss()
         } catch {
+            Loader.dismiss()
             showAlert(title: "🚨 회원가입 에러", message: error.localizedDescription)
         }
     }
