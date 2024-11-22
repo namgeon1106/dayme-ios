@@ -40,22 +40,32 @@ final class LoginVC: VC {
     override func setup() {
         addKeyboardObeserver()
         view.backgroundColor(.colorBackground)
-        scrollView.keyboardDismissMode = .interactive
-        pwTF.isSecureTextEntry = true
+        scrollView.keyboardDismissMode = .onDrag
+        
         logo.textColor(.accent)
             .font(.systemFont(ofSize: 32, weight: .black))
             .textAlignment(.center)
         separatorLbl.textColor(.colorContentSecondary)
             .font(.systemFont(ofSize: 14, weight: .regular))
             .textAlignment(.center)
+        
+        emailTF.keyboardType = .emailAddress
+        emailTF.returnKeyType = .next
+        emailTF.delegate = self
+        pwTF.keyboardType = .asciiCapable
+        pwTF.returnKeyType = .done
+        pwTF.isSecureTextEntry = true
     }
     
     override func setupAction() {
         loginBtn.onAction { [weak self] in
+            self?.view.endEditing(true)
             await self?.login()
         }
+        
         for socialButton in [googleBtn, kakaoBtn, appleBtn] {
             socialButton.onAction { [weak self] in
+                self?.view.endEditing(true)
                 await self?.loginWithSocial(socialButton.provider)
             }
         }
@@ -110,7 +120,21 @@ final class LoginVC: VC {
         scrollView.contentInset.bottom = 0
     }
     
+    func showAlert(title: String, message: String) {
+        Alert(title: title, message: message)
+            .onAction(title: "확인")
+            .show(on: self)
+    }
+    
+    func validateEmail(_ email: String) -> Bool {
+        let emailRegex = "^[A-Za-z0-9]+([._%+-]*[A-Za-z0-9])?@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
+        let emailTest = NSPredicate(format: "SELF MATCHES %@", emailRegex)
+        return emailTest.evaluate(with: email)
+    }
+    
 }
+
+// MARK: - Auth
 
 private extension LoginVC {
     
@@ -119,7 +143,10 @@ private extension LoginVC {
         let password = pwTF.text.orEmpty
         
         if email.isEmpty || password.isEmpty {
-            showAlert(title: "요청 실패", message: "이메일 또는 패스워드가 비어있습니다.")
+            showAlert(title: "⚠️ 입력 오류", message: "이메일과 비밀번호를 모두 입력해주세요.")
+            return
+        } else if !validateEmail(email) {
+            showAlert(title: "⚠️ 입력 오류", message: "유효한 이메일 주소를 입력해주세요.")
             return
         }
         
@@ -170,16 +197,25 @@ private extension LoginVC {
         }
     }
     
-    func showAlert(title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let cancelAction = UIAlertAction(title: "확인", style: .cancel)
-        alert.addAction(cancelAction)
-        present(alert, animated: true)
+}
+
+// MARK: - UITextFieldDelegate
+
+extension LoginVC: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == emailTF {
+            pwTF.becomeFirstResponder()
+        } else if textField == pwTF {
+            Task { await login() }
+        }
+        return true
     }
     
 }
 
-// 임시 Alert
+// MARK: - 임시 Alert
+
 final class NicknamePopup: UIAlertController {
     
     var continuation: CheckedContinuation<String?, Never>?
