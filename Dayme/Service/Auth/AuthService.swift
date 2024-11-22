@@ -51,6 +51,17 @@ class AuthService: NSObject {
     }
     
     @MainActor
+    func login(email: String, password: String) async throws {
+        let endpoint = Endpoint(
+            method: .post,
+            baseUrl: Env.serverBaseUrl,
+            path: "/auth/login",
+            params: ["email": email, "password": password]
+        )
+        try await network.request(endpoint)
+    }
+    
+    @MainActor
     func signupWithSocial(_ provider: OAuthProvider, nickname: String, idToken: String) async throws {
         Logger.debug("Bearer \(idToken)")
         let endpoint = Endpoint(
@@ -59,6 +70,17 @@ class AuthService: NSObject {
             path: "/auth/signupBySns",
             params: ["socialLoginType": provider.code, "nickname": nickname],
             headers: ["Authorization": "Bearer \(idToken)"]
+        )
+        try await network.request(endpoint)
+    }
+    
+    @MainActor
+    func signup(email: String, password: String, nickname: String) async throws {
+        let endpoint = Endpoint(
+            method: .post,
+            baseUrl: Env.serverBaseUrl,
+            path: "/auth/signup",
+            params: ["email": email, "password": password, "nickname": nickname]
         )
         try await network.request(endpoint)
     }

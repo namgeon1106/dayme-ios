@@ -51,6 +51,9 @@ final class LoginVC: VC {
     }
     
     override func setupAction() {
+        loginBtn.onAction { [weak self] in
+            await self?.login()
+        }
         for socialButton in [googleBtn, kakaoBtn, appleBtn] {
             socialButton.onAction { [weak self] in
                 await self?.loginWithSocial(socialButton.provider)
@@ -110,6 +113,24 @@ final class LoginVC: VC {
 }
 
 private extension LoginVC {
+    
+    func login() async {
+        let email = emailTF.text.orEmpty
+        let password = pwTF.text.orEmpty
+        
+        if email.isEmpty || password.isEmpty {
+            showAlert(title: "요청 실패", message: "이메일 또는 패스워드가 비어있습니다.")
+            return
+        }
+        
+        do {
+            try await authService.login(email: email, password: password)
+        } catch {
+            Logger.error { "로그인 에러: \(error)" }
+            
+            showAlert(title: "🚨 로그인 에러", message: error.localizedDescription)
+        }
+    }
     
     func loginWithSocial(_ provider: OAuthProvider) async {
         do {
