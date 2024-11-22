@@ -15,6 +15,7 @@
 		9A7BFB4E2CD5EDBE00E48C31 /* Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 9A7BFB4D2CD5EDBE00E48C31 /* Release.xcconfig */; };
 		9A7BFB712CD5FBD800E48C31 /* KakaoSDKAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 9A7BFB702CD5FBD800E48C31 /* KakaoSDKAuth */; };
 		9A7BFB732CD5FBD800E48C31 /* KakaoSDKUser in Frameworks */ = {isa = PBXBuildFile; productRef = 9A7BFB722CD5FBD800E48C31 /* KakaoSDKUser */; };
+		9AB0EC782CF06B7000BD01E1 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 9AB0EC772CF06B7000BD01E1 /* FirebaseAuth */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -55,6 +56,7 @@
 				9A32AF502CDBA2E000F9CBF1 /* Alamofire in Frameworks */,
 				9A7BFB732CD5FBD800E48C31 /* KakaoSDKUser in Frameworks */,
 				9A7BFB712CD5FBD800E48C31 /* KakaoSDKAuth in Frameworks */,
+				9AB0EC782CF06B7000BD01E1 /* FirebaseAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,6 +107,7 @@
 				9A7BFB702CD5FBD800E48C31 /* KakaoSDKAuth */,
 				9A7BFB722CD5FBD800E48C31 /* KakaoSDKUser */,
 				9A32AF4F2CDBA2E000F9CBF1 /* Alamofire */,
+				9AB0EC772CF06B7000BD01E1 /* FirebaseAuth */,
 			);
 			productName = Dayme;
 			productReference = 9A1E35222CD3CA4700753F8A /* Dayme.app */;
@@ -141,6 +144,7 @@
 				9A7BFB3F2CD5247F00E48C31 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				9A7BFB6F2CD5FBD800E48C31 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */,
 				9A32AF4E2CDBA2E000F9CBF1 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				9AB0EC742CF06B7000BD01E1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9A1E35232CD3CA4700753F8A /* Products */;
@@ -438,6 +442,14 @@
 				minimumVersion = 2.23.0;
 			};
 		};
+		9AB0EC742CF06B7000BD01E1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.5.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -470,6 +482,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 9A7BFB6F2CD5FBD800E48C31 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
 			productName = KakaoSDKUser;
+		};
+		9AB0EC772CF06B7000BD01E1 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9AB0EC742CF06B7000BD01E1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -16,6 +16,8 @@ enum Env {
     static let serverBaseUrl: String = infoValue("SERVER_BASE_URL")
     
     static let kakakoAppKey: String = infoValue("KAKAO_APP_KEY")
+    
+    static let firebaseClientId: String = infoValue("FIREBASE_CLIENT_ID")
 }
 
 private extension Env {

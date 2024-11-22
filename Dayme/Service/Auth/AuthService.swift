@@ -12,6 +12,13 @@ import KakaoSDKAuth
 import KakaoSDKCommon
 import KakaoSDKUser
 import AuthenticationServices
+import FirebaseAuth
+import FirebaseCore
+
+struct LoginResponse: Decodable {
+    let accessToken: String
+    let refreshToken: String
+}
 
 class AuthService: NSObject {
     
@@ -91,18 +98,18 @@ class AuthService: NSObject {
 
 private extension AuthService {
     
-    struct LoginResponse: Decodable {
-        let accessToken: String
-        let refreshToken: String
-    }
-    
     @MainActor
     func loginWithGoogle() async throws -> String {
         let auth = GIDSignIn.sharedInstance
+        auth.configuration = GIDConfiguration(clientID: Env.firebaseClientId)
+        
         do {
             let result = try await auth.signIn(withPresenting: presenter)
-            if let token = result.user.idToken?.tokenString {
-                return token
+            if let googleIdToken = result.user.idToken?.tokenString {
+                let accessToken = result.user.accessToken.tokenString
+                let credential = GoogleAuthProvider.credential(withIDToken: googleIdToken,
+                                                               accessToken: accessToken)
+                return try await getFirebaseIdToken(with: credential)
             }
         } catch GIDSignInError.canceled {
             throw AuthError.canceled
@@ -157,6 +164,15 @@ private extension AuthService {
         }
         
         throw AuthError.emptySocialToken
+    }
+    
+}
+
+private extension AuthService {
+    
+    func getFirebaseIdToken(with credential: AuthCredential) async throws -> String {
+        let authResult = try await FirebaseAuth.Auth.auth().signIn(with: credential)
+        return try await authResult.user.getIDTokenResult(forcingRefresh: true).token
     }
     
     func kakaoLoginHandler(_ result: KakaoSDKAuth.OAuthToken?, _ error: Error?) {
