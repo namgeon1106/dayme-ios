@@ -9,10 +9,15 @@ import UIKit
 
 final class MainCoordinator: Coordinator {
     
-    override func start() {
+    override func start(animated: Bool) {
         let navs = MainTab.allCases.map(nav)
         let mainTC = MainTC(navs)
         mainTC.coordinator = self
+        
+        if animated {
+            addFadeTransaction(in: nav.view.layer)
+        }
+        
         nav.viewControllers = [mainTC]
     }
     
@@ -36,7 +41,7 @@ private extension MainCoordinator {
         case .goal: GoalCoordinator(nav: nav)
         case .setting: SettingCoordinator(nav: nav)
         }
-        startFlow(child)
+        startFlow(child, animated: false)
     }
     
     func nav(tab: MainTab) -> UINavigationController {

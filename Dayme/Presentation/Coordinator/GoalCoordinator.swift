@@ -9,7 +9,7 @@ import UIKit
 
 final class GoalCoordinator: Coordinator {
     
-    override func start() {
+    override func start(animated: Bool) {
         nav.viewControllers = [UIViewController()]
     }
     

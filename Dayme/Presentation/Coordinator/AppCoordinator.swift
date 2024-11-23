@@ -9,13 +9,13 @@ import UIKit
 
 final class AppCoordinator: Coordinator {
     
-    override func start() {
+    override func start(animated: Bool) {
         let isAuthorized = Keychain.read(key: Env.Keychain.accessTokenKey) != nil
         
         if isAuthorized {
-            startMainFlow()
+            startMainFlow(animated: false)
         } else {
-            startLoginFlow()
+            startLoginFlow(animated: false)
         }
     }
     
@@ -23,11 +23,11 @@ final class AppCoordinator: Coordinator {
         switch event {
         case .loginFinished, .signupFinished:
             children.removeAll()
-            startMainFlow()
+            startMainFlow(animated: true)
             
         case .logout:
             children.removeAll()
-            startLoginFlow()
+            startLoginFlow(animated: true)
             
         default:
             break
@@ -38,14 +38,14 @@ final class AppCoordinator: Coordinator {
 
 private extension AppCoordinator {
     
-    func startMainFlow() {
+    func startMainFlow(animated: Bool) {
         let child = MainCoordinator(nav: nav)
-        startFlow(child)
+        startFlow(child, animated: animated)
     }
     
-    func startLoginFlow() {
+    func startLoginFlow(animated: Bool) {
         let child = LoginCoordinator(nav: nav)
-        startFlow(child)
+        startFlow(child, animated: animated)
     }
     
 }

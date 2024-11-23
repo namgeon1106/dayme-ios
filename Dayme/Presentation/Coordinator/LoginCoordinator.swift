@@ -9,9 +9,14 @@ import UIKit
 
 final class LoginCoordinator: Coordinator {
     
-    override func start() {
+    override func start(animated: Bool) {
         let loginVC = LoginVC()
         loginVC.coordinator = self
+        
+        if animated {
+            addFadeTransaction(in: nav.view.layer)
+        }
+        
         nav.viewControllers = [loginVC]
     }
     

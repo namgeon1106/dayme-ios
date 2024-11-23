@@ -9,7 +9,7 @@ import UIKit
 
 final class SettingCoordinator: Coordinator {
     
-    override func start() {
+    override func start(animated: Bool) {
         let settingVC = SettingVC()
         settingVC.coordinator = self
         nav.viewControllers = [settingVC]

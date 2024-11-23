@@ -19,7 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         nav.setNavigationBarHidden(true, animated: false)
         
         appCoordinator = AppCoordinator(nav: nav)
-        appCoordinator?.start()
+        appCoordinator?.start(animated: false)
         
         if let windowScene = scene as? UIWindowScene {
             window = UIWindow(windowScene: windowScene)
