@@ -104,11 +104,5 @@ private extension Network {
 }
 
 fileprivate extension HttpMethod {
-    var af: Alamofire.HTTPMethod {
-        switch self {
-        case .get: .get
-        case .delete: .delete
-        case .post: .post
-        }
-    }
+    var af: Alamofire.HTTPMethod { .init(rawValue: rawValue) }
 }
