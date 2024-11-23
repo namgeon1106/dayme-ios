@@ -64,7 +64,7 @@ final class Network {
     
     // MARK: - 네트워크 설정
     
-    private let session: Session = {
+    private lazy var session: Session = {
         let config = URLSessionConfiguration.default
         config.timeoutIntervalForRequest = 10
         config.timeoutIntervalForResource = 10
@@ -89,8 +89,13 @@ final class Network {
 
 private extension Network {
     
-    func dataRequest(_ endpoint: Endpoint) -> DataRequest {
+    func dataRequest(_ endpoint: Endpoint) async -> DataRequest {
         let header = defaultHeader.merging(endpoint.headers.orEmpty) { $1 }
+        
+        // Session 초기화가 I/O 관련이 있어 background 초기화
+        let session = await Task(priority: .background) {
+            return self.session
+        }.value
         
         return session.request(
             endpoint.baseUrl + endpoint.path,

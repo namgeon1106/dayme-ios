@@ -19,7 +19,7 @@ fileprivate class AlertAction {
     }
 }
 
-class Alert {
+final class Alert {
     
     let title: String
     let message: String
