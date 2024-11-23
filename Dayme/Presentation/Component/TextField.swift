@@ -37,4 +37,12 @@ final class FilledTextField: UITextField {
         return bounds.inset(by: padding)
     }
     
+    override func clearButtonRect(forBounds bounds: CGRect) -> CGRect {
+        let clearButtonWidth: CGFloat = 24
+        let clearButtonHeight: CGFloat = 24
+        let clearButtonX = bounds.width - clearButtonWidth - padding.right
+        let clearButtonY = (bounds.height - clearButtonHeight) / 2
+        return CGRect(x: clearButtonX, y: clearButtonY, width: clearButtonWidth, height: clearButtonHeight)
+    }
+    
 }

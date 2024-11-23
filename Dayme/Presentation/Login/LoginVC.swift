@@ -51,10 +51,18 @@ final class LoginVC: VC {
         
         emailTF.keyboardType = .emailAddress
         emailTF.returnKeyType = .next
+        emailTF.autocapitalizationType = .none
+        emailTF.autocorrectionType = .no
+        emailTF.clearButtonMode = .whileEditing
         emailTF.delegate = self
+        
         pwTF.keyboardType = .asciiCapable
         pwTF.returnKeyType = .done
         pwTF.isSecureTextEntry = true
+        pwTF.autocapitalizationType = .none
+        pwTF.autocorrectionType = .no
+        pwTF.clearButtonMode = .whileEditing
+        pwTF.delegate = self
     }
     
     override func setupAction() {
@@ -122,7 +130,16 @@ final class LoginVC: VC {
     
     func showAlert(title: String, message: String) {
         Haptic.noti(.warning)
+        
         Alert(title: title, message: message)
+            .onAction(title: "확인")
+            .show(on: self)
+    }
+    
+    func showAsyncAlert(title: String, message: String) async {
+        Haptic.noti(.warning)
+        
+        await Alert(title: title, message: message)
             .onAction(title: "확인")
             .show(on: self)
     }
@@ -144,10 +161,15 @@ private extension LoginVC {
         let password = pwTF.text.orEmpty
         
         if email.isEmpty || password.isEmpty {
-            showAlert(title: "⚠️ 입력 오류", message: "이메일과 비밀번호를 모두 입력해주세요.")
+            await showAsyncAlert(title: "⚠️ 입력 오류", message: "이메일과 비밀번호를 모두 입력해주세요.")
+            let target = email.isEmpty ? emailTF : pwTF
+            target.becomeFirstResponder()
             return
-        } else if !validateEmail(email) {
-            showAlert(title: "⚠️ 입력 오류", message: "유효한 이메일 주소를 입력해주세요.")
+        }
+        
+        if !validateEmail(email) {
+            await showAsyncAlert(title: "⚠️ 입력 오류", message: "유효한 이메일 주소를 입력해주세요.")
+            emailTF.becomeFirstResponder()
             return
         }
         
