@@ -36,6 +36,8 @@ final class MainTC: UITabBarController {
         
         self.viewControllers = MainTab.allCases.map(viewController)
         self.selectedIndex = 0
+        
+        delegate = self
     }
     
     required init?(coder: NSCoder) {
@@ -49,6 +51,16 @@ final class MainTC: UITabBarController {
         let nc = UINavigationController(rootViewController: vc)
         nc.navigationBar.prefersLargeTitles = true
         return nc
+    }
+    
+}
+
+// MARK: - UITabBarControllerDelegate
+
+extension MainTC: UITabBarControllerDelegate {
+    
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        Haptic.impact(.light)
     }
     
 }

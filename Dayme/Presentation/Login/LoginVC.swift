@@ -121,6 +121,7 @@ final class LoginVC: VC {
     }
     
     func showAlert(title: String, message: String) {
+        Haptic.noti(.warning)
         Alert(title: title, message: message)
             .onAction(title: "확인")
             .show(on: self)
