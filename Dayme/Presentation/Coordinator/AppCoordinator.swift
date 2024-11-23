@@ -10,7 +10,7 @@ import UIKit
 final class AppCoordinator: Coordinator {
     
     override func start() {
-        let isAuthorized = Keychain.read(key: Env.Keychain.accessTokenKey) == nil
+        let isAuthorized = Keychain.read(key: Env.Keychain.accessTokenKey) != nil
         
         if isAuthorized {
             startMainFlow()
@@ -21,9 +21,13 @@ final class AppCoordinator: Coordinator {
     
     override func trigger(with event: FlowEvent) {
         switch event {
-        case .loginFinished:
+        case .loginFinished, .signupFinished:
             children.removeAll()
             startMainFlow()
+            
+        case .logout:
+            children.removeAll()
+            startLoginFlow()
             
         default:
             break
