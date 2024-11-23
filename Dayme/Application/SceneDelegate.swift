@@ -17,7 +17,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = scene as? UIWindowScene else { return }
         
         window = UIWindow(windowScene: windowScene)
-        window?.rootViewController = LoginVC()
+        window?.rootViewController = MainTC()
         window?.tintColor = .accent
         window?.makeKeyAndVisible()
     }
