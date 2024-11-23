@@ -14,6 +14,7 @@ import KakaoSDKUser
 import AuthenticationServices
 import FirebaseAuth
 import FirebaseCore
+import CryptoKit
 
 struct LoginResponse: Decodable {
     let accessToken: String
@@ -28,6 +29,8 @@ class AuthService: NSObject {
     
     private var kakaoContinuation: CheckedContinuation<KakaoSDKAuth.OAuthToken, Error>?
     private var appleContinuation: CheckedContinuation<ASAuthorization, Error>?
+    
+    private var currentNonce: String?
     
     
     @MainActor
@@ -121,6 +124,40 @@ private extension AuthService {
     }
     
     @MainActor
+    func loginWithApple() async throws -> String {
+        let nonce = generateRandomeNonce()
+        currentNonce = nonce
+        
+        let provider = ASAuthorizationAppleIDProvider()
+        let request = provider.createRequest()
+        request.requestedScopes = [.email]
+        request.nonce = sha256(nonce)
+        
+        let controller = ASAuthorizationController(authorizationRequests: [request])
+        controller.delegate = self
+        controller.presentationContextProvider = self
+        
+        let authorization = try await withCheckedThrowingContinuation { [weak self] continuation in
+            self?.appleContinuation = continuation
+            controller.performRequests()
+        }
+        
+        guard let appleCredential = authorization.credential as? ASAuthorizationAppleIDCredential,
+              let identityToken = appleCredential.identityToken,
+              let idToken = String(data: identityToken, encoding: .utf8) else {
+            throw AuthError.emptySocialToken
+        }
+        
+        let credential = FirebaseAuth.OAuthProvider.appleCredential(
+            withIDToken: idToken,
+            rawNonce: currentNonce,
+            fullName: appleCredential.fullName
+        )
+        
+        return try await getFirebaseIdToken(with: credential)
+    }
+    
+    @MainActor
     func loginWithKakao() async throws -> String {
         KakaoSDK.initSDK(appKey: Env.kakakoAppKey)
         
@@ -144,37 +181,16 @@ private extension AuthService {
         return oAuthToken.accessToken
     }
     
-    @MainActor
-    func loginWithApple() async throws -> String {
-        let provider = ASAuthorizationAppleIDProvider()
-        let request = provider.createRequest()
-        let controller = ASAuthorizationController(authorizationRequests: [request])
-        controller.delegate = self
-        controller.presentationContextProvider = self
-        
-        let authorization = try await withCheckedThrowingContinuation { [weak self] continuation in
-            self?.appleContinuation = continuation
-            controller.performRequests()
-        }
-        
-        if let credential = authorization.credential as? ASAuthorizationAppleIDCredential,
-           let identityToken = credential.identityToken,
-           let idToken = String(data: identityToken, encoding: .utf8) {
-            return idToken
-        }
-        
-        throw AuthError.emptySocialToken
-    }
-    
 }
 
 private extension AuthService {
-    
+    // 파이어베이스
     func getFirebaseIdToken(with credential: AuthCredential) async throws -> String {
         let authResult = try await FirebaseAuth.Auth.auth().signIn(with: credential)
         return try await authResult.user.getIDTokenResult(forcingRefresh: true).token
     }
     
+    // 카카오
     func kakaoLoginHandler(_ result: KakaoSDKAuth.OAuthToken?, _ error: Error?) {
         if let result {
             kakaoContinuation?.resume(returning: result)
@@ -184,6 +200,33 @@ private extension AuthService {
         
         kakaoContinuation?.resume(throwing: error ?? AuthError.failedKakaoLogin)
         kakaoContinuation = nil
+    }
+    
+    /// 재전송 공격 방지 목적
+    /// https://firebase.google.com/docs/auth/ios/apple?hl=ko
+    func generateRandomeNonce(length: Int = 32) -> String {
+        precondition(length > 0)
+        
+        var randomBytes = [UInt8](repeating: 0, count: length)
+        let errorCode = SecRandomCopyBytes(kSecRandomDefault, randomBytes.count, &randomBytes)
+        if errorCode != errSecSuccess {
+            fatalError("Unable to generate nonce. SecRandomCopyBytes failed with OSStatus \(errorCode)")
+        }
+        
+        let charset: [Character] = Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
+        let nonce = randomBytes.map { byte in
+            charset[Int(byte) % charset.count]
+        }
+        
+        return String(nonce)
+    }
+    
+    /// nonce SHA256 해싱
+    func sha256(_ input: String) -> String {
+        let inputData = Data(input.utf8)
+        let hashedData = SHA256.hash(data: inputData)
+        let hashString = hashedData.compactMap({ String(format: "%02x", $0) }).joined()
+        return hashString
     }
     
 }
