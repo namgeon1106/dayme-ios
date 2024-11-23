@@ -16,11 +16,6 @@ import FirebaseAuth
 import FirebaseCore
 import CryptoKit
 
-struct LoginResponse: Decodable {
-    let accessToken: String
-    let refreshToken: String
-}
-
 class AuthService: NSObject {
     
     private weak var presenter: UIViewController!
@@ -45,30 +40,39 @@ class AuthService: NSObject {
     }
     
     @MainActor
-    func loginWithSocial(_ provider: OAuthProvider, idToken: String) async throws  {
+    @discardableResult
+    func loginWithSocial(_ provider: OAuthProvider, idToken: String) async throws -> OAuthToken {
         let endpoint = Endpoint(
             method: .post,
             baseUrl: Env.serverBaseUrl,
             path: "/auth/loginBySns",
-            params: ["socialLoginType": provider.code],
-            headers: ["Authorization": "Bearer \(idToken)"]
-        )
-        let response: LoginResponse = try await network.request(endpoint)
+            params: ["socialLoginType": provider.code]
+        ).withAuthorization(idToken)
         
-        // 키체인 토큰 저장
-        Keychain.create(key: Env.Keychain.accessTokenKey, token: response.accessToken)
-        Keychain.create(key: Env.Keychain.refreshTokenKey, token: response.refreshToken)
+        let response: LoginResponse = try await network.request(endpoint)
+        let oAuthToken = response.toDomain()
+        
+        saveToken(oAuthToken)
+        
+        return oAuthToken
     }
     
     @MainActor
-    func login(email: String, password: String) async throws {
+    @discardableResult
+    func login(email: String, password: String) async throws -> OAuthToken {
         let endpoint = Endpoint(
             method: .post,
             baseUrl: Env.serverBaseUrl,
             path: "/auth/login",
             params: ["email": email, "password": password]
         )
-        try await network.request(endpoint)
+        
+        let response: LoginResponse = try await network.request(endpoint)
+        let oAuthToken = response.toDomain()
+        
+        saveToken(oAuthToken)
+        
+        return oAuthToken
     }
     
     @MainActor
@@ -78,9 +82,9 @@ class AuthService: NSObject {
             method: .post,
             baseUrl: Env.serverBaseUrl,
             path: "/auth/signupBySns",
-            params: ["socialLoginType": provider.code, "nickname": nickname],
-            headers: ["Authorization": "Bearer \(idToken)"]
-        )
+            params: ["socialLoginType": provider.code, "nickname": nickname]
+        ).withAuthorization(idToken)
+        
         try await network.request(endpoint)
     }
     
@@ -227,6 +231,11 @@ private extension AuthService {
         let hashedData = SHA256.hash(data: inputData)
         let hashString = hashedData.compactMap({ String(format: "%02x", $0) }).joined()
         return hashString
+    }
+    
+    func saveToken(_ oAuthToken: OAuthToken) {
+        Keychain.create(key: Env.Keychain.accessTokenKey, token: oAuthToken.accessToken)
+        Keychain.create(key: Env.Keychain.refreshTokenKey, token: oAuthToken.refreshToken)
     }
     
 }

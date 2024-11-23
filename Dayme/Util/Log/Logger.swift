@@ -22,11 +22,15 @@ enum Logger {
     }
     
     static func error(_ message: String) {
-        debug { message }
+        error { message }
+    }
+    
+    static func error(_ error: Error) {
+        self.error { error.localizedDescription }
     }
     
     static func network(_ message: String) {
-        debug { message }
+        network { message }
     }
     
     static func debug(_ message: () -> String) {

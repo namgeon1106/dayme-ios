@@ -9,7 +9,7 @@ import Foundation
 import Alamofire
 
 enum HttpMethod: String {
-    case get, delete, post
+    case get, delete, post, put, patch
     
     var code: String { rawValue.uppercased() }
 }

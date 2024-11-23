@@ -33,5 +33,4 @@ enum OAuthProvider: String {
 struct OAuthToken {
     let accessToken: String
     let refreshToken: String
-    let expiration: Date
 }

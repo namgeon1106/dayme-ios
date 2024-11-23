@@ -27,4 +27,15 @@ struct Endpoint {
         self.params = params
         self.headers = headers
     }
+    
+    func withAuthorization(_ token: String) -> Endpoint {
+        let authorization = ["Authorization": "Bearer \(token)"]
+        return Endpoint(
+            method: method,
+            baseUrl: baseUrl,
+            path: path,
+            params: params,
+            headers: headers.orEmpty.merging(authorization) { $1 }
+        )
+    }
 }
