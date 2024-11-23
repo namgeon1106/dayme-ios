@@ -178,6 +178,7 @@ private extension LoginVC {
         do {
             try await authService.login(email: email, password: password)
             Loader.dismiss()
+            coordinator?.trigger(with: .loginFinished)
         } catch {
             Loader.dismiss()
             Logger.error { "로그인 에러: \(error)" }
@@ -189,10 +190,14 @@ private extension LoginVC {
     func loginWithSocial(_ provider: OAuthProvider) async {
         do {
             let idToken = try await authService.getSocialIdToken(provider, presenter: self)
+            Loader.show(in: view)
             
             do {
                 try await authService.loginWithSocial(provider, idToken: idToken)
+                Loader.dismiss()
+                coordinator?.trigger(with: .loginFinished)
             } catch let error as ServerError where error.errorCode == .memberIdentityNotFound {
+                Loader.dismiss()
                 await signupWithSocial(provider, idToken: idToken)
             }
         } catch AuthError.canceled {

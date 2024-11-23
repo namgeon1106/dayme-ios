@@ -9,7 +9,13 @@ import UIKit
 
 class VC: UIViewController {
     
+    weak var coordinator: Coordinator?
+    
     let flexView = UIView()
+    
+    deinit {
+        Logger.debug { "\(type(of: self)) \(#function)" }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -12,14 +12,21 @@ import KakaoSDKAuth
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
+    var appCoordinator: AppCoordinator?
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        guard let windowScene = scene as? UIWindowScene else { return }
+        let nav = UINavigationController()
+        nav.setNavigationBarHidden(true, animated: false)
         
-        window = UIWindow(windowScene: windowScene)
-        window?.rootViewController = LoginVC()
-        window?.tintColor = .accent
-        window?.makeKeyAndVisible()
+        appCoordinator = AppCoordinator(nav: nav)
+        appCoordinator?.start()
+        
+        if let windowScene = scene as? UIWindowScene {
+            window = UIWindow(windowScene: windowScene)
+            window?.rootViewController = appCoordinator?.nav
+            window?.tintColor = .accent
+            window?.makeKeyAndVisible()
+        }
     }
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
