@@ -37,16 +37,21 @@ final class SocialLoginButton: UIButton {
         super.init(frame: .zero)
         
         var attrString = AttributedString(provider.title)
-        attrString.font = .systemFont(ofSize: 16, weight: .bold)
+        attrString.font = .pretendard(.bold, 16)
         
-        var config = UIButton.Configuration.plain()
-        config.background.strokeWidth = 1
-        config.background.strokeColor = .colorBorder
+        var config = UIButton.Configuration.filled()
+        config.baseBackgroundColor = provider.backgroundColor
+        config.baseForegroundColor = provider.foregroundColor
         config.background.cornerRadius = 12
-        config.baseForegroundColor = .colorContentPrimary
         config.attributedTitle = attrString
         config.image = provider.image
         config.imagePadding = 4
+        
+        if provider.hasBorder {
+            config.background.strokeWidth = 1
+            config.background.strokeColor = .colorBorder
+        }
+        
         configuration = config
     }
     

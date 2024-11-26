@@ -19,7 +19,7 @@
       }
     },
     "login.email_text_field" : {
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -70,7 +70,7 @@
       }
     },
     "login.login_button" : {
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -87,7 +87,7 @@
       }
     },
     "login.login_separator" : {
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -104,7 +104,7 @@
       }
     },
     "login.password_text_field" : {
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -116,6 +116,17 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "비밀번호을 입력해주세요"
+          }
+        }
+      }
+    },
+    "login.subTitle" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "더 나은 내일의 나를 위한 시작,\n지금 함께해보세요."
           }
         }
       }

@@ -6,10 +6,20 @@
 //
 
 import Foundation
-import UIKit.UIImage
+import class UIKit.UIImage
+import class UIKit.UIColor
+
+struct OAuthToken {
+    let accessToken: String
+    let refreshToken: String
+}
 
 enum OAuthProvider: String {
     case google, kakao, apple
+    
+    var code: String {
+        rawValue.uppercased()
+    }
     
     var image: UIImage {
         switch self {
@@ -27,10 +37,24 @@ enum OAuthProvider: String {
         }
     }
     
-    var code: String { rawValue.uppercased() }
-}
-
-struct OAuthToken {
-    let accessToken: String
-    let refreshToken: String
+    var foregroundColor: UIColor {
+        switch self {
+        case .google: .black
+        case .kakao: .black
+        case .apple: .white
+        }
+    }
+    
+    var backgroundColor: UIColor {
+        switch self {
+        case .google: .white
+        case .kakao: .colorSocialKakao
+        case .apple: .black
+        }
+    }
+    
+    var hasBorder: Bool {
+        self == .google
+    }
+    
 }

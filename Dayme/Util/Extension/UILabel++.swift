@@ -38,4 +38,43 @@ extension UILabel {
         return self
     }
     
+    @discardableResult
+    func numberOfLines(_ length: Int) -> Self {
+        self.numberOfLines = length
+        return self
+    }
+    
+    @discardableResult
+    func lineHeight(_ height: CGFloat) -> Self {
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.maximumLineHeight = height
+        paragraphStyle.minimumLineHeight = height
+        paragraphStyle.alignment = textAlignment
+        
+        var attributes: [NSAttributedString.Key: Any] = [
+            .paragraphStyle: paragraphStyle,
+            .baselineOffset: (height - font.lineHeight) / 2
+        ]
+        
+        if let font {
+            attributes[.font] = font
+        }
+        
+        if let textColor {
+            attributes[.foregroundColor] = textColor
+        }
+        
+        attributedText = NSAttributedString(
+            string: text.orEmpty,
+            attributes: attributes
+        )
+        
+        return self
+    }
+    
+    @discardableResult
+    func lineHeight(multiple: CGFloat) -> Self {
+        lineHeight(font.lineHeight * multiple)
+    }
+    
 }
