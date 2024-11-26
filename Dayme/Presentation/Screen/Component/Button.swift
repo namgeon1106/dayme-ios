@@ -16,7 +16,7 @@ final class FilledButton: UIButton {
         attrString.font = .systemFont(ofSize: 16, weight: .bold)
         
         var config = UIButton.Configuration.filled()
-        config.baseBackgroundColor = .accent
+        config.baseBackgroundColor = .colorMain1
         config.background.cornerRadius = 12
         config.baseForegroundColor = .white
         config.attributedTitle = attrString

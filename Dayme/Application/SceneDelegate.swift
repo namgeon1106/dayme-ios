@@ -24,7 +24,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let windowScene = scene as? UIWindowScene {
             window = UIWindow(windowScene: windowScene)
             window?.rootViewController = appCoordinator?.nav
-            window?.tintColor = .accent
+            window?.tintColor = .colorMain1
             window?.makeKeyAndVisible()
         }
     }

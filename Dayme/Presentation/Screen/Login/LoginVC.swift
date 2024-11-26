@@ -42,7 +42,7 @@ final class LoginVC: VC {
         view.backgroundColor(.colorBackground)
         scrollView.keyboardDismissMode = .onDrag
         
-        logo.textColor(.accent)
+        logo.textColor(.colorMain1)
             .font(.systemFont(ofSize: 32, weight: .black))
             .textAlignment(.center)
         separatorLbl.textColor(.colorContentSecondary)

@@ -21,7 +21,7 @@ final class ReminderService {
         }
         
         let existCalendar = getCalendar(for: calendarName)
-        let calendar = try existCalendar ?? createCalendar(calendarName, color: .accent)
+        let calendar = try existCalendar ?? createCalendar(calendarName, color: .colorMain1)
         let reminder = EKReminder(eventStore: eventStore)
         reminder.calendar = calendar
         reminder.title = item.title
