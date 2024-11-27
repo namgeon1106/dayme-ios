@@ -11,5 +11,6 @@ enum FlowEvent {
     case loginFinished
     case logout
     case signupNeeded
+    case signupCanceled
     case signupFinished
 }

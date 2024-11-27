@@ -7,7 +7,7 @@
 
 import UIKit
 
-class Coordinator {
+class Coordinator: NSObject, UIGestureRecognizerDelegate {
     
     weak var parent: Coordinator?
     
@@ -43,6 +43,10 @@ extension Coordinator {
         transition.type = .fade
         transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
         nav.view.layer.add(transition, forKey: kCATransition)
+    }
+    
+    func popViewController(animated: Bool) {
+        nav.popViewController(animated: animated)
     }
     
 }

@@ -1,5 +1,5 @@
 {
-  "originHash" : "52690dac8a069bad5a3a440dc40a777a3b9a61b720fc35428a8454cd1b7b0097",
+  "originHash" : "9f88a52c77be5bd9cb8c7539c83888037026c7538329a164e21392e42c34aad6",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -188,6 +188,15 @@
       "state" : {
         "revision" : "ebc7251dd5b37f627c93698e4374084d98409633",
         "version" : "1.28.2"
+      }
+    },
+    {
+      "identity" : "then",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/devxoul/Then.git",
+      "state" : {
+        "revision" : "d41ef523faef0f911369f79c0b96815d9dbb6d7a",
+        "version" : "3.0.0"
       }
     }
   ],

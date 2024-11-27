@@ -1,5 +1,5 @@
 //
-//  LoginCoordinator.swift
+//  OnboardingCoordinator.swift
 //  Dayme
 //
 //  Created by 정동천 on 11/23/24.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class LoginCoordinator: Coordinator {
+final class OnboardingCoordinator: Coordinator {
     
     override func start(animated: Bool) {
         let loginVC = LoginVC()
@@ -25,9 +25,28 @@ final class LoginCoordinator: Coordinator {
         case .loginFinished, .signupFinished:
             parent?.trigger(with: event)
             
+        case .signupNeeded:
+            pushTermsScreen()
+            
+        case .signupCanceled:
+            popViewController(animated: true)
+            
         default:
             break
         }
+    }
+    
+}
+
+// MARK: - Navigate
+
+private extension OnboardingCoordinator {
+    
+    func pushTermsScreen() {
+        let termsVC = TermsVC()
+        termsVC.coordinator = self
+        nav.interactivePopGestureRecognizer?.delegate = self
+        nav.pushViewController(termsVC, animated: true)
     }
     
 }

@@ -15,7 +15,7 @@ final class AppCoordinator: Coordinator {
         if isAuthorized {
             startMainFlow(animated: false)
         } else {
-            startLoginFlow(animated: false)
+            startOnboardingFlow(animated: false)
         }
     }
     
@@ -27,7 +27,7 @@ final class AppCoordinator: Coordinator {
             
         case .logout:
             children.removeAll()
-            startLoginFlow(animated: true)
+            startOnboardingFlow(animated: true)
             
         default:
             break
@@ -43,8 +43,8 @@ private extension AppCoordinator {
         startFlow(child, animated: animated)
     }
     
-    func startLoginFlow(animated: Bool) {
-        let child = LoginCoordinator(nav: nav)
+    func startOnboardingFlow(animated: Bool) {
+        let child = OnboardingCoordinator(nav: nav)
         startFlow(child, animated: animated)
     }
     

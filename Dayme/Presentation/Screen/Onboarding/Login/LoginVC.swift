@@ -18,7 +18,7 @@ final class LoginVC: VC {
     // MARK: UI properties
     
     private let logo = UILabel("DAYME")
-    private let subTitleLabel = UILabel(L10n.Login.subTitle)
+    private let subTitleLbl = UILabel(L10n.Login.subTitle)
     
     private let kakaoBtn = SocialLoginButton(.kakao)
     private let googleBtn = SocialLoginButton(.google)
@@ -34,7 +34,7 @@ final class LoginVC: VC {
             .font(.montserrat(.black, 32))
             .textAlignment(.center)
         
-        subTitleLabel.textColor(.colorDarkVoid)
+        subTitleLbl.textColor(.colorDarkVoid)
             .font(.montserrat(.black, 24))
             .textAlignment(.center)
             .numberOfLines(0)
@@ -59,7 +59,7 @@ final class LoginVC: VC {
                 .grow(1)
                 .define { flex in
                     flex.addItem(logo)
-                    flex.addItem(subTitleLabel).marginTop(20)
+                    flex.addItem(subTitleLbl).marginTop(20)
                     flex.addItem().height(80)
                 }
             
@@ -81,14 +81,6 @@ final class LoginVC: VC {
         Haptic.noti(.warning)
         
         Alert(title: title, message: message)
-            .onAction(title: "확인")
-            .show(on: self)
-    }
-    
-    func showAsyncAlert(title: String, message: String) async {
-        Haptic.noti(.warning)
-        
-        await Alert(title: title, message: message)
             .onAction(title: "확인")
             .show(on: self)
     }
@@ -124,6 +116,8 @@ private extension LoginVC {
         }
     }
     
-    func signupWithSocial(_ provider: OAuthProvider, idToken: String) async {}
+    func signupWithSocial(_ provider: OAuthProvider, idToken: String) async {
+        coordinator?.trigger(with: .signupNeeded)
+    }
     
 }

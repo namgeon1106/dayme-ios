@@ -13,7 +13,7 @@ final class FilledButton: UIButton {
         super.init(frame: .zero)
         
         var attrString = AttributedString(title)
-        attrString.font = .systemFont(ofSize: 16, weight: .bold)
+        attrString.font = .pretendard(.bold, 18)
         
         var config = UIButton.Configuration.filled()
         config.baseBackgroundColor = .colorMain1
@@ -49,7 +49,7 @@ final class SocialLoginButton: UIButton {
         
         if provider.hasBorder {
             config.background.strokeWidth = 1
-            config.background.strokeColor = .colorBorder
+            config.background.strokeColor = .colorGrey20
         }
         
         configuration = config

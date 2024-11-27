@@ -11,6 +11,7 @@
 		9A1E35422CD3DEEA00753F8A /* PinLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 9A1E35412CD3DEEA00753F8A /* PinLayout */; };
 		9A1E35452CD3DF0200753F8A /* FlexLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 9A1E35442CD3DF0200753F8A /* FlexLayout */; };
 		9A32AF502CDBA2E000F9CBF1 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 9A32AF4F2CDBA2E000F9CBF1 /* Alamofire */; };
+		9A33A2832CF6CE8600D40F2D /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 9A33A2822CF6CE8600D40F2D /* Then */; };
 		9A7BFB412CD5247F00E48C31 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 9A7BFB402CD5247F00E48C31 /* GoogleSignIn */; };
 		9A7BFB4C2CD5EDA100E48C31 /* Dev.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 9A7BFB4B2CD5EDA100E48C31 /* Dev.xcconfig */; };
 		9A7BFB4E2CD5EDBE00E48C31 /* Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 9A7BFB4D2CD5EDBE00E48C31 /* Release.xcconfig */; };
@@ -52,6 +53,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9A1E35422CD3DEEA00753F8A /* PinLayout in Frameworks */,
+				9A33A2832CF6CE8600D40F2D /* Then in Frameworks */,
 				9A1E35452CD3DF0200753F8A /* FlexLayout in Frameworks */,
 				9A7BFB412CD5247F00E48C31 /* GoogleSignIn in Frameworks */,
 				9A32AF502CDBA2E000F9CBF1 /* Alamofire in Frameworks */,
@@ -111,6 +113,7 @@
 				9A32AF4F2CDBA2E000F9CBF1 /* Alamofire */,
 				9AB0EC772CF06B7000BD01E1 /* FirebaseAuth */,
 				9A1069E92CF0BE9100221178 /* JGProgressHUD */,
+				9A33A2822CF6CE8600D40F2D /* Then */,
 			);
 			productName = Dayme;
 			productReference = 9A1E35222CD3CA4700753F8A /* Dayme.app */;
@@ -149,6 +152,7 @@
 				9A32AF4E2CDBA2E000F9CBF1 /* XCRemoteSwiftPackageReference "Alamofire" */,
 				9AB0EC742CF06B7000BD01E1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				9A1069E82CF0BE9100221178 /* XCRemoteSwiftPackageReference "JGProgressHUD" */,
+				9A33A2812CF6CE8600D40F2D /* XCRemoteSwiftPackageReference "Then" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9A1E35232CD3CA4700753F8A /* Products */;
@@ -438,6 +442,14 @@
 				minimumVersion = 5.10.1;
 			};
 		};
+		9A33A2812CF6CE8600D40F2D /* XCRemoteSwiftPackageReference "Then" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/devxoul/Then.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
 		9A7BFB3F2CD5247F00E48C31 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/google/GoogleSignIn-iOS.git";
@@ -484,6 +496,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 9A32AF4E2CDBA2E000F9CBF1 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
+		};
+		9A33A2822CF6CE8600D40F2D /* Then */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9A33A2812CF6CE8600D40F2D /* XCRemoteSwiftPackageReference "Then" */;
+			productName = Then;
 		};
 		9A7BFB402CD5247F00E48C31 /* GoogleSignIn */ = {
 			isa = XCSwiftPackageProductDependency;

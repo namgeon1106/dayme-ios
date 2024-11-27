@@ -23,4 +23,10 @@ extension UIButton {
         return self
     }
     
+    @discardableResult
+    func image(_ image: UIImage?, for control: UIControl.State) -> Self {
+        setImage(image, for: control)
+        return self
+    }
+    
 }
