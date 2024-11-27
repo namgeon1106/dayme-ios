@@ -26,18 +26,17 @@ final class TermsVC: VC {
     }
     
     private let subTitleLbl = UILabel(L10n.Terms.subTitle).then {
-        $0.textColor(.colorDarkVoid)
-            .font(.montserrat(.black, 24))
+        $0.textColor(.colorDark100)
             .textAlignment(.left)
             .numberOfLines(0)
-            .lineHeight(multiple: 1.2)
+            .typo(.title24B)
     }
     
     private let agreeAllBtn = UIButton().then {
         var attrString = AttributedString(L10n.Terms.agreeAll)
         attrString.font = .pretendard(.bold, 18)
         var config = UIButton.Configuration.plain()
-        config.baseForegroundColor = .colorDarkVoid
+        config.baseForegroundColor = .colorDark100
         config.attributedTitle = attrString
         config.image = .icCheckOff
         config.imagePadding = 6
@@ -92,6 +91,14 @@ final class TermsVC: VC {
         
         startBtn.onAction { [weak self] in
             self?.coordinator?.trigger(with: .nicknameNeeded)
+        }
+        
+        serviceShowBtn.onAction { [weak self] in
+            self?.coordinator?.trigger(with: .termsNeeded(.termsOfService))
+        }
+        
+        privacyShowBtn.onAction { [weak self] in
+            self?.coordinator?.trigger(with: .termsNeeded(.privacyPolicy))
         }
     }
     

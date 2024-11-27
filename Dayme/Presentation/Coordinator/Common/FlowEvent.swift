@@ -10,10 +10,14 @@ import Foundation
 enum FlowEvent {
     // MARK: Onboarding
     case loginFinished
-    case logout
     case signupNeeded
     case signupCanceled
+    case termsNeeded(Terms)
+    case termsCanceled
     case nicknameNeeded
     case nicknameCanceled
     case signupFinished
+    
+    // MARK: Setting
+    case logout
 }

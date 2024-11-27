@@ -29,7 +29,7 @@ final class NicknameVC: VC {
     }
     
     private let subTitleLbl = UILabel(L10n.Nickname.subTitle).then {
-        $0.textColor(.colorDarkVoid)
+        $0.textColor(.colorDark100)
             .font(.montserrat(.black, 24))
             .textAlignment(.left)
             .numberOfLines(0)

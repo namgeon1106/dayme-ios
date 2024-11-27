@@ -17,6 +17,7 @@ enum Typo {
     case body16R
     case body14B
     case body14M
+    case body14R
     case small12R
 }
 
@@ -32,12 +33,13 @@ extension Typo {
         case .body16R: .pretendard(.regular, 16)
         case .body14B: .pretendard(.bold, 14)
         case .body14M: .pretendard(.medium, 14)
+        case .body14R: .pretendard(.regular, 14)
         case .small12R: .pretendard(.regular, 12)
         }
     }
     
     var lineHeight: CGFloat {
-        switch self {
+        let original = switch self {
         case .title24B: 1.5
         case .title20B: 1.2
         case .body20M: 1.5
@@ -47,7 +49,9 @@ extension Typo {
         case .body16R: 1.5
         case .body14B: 1.5
         case .body14M: 1.4
+        case .body14R: 1.5
         case .small12R: 1.5
         }
+        return original / 1.2
     }
 }

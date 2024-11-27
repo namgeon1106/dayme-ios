@@ -34,7 +34,7 @@ final class LoginVC: VC {
             .font(.montserrat(.black, 32))
             .textAlignment(.center)
         
-        subTitleLbl.textColor(.colorDarkVoid)
+        subTitleLbl.textColor(.colorDark100)
             .font(.montserrat(.black, 24))
             .textAlignment(.center)
             .numberOfLines(0)
