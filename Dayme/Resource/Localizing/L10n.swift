@@ -10,6 +10,7 @@ import Foundation
 enum L10n {
     enum Login {}
     enum Terms {}
+    enum Nickname {}
 }
 
 extension L10n.Login {
@@ -34,4 +35,15 @@ extension L10n.Terms {
                                        defaultValue: "[필수] 서비스 이용약관 동의")
     static let privacyPolicy = String(localized: "terms.privacyPolicy",
                                       defaultValue: "[필수] 개인정보 처리방침 동의")
+}
+
+extension L10n.Nickname {
+    static let subTitle = String(localized: "nickname.subTitle",
+                                 defaultValue: "데이미에서 사용할\n닉네임을 입력해주세요.")
+    static let done = String(localized: "nickname.done",
+                              defaultValue: "완료")
+    static let caption = String(localized: "nickname.caption",
+                              defaultValue: "닉네임")
+    static let placeholder = String(localized: "nickname.placeholder",
+                              defaultValue: "닉네임을 입력해주세요")
 }

@@ -77,4 +77,10 @@ extension UILabel {
         lineHeight(font.lineHeight * multiple)
     }
     
+    @discardableResult
+    func typo(_ typo: Typo) -> Self {
+        font(typo.font)
+            .lineHeight(multiple: typo.lineHeight)
+    }
+    
 }

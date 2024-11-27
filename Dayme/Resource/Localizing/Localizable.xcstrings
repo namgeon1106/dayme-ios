@@ -131,6 +131,50 @@
         }
       }
     },
+    "nickname.caption" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "닉네임"
+          }
+        }
+      }
+    },
+    "nickname.done" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "완료"
+          }
+        }
+      }
+    },
+    "nickname.placeholder" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "닉네임을 입력해주세요"
+          }
+        }
+      }
+    },
+    "nickname.subTitle" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "데이미에서 사용할\n닉네임을 입력해주세요."
+          }
+        }
+      }
+    },
     "terms.agreeAll" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {

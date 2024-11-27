@@ -28,7 +28,10 @@ final class OnboardingCoordinator: Coordinator {
         case .signupNeeded:
             pushTermsScreen()
             
-        case .signupCanceled:
+        case .nicknameNeeded:
+            pushNicknameScreen()
+            
+        case .signupCanceled, .nicknameCanceled:
             popViewController(animated: true)
             
         default:
@@ -47,6 +50,13 @@ private extension OnboardingCoordinator {
         termsVC.coordinator = self
         nav.interactivePopGestureRecognizer?.delegate = self
         nav.pushViewController(termsVC, animated: true)
+    }
+    
+    func pushNicknameScreen() {
+        let nicknameVC = NicknameVC()
+        nicknameVC.coordinator = self
+        nav.interactivePopGestureRecognizer?.delegate = self
+        nav.pushViewController(nicknameVC, animated: true)
     }
     
 }

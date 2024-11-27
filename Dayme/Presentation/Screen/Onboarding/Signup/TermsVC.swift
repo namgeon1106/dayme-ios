@@ -89,16 +89,20 @@ final class TermsVC: VC {
         backBtn.onAction { [weak self] in
             self?.coordinator?.trigger(with: .signupCanceled)
         }
+        
+        startBtn.onAction { [weak self] in
+            self?.coordinator?.trigger(with: .nicknameNeeded)
+        }
     }
     
     override func setupFlex() {
         view.addSubview(flexView)
         
-        flexView.flex.define { flex in
+        flexView.flex.padding(0, 8).define { flex in
             flex.addItem().marginTop(19).alignItems(.start).define { flex in
                 flex.addItem(backBtn).width(44).height(44)
                 flex.addItem(logo).marginTop(27).marginLeft(16)
-                flex.addItem(subTitleLbl).marginTop(40).marginLeft(16)
+                flex.addItem(subTitleLbl).marginTop(32).marginLeft(16)
             }
             
             flex.addItem().grow(1)
