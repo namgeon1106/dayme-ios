@@ -30,10 +30,9 @@ final class NicknameVC: VC {
     
     private let subTitleLbl = UILabel(L10n.Nickname.subTitle).then {
         $0.textColor(.colorDark100)
-            .font(.montserrat(.black, 24))
             .textAlignment(.left)
             .numberOfLines(0)
-            .lineHeight(multiple: 1.2)
+            .typo(.title24B)
     }
     
     private let captionLbl = UILabel(L10n.Nickname.caption).then {

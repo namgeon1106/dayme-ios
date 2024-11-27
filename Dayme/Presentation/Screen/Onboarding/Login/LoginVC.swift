@@ -35,10 +35,9 @@ final class LoginVC: VC {
             .textAlignment(.center)
         
         subTitleLbl.textColor(.colorDark100)
-            .font(.montserrat(.black, 24))
             .textAlignment(.center)
             .numberOfLines(0)
-            .lineHeight(multiple: 1.2)
+            .typo(.title24B)
     }
     
     override func setupAction() {

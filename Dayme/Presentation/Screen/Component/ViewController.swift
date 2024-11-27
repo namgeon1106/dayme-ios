@@ -6,12 +6,15 @@
 //
 
 import UIKit
+import Combine
 
 class VC: UIViewController {
     
     weak var coordinator: Coordinator?
     
     let flexView = UIView()
+    
+    var cancellables = Set<AnyCancellable>()
     
     deinit {
         Logger.debug { "\(type(of: self)) \(#function)" }
@@ -23,6 +26,7 @@ class VC: UIViewController {
         setup()
         setupAction()
         setupFlex()
+        bind()
     }
     
     override func viewDidLayoutSubviews() {
@@ -37,6 +41,7 @@ class VC: UIViewController {
     func setupAction() {}
     func setupFlex() {}
     func layoutFlex() {}
+    func bind() {}
     
     // MARK: - Keyboard Obeserver
     

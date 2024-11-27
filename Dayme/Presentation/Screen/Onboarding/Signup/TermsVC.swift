@@ -12,7 +12,15 @@ import Then
 
 #Preview { TermsVC() }
 
+final class TermsVM: ObservableObject {
+    @Published var agreeAll: Bool = false
+    @Published var agreeService: Bool = false
+    @Published var agreePrivacy: Bool = false
+}
+
 final class TermsVC: VC {
+    
+    private let vm = TermsVM()
     
     // MARK: UI properties
     
@@ -44,7 +52,7 @@ final class TermsVC: VC {
         $0.configuration = config
     }
     
-    private let serviceAgreeBtn = UIButton().then {
+    private let agreeServiceBtn = UIButton().then {
         var attrString = AttributedString(L10n.Terms.termsOfService)
         attrString.font = .pretendard(.medium, 16)
         var config = UIButton.Configuration.plain()
@@ -56,7 +64,7 @@ final class TermsVC: VC {
         $0.configuration = config
     }
     
-    private let privacyAgreeBtn = UIButton().then {
+    private let agreePrivacyBtn = UIButton().then {
         var attrString = AttributedString(L10n.Terms.privacyPolicy)
         attrString.font = .pretendard(.medium, 16)
         var config = UIButton.Configuration.plain()
@@ -100,6 +108,25 @@ final class TermsVC: VC {
         privacyShowBtn.onAction { [weak self] in
             self?.coordinator?.trigger(with: .termsNeeded(.privacyPolicy))
         }
+        
+        agreeAllBtn.onAction { [weak self] in
+            guard let self else { return }
+            vm.agreeAll.toggle()
+            vm.agreePrivacy = vm.agreeAll
+            vm.agreeService = vm.agreeAll
+        }
+        
+        agreePrivacyBtn.onAction { [weak self] in
+            guard let self else { return }
+            vm.agreePrivacy.toggle()
+            vm.agreeAll = vm.agreePrivacy && vm.agreeService
+        }
+        
+        agreeServiceBtn.onAction { [weak self] in
+            guard let self else { return }
+            vm.agreeService.toggle()
+            vm.agreeAll = vm.agreePrivacy && vm.agreeService
+        }
     }
     
     override func setupFlex() {
@@ -120,13 +147,13 @@ final class TermsVC: VC {
             }
             
             flex.addItem().direction(.row).height(36).padding(0, 24, 0, 5).define { flex in
-                flex.addItem(serviceAgreeBtn)
+                flex.addItem(agreeServiceBtn)
                 flex.addItem().grow(1)
                 flex.addItem(serviceShowBtn).width(44)
             }
             
             flex.addItem().direction(.row).height(36).padding(0, 24, 0, 5).define { flex in
-                flex.addItem(privacyAgreeBtn)
+                flex.addItem(agreePrivacyBtn)
                 flex.addItem().grow(1)
                 flex.addItem(privacyShowBtn).width(44)
             }
@@ -140,6 +167,27 @@ final class TermsVC: VC {
     override func layoutFlex() {
         flexView.pin.all(view.safeAreaInsets)
         flexView.flex.layout()
+    }
+    
+    override func bind() {
+        vm.$agreeAll.receive(on: RunLoop.main)
+            .sink { [weak self] (agree: Bool) in
+                let image: UIImage = agree ? .icCheckOn : .icCheckOff
+                self?.agreeAllBtn.setImage(image, for: .normal)
+                self?.startBtn.isEnabled = agree
+            }.store(in: &cancellables)
+        
+        vm.$agreeService.receive(on: RunLoop.main)
+            .sink { [weak self] (agree: Bool) in
+                let image: UIImage = agree ? .icCheckOn : .icCheckOff
+                self?.agreeServiceBtn.setImage(image, for: .normal)
+            }.store(in: &cancellables)
+        
+        vm.$agreePrivacy.receive(on: RunLoop.main)
+            .sink { [weak self] (agree: Bool) in
+                let image: UIImage = agree ? .icCheckOn : .icCheckOff
+                self?.agreePrivacyBtn.setImage(image, for: .normal)
+            }.store(in: &cancellables)
     }
     
 }
