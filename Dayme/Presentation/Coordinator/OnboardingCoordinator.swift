@@ -9,6 +9,8 @@ import UIKit
 
 final class OnboardingCoordinator: Coordinator {
     
+    private var oAuthSignupInfo: OAuthSignupInfo?
+    
     override func start(animated: Bool) {
         let loginVC = LoginVC()
         loginVC.coordinator = self
@@ -22,10 +24,11 @@ final class OnboardingCoordinator: Coordinator {
     
     override func trigger(with event: FlowEvent) {
         switch event {
-        case .loginFinished, .signupFinished:
+        case .loginFinished:
             parent?.trigger(with: event)
             
-        case .signupNeeded:
+        case .signupNeeded(let info):
+            self.oAuthSignupInfo = info
             pushTermsScreen()
             
         case .termsNeeded(let terms):
@@ -33,6 +36,9 @@ final class OnboardingCoordinator: Coordinator {
             
         case .nicknameNeeded:
             pushNicknameScreen()
+            
+        case .signupFinished:
+            popToRootViewController(animated: true)
             
         case .signupCanceled, .termsCanceled, .nicknameCanceled:
             popViewController(animated: true)
@@ -63,7 +69,12 @@ private extension OnboardingCoordinator {
     }
     
     func pushNicknameScreen() {
-        let nicknameVC = NicknameVC()
+        guard let oAuthSignupInfo else {
+            Logger.error { "empty OAuthSignupInfo" }
+            return
+        }
+        
+        let nicknameVC = NicknameVC(authInfo: oAuthSignupInfo)
         nicknameVC.coordinator = self
         nav.interactivePopGestureRecognizer?.delegate = self
         nav.pushViewController(nicknameVC, animated: true)

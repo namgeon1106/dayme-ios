@@ -6,13 +6,24 @@
 //
 
 import UIKit
+import Combine
 import FlexLayout
 import PinLayout
 import Then
 
 #Preview { NicknameVC() }
 
+final class NicknameVM: ObservableObject {
+    @Published var nickname: String = ""
+}
+
 final class NicknameVC: VC {
+    
+    private let authInfo: OAuthSignupInfo
+    private let vm = NicknameVM()
+    private let authService = AuthService()
+    
+    private let maxLength: Int = 10
     
     // MARK: UI properties
     
@@ -63,6 +74,15 @@ final class NicknameVC: VC {
     
     // MARK: Lifecycle
     
+    init(authInfo: OAuthSignupInfo) {
+        self.authInfo = authInfo
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -73,6 +93,7 @@ final class NicknameVC: VC {
     
     override func setup() {
         view.backgroundColor(.colorBackground)
+        doneBtn.isEnabled = false
         nicknameTF.delegate = self
         addKeyboardObeserver()
     }
@@ -80,6 +101,15 @@ final class NicknameVC: VC {
     override func setupAction() {
         backBtn.onAction { [weak self] in
             self?.coordinator?.trigger(with: .nicknameCanceled)
+        }
+        
+        nicknameTF.onEditingChanged { [weak self] in
+            guard let self else { return }
+            vm.nickname = nicknameTF.text.orEmpty
+        }
+        
+        doneBtn.onAction { [weak self] in
+            await self?.signupWithSocial()
         }
     }
     
@@ -124,6 +154,17 @@ final class NicknameVC: VC {
         scrollView.contentSize = contentView.bounds.size
     }
     
+    override func bind() {
+        vm.$nickname.receive(on: RunLoop.main)
+            .sink { [weak self] nickname in
+                guard let self else { return }
+                doneBtn.isEnabled = !nickname.isEmpty
+                currentLengthLbl.text = "\(nickname.count) / "
+                currentLengthLbl.flex.markDirty()
+                contentView.flex.layout()
+            }.store(in: &cancellables)
+    }
+    
     override func keyboardWillShow(_ height: CGFloat) {
         scrollView.contentInset.bottom = height
     }
@@ -134,8 +175,64 @@ final class NicknameVC: VC {
     
 }
 
+// MARK: - Auth
+
+private extension NicknameVC {
+    
+    func signupWithSocial() async {
+        do {
+            Loader.show(in: view)
+            let nickname = nicknameTF.text.orEmpty
+            let newInfo = authInfo.copyWith(nickname: nickname)
+            // 회원가입 시도
+            try await authService.signupWithSocial(newInfo)
+            
+            do {
+                // 로그인 시도
+                try await authService.loginWithSocial(
+                    newInfo.provider,
+                    idToken: newInfo.token
+                )
+                
+                Loader.dismiss()
+                
+                coordinator?.trigger(with: .loginFinished)
+            } catch {
+                Loader.dismiss()
+                Logger.error { "로그인 에러: \(error)" }
+                
+                coordinator?.trigger(with: .signupFinished)
+            }
+        } catch {
+            Loader.dismiss()
+            Logger.error { "회원가입 에러: \(error)" }
+            
+            showAlert(title: "🚨 회원가입 에러", message: error.localizedDescription)
+        }
+    }
+    
+}
+
 // MARK: - UITextFieldDelegate
 
 extension NicknameVC: UITextFieldDelegate {
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        // 공백이 포함된 입력 거부
+        if string.contains(" ") {
+            return false
+        }
+        
+        let currentText = textField.text.orEmpty
+        
+        guard let stringRange = Range(range, in: currentText) else {
+            return false
+        }
+        
+        let updatedText = currentText
+            .replacingCharacters(in: stringRange, with: string)
+        
+        return updatedText.count <= maxLength
+    }
     
 }

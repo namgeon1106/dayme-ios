@@ -49,4 +49,8 @@ extension Coordinator {
         nav.popViewController(animated: animated)
     }
     
+    func popToRootViewController(animated: Bool) {
+        nav.popToRootViewController(animated: animated)
+    }
+    
 }

@@ -76,14 +76,6 @@ final class LoginVC: VC {
         flexView.flex.layout()
     }
     
-    func showAlert(title: String, message: String) {
-        Haptic.noti(.warning)
-        
-        Alert(title: title, message: message)
-            .onAction(title: "확인")
-            .show(on: self)
-    }
-    
 }
 
 // MARK: - Auth
@@ -116,7 +108,8 @@ private extension LoginVC {
     }
     
     func signupWithSocial(_ provider: OAuthProvider, idToken: String) async {
-        coordinator?.trigger(with: .signupNeeded)
+        let info = OAuthSignupInfo(provider: provider, token: idToken)
+        coordinator?.trigger(with: .signupNeeded(info))
     }
     
 }
