@@ -35,40 +35,48 @@ convert_bool() {
     fi
 }
 
-cat <<EOF > "/Volumes/workspace/repository/Dayme/Resource/GoogleService-Info.plist"
+# GoogleService-Info.plist 생성 경로
+PLIST_FILE_PATH="/Volumes/workspace/repository/Dayme/Resource/GoogleService-Info.plist"
+
+# GoogleService-Info.plist 파일 생성
+cat <<EOF > "$PLIST_FILE_PATH"
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
     <key>CLIENT_ID</key>
-    <string>$(CLIENT_ID)</string>
+    <string>${CLIENT_ID}</string>
     <key>REVERSED_CLIENT_ID</key>
-    <string>$(REVERSED_CLIENT_ID)</string>
+    <string>${REVERSED_CLIENT_ID}</string>
     <key>API_KEY</key>
-    <string>$(API_KEY)</string>
+    <string>${API_KEY}</string>
     <key>GCM_SENDER_ID</key>
-    <string>$(GCM_SENDER_ID)</string>
+    <string>${GCM_SENDER_ID}</string>
     <key>PLIST_VERSION</key>
-    <string>$(PLIST_VERSION)</string>
+    <string>${PLIST_VERSION}</string>
     <key>BUNDLE_ID</key>
-    <string>$(BUNDLE_ID)</string>
+    <string>${BUNDLE_ID}</string>
     <key>PROJECT_ID</key>
-    <string>$(PROJECT_ID)</string>
+    <string>${PROJECT_ID}</string>
     <key>STORAGE_BUCKET</key>
-    <string>$(STORAGE_BUCKET)</string>
+    <string>${STORAGE_BUCKET}</string>
     <key>IS_ADS_ENABLED</key>
-    `convert_bool ${IS_ADS_ENABLED}`
+    $(convert_bool "${IS_ADS_ENABLED}")
     <key>IS_ANALYTICS_ENABLED</key>
-    `convert_bool ${IS_ANALYTICS_ENABLED}`
+    $(convert_bool "${IS_ANALYTICS_ENABLED}")
     <key>IS_APPINVITE_ENABLED</key>
-    `convert_bool ${IS_APPINVITE_ENABLED}`
+    $(convert_bool "${IS_APPINVITE_ENABLED}")
     <key>IS_GCM_ENABLED</key>
-    `convert_bool ${IS_GCM_ENABLED}`
+    $(convert_bool "${IS_GCM_ENABLED}")
     <key>IS_SIGNIN_ENABLED</key>
-    `convert_bool ${IS_SIGNIN_ENABLED}`
+    $(convert_bool "${IS_SIGNIN_ENABLED}")
     <key>GOOGLE_APP_ID</key>
-    <string>$(GOOGLE_APP_ID)</string>
+    <string>${GOOGLE_APP_ID}</string>
 </dict>
 </plist>
 EOF
+
+# 생성된 *.plist 파일 내용 출력
+cat "$PLIST_FILE_PATH"
+
 echo "GoogleService-Info.plist 복원 완료"
