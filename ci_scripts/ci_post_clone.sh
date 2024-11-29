@@ -9,7 +9,7 @@
 echo "Release.xcconfig 복원 시작"
 
 # xcconfig 파일 생성 경로
-CONFIG_FILE_PATH="/Volumes/workspace/repository/Dayme/Release.xcconfig"
+CONFIG_FILE_PATH="/Volumes/workspace/repository/Release.xcconfig"
 
 # 환경 변수에서 값을 가져와서 xcconfig 파일에 추가하기
 echo "SERVER_BASE_URL = $SERVER_BASE_URL" >> "$CONFIG_FILE_PATH"
