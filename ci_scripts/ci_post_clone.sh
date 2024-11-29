@@ -61,15 +61,15 @@ cat <<EOF > "$PLIST_FILE_PATH"
     <key>STORAGE_BUCKET</key>
     <string>${STORAGE_BUCKET}</string>
     <key>IS_ADS_ENABLED</key>
-    $(convert_bool "${IS_ADS_ENABLED}")
+    <false></false>
     <key>IS_ANALYTICS_ENABLED</key>
-    $(convert_bool "${IS_ANALYTICS_ENABLED}")
+    <false></false>
     <key>IS_APPINVITE_ENABLED</key>
-    $(convert_bool "${IS_APPINVITE_ENABLED}")
+    <true></true>
     <key>IS_GCM_ENABLED</key>
-    $(convert_bool "${IS_GCM_ENABLED}")
+    <true></true>
     <key>IS_SIGNIN_ENABLED</key>
-    $(convert_bool "${IS_SIGNIN_ENABLED}")
+    <true></true>
     <key>GOOGLE_APP_ID</key>
     <string>${GOOGLE_APP_ID}</string>
 </dict>
