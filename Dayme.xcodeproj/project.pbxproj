@@ -13,8 +13,6 @@
 		9A32AF502CDBA2E000F9CBF1 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 9A32AF4F2CDBA2E000F9CBF1 /* Alamofire */; };
 		9A33A2832CF6CE8600D40F2D /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 9A33A2822CF6CE8600D40F2D /* Then */; };
 		9A7BFB412CD5247F00E48C31 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 9A7BFB402CD5247F00E48C31 /* GoogleSignIn */; };
-		9A7BFB4C2CD5EDA100E48C31 /* Dev.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 9A7BFB4B2CD5EDA100E48C31 /* Dev.xcconfig */; };
-		9A7BFB4E2CD5EDBE00E48C31 /* Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 9A7BFB4D2CD5EDBE00E48C31 /* Release.xcconfig */; };
 		9A7BFB712CD5FBD800E48C31 /* KakaoSDKAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 9A7BFB702CD5FBD800E48C31 /* KakaoSDKAuth */; };
 		9A7BFB732CD5FBD800E48C31 /* KakaoSDKUser in Frameworks */ = {isa = PBXBuildFile; productRef = 9A7BFB722CD5FBD800E48C31 /* KakaoSDKUser */; };
 		9AB0EC782CF06B7000BD01E1 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 9AB0EC772CF06B7000BD01E1 /* FirebaseAuth */; };
@@ -34,6 +32,13 @@
 			);
 			target = 9A1E35212CD3CA4700753F8A /* Dayme */;
 		};
+		9AF829B32CFA169B003EBC70 /* Exceptions for "ci_scripts" folder in "Dayme" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ci_post_clone.sh,
+			);
+			target = 9A1E35212CD3CA4700753F8A /* Dayme */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -43,6 +48,14 @@
 				9A1E35342CD3CA4800753F8A /* Exceptions for "Dayme" folder in "Dayme" target */,
 			);
 			path = Dayme;
+			sourceTree = "<group>";
+		};
+		9AF829AE2CFA1246003EBC70 /* ci_scripts */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				9AF829B32CFA169B003EBC70 /* Exceptions for "ci_scripts" folder in "Dayme" target */,
+			);
+			path = ci_scripts;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -73,6 +86,7 @@
 				9A7BFB4B2CD5EDA100E48C31 /* Dev.xcconfig */,
 				9A7BFB4D2CD5EDBE00E48C31 /* Release.xcconfig */,
 				9A1E35242CD3CA4700753F8A /* Dayme */,
+				9AF829AE2CFA1246003EBC70 /* ci_scripts */,
 				9A1E35232CD3CA4700753F8A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -102,6 +116,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				9A1E35242CD3CA4700753F8A /* Dayme */,
+				9AF829AE2CFA1246003EBC70 /* ci_scripts */,
 			);
 			name = Dayme;
 			packageProductDependencies = (
@@ -169,8 +184,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9A7BFB4E2CD5EDBE00E48C31 /* Release.xcconfig in Resources */,
-				9A7BFB4C2CD5EDA100E48C31 /* Dev.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
