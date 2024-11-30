@@ -25,7 +25,7 @@ final class AppCoordinator: Coordinator {
             children.removeAll()
             startMainFlow(animated: true)
             
-        case .logout:
+        case .logout, .userDeleted:
             children.removeAll()
             startOnboardingFlow(animated: true)
             

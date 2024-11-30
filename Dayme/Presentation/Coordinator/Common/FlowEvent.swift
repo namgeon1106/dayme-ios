@@ -20,4 +20,5 @@ enum FlowEvent {
     
     // MARK: Setting
     case logout
+    case userDeleted
 }

@@ -35,6 +35,9 @@ class UserService: TokenAccessible {
         ).withAuthorization(token)
         
         try await network.request(endpoint)
+        
+        Keychain.delete(key: Env.Keychain.accessTokenKey)
+        Keychain.delete(key: Env.Keychain.refreshTokenKey)
     }
     
     @MainActor

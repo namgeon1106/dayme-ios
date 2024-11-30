@@ -17,7 +17,7 @@ final class SettingCoordinator: Coordinator {
     
     override func trigger(with event: FlowEvent) {
         switch event {
-        case .logout:
+        case .logout, .userDeleted:
             parent?.trigger(with: event)
             
         default:
