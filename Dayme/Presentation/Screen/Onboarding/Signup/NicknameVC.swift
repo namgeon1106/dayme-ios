@@ -217,12 +217,7 @@ private extension NicknameVC {
 
 extension NicknameVC: UITextFieldDelegate {
     
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        // 공백이 포함된 입력 거부
-        if string.contains(" ") {
-            return false
-        }
-        
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {        
         let currentText = textField.text.orEmpty
         
         guard let stringRange = Range(range, in: currentText) else {
