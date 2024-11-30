@@ -2,11 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>UIAppFonts</key>
-	<array>
-		<string>Montserrat-VariableFont_wght.ttf</string>
-		<string>PretendardVariable.ttf</string>
-	</array>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -30,6 +25,8 @@
 			</array>
 		</dict>
 	</array>
+    <key>FirebaseAppDelegateProxyEnabled</key>
+    <false/>
 	<key>FIREBASE_CLIENT_ID</key>
 	<string>$(FIREBASE_CLIENT_ID).apps.googleusercontent.com</string>
 	<key>GIDClientID</key>
@@ -54,6 +51,11 @@
 	</dict>
 	<key>SERVER_BASE_URL</key>
 	<string>$(SERVER_BASE_URL)</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Montserrat-VariableFont_wght.ttf</string>
+		<string>PretendardVariable.ttf</string>
+	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -71,5 +73,9 @@
 			</array>
 		</dict>
 	</dict>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
 </dict>
 </plist>

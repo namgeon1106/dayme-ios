@@ -16,6 +16,7 @@
 		9A7BFB712CD5FBD800E48C31 /* KakaoSDKAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 9A7BFB702CD5FBD800E48C31 /* KakaoSDKAuth */; };
 		9A7BFB732CD5FBD800E48C31 /* KakaoSDKUser in Frameworks */ = {isa = PBXBuildFile; productRef = 9A7BFB722CD5FBD800E48C31 /* KakaoSDKUser */; };
 		9AB0EC782CF06B7000BD01E1 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 9AB0EC772CF06B7000BD01E1 /* FirebaseAuth */; };
+		9AD2B3132CFB34F200BB4EB6 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 9AD2B3122CFB34F200BB4EB6 /* FirebaseMessaging */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -67,6 +68,7 @@
 			files = (
 				9A1E35422CD3DEEA00753F8A /* PinLayout in Frameworks */,
 				9A33A2832CF6CE8600D40F2D /* Then in Frameworks */,
+				9AD2B3132CFB34F200BB4EB6 /* FirebaseMessaging in Frameworks */,
 				9A1E35452CD3DF0200753F8A /* FlexLayout in Frameworks */,
 				9A7BFB412CD5247F00E48C31 /* GoogleSignIn in Frameworks */,
 				9A32AF502CDBA2E000F9CBF1 /* Alamofire in Frameworks */,
@@ -87,6 +89,7 @@
 				9A7BFB4D2CD5EDBE00E48C31 /* Release.xcconfig */,
 				9A1E35242CD3CA4700753F8A /* Dayme */,
 				9AF829AE2CFA1246003EBC70 /* ci_scripts */,
+				9AD2B3112CFB34F200BB4EB6 /* Frameworks */,
 				9A1E35232CD3CA4700753F8A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -97,6 +100,13 @@
 				9A1E35222CD3CA4700753F8A /* Dayme.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		9AD2B3112CFB34F200BB4EB6 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -129,6 +139,7 @@
 				9AB0EC772CF06B7000BD01E1 /* FirebaseAuth */,
 				9A1069E92CF0BE9100221178 /* JGProgressHUD */,
 				9A33A2822CF6CE8600D40F2D /* Then */,
+				9AD2B3122CFB34F200BB4EB6 /* FirebaseMessaging */,
 			);
 			productName = Dayme;
 			productReference = 9A1E35222CD3CA4700753F8A /* Dayme.app */;
@@ -534,6 +545,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 9AB0EC742CF06B7000BD01E1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAuth;
+		};
+		9AD2B3122CFB34F200BB4EB6 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9AB0EC742CF06B7000BD01E1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
