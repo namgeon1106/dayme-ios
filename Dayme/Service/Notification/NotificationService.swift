@@ -47,11 +47,13 @@ final class NotificationService: NSObject {
 
 extension NotificationService: UNUserNotificationCenterDelegate {
     
+    @MainActor
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
         let userInfo = response.notification.request.content.userInfo as NSDictionary
         Logger.debug { "\(userInfo)" }
     }
     
+    @MainActor
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
         return [.sound, .banner, .list]
     }
