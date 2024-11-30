@@ -60,7 +60,7 @@ extension NotificationService: UNUserNotificationCenterDelegate {
     
 }
 
-// MARK: - UNUserNotificationCenterDelegate
+// MARK: - MessagingDelegate
 
 extension NotificationService: MessagingDelegate {
     
