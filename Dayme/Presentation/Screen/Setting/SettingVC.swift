@@ -11,23 +11,6 @@ import PinLayout
 
 #Preview { SettingVC() }
 
-enum Setting: String, CaseIterable {
-    case privacyPolicy, logout, withdraw, version
-    
-    var title: String {
-        switch self {
-        case .privacyPolicy:
-            "개인정보 처리방침"
-        case .logout:
-            "로그아웃"
-        case .withdraw:
-            "탈퇴하기"
-        case .version:
-            "앱 버전"
-        }
-    }
-}
-
 final class SettingVC: VC {
     
     private let userService = UserService()
@@ -38,20 +21,6 @@ final class SettingVC: VC {
     private let tableView = UITableView()
     private let logoutBtn = FilledButton("로그아웃")
     private let withdrawBtn = FilledButton("회원 탈퇴")
-    
-    // MARK: Lifecycle
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        navigationController?.setNavigationBarHidden(false, animated: true)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        navigationController?.setNavigationBarHidden(true, animated: true)
-    }
     
     // MARK: Helpers
     
@@ -88,6 +57,17 @@ private extension SettingVC {
     
     @MainActor
     func withdraw() async {
+        let title = "회원탈퇴"
+        let message = "삭제하시겠습니까?\n모든 정보가 삭제됩니다."
+        let selectedAction = await Alert(title: title, message: message)
+            .onCancel(title: "취소")
+            .onDestructive(title: "탈퇴하기")
+            .show(on: self)
+        
+        if selectedAction == "취소" {
+            return
+        }
+        
         do {
             try await userService.deleteUser()
             coordinator?.trigger(with: .userDeleted)

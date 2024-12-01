@@ -26,8 +26,9 @@ final class Alert {
     
     private var cancelAction: AlertAction?
     private var defaultAction: AlertAction?
+    private var destructiveAction: AlertAction?
     
-    private var continuation: CheckedContinuation<Void, Never>?
+    private var continuation: CheckedContinuation<String, Never>?
     
     
     init(title: String, message: String) {
@@ -50,6 +51,13 @@ final class Alert {
         return self
     }
     
+    func onDestructive(title: String, handler: (() -> Void)? = nil) -> Self {
+        destructiveAction = AlertAction(title: title, style: .destructive) {
+            handler?()
+        }
+        return self
+    }
+    
     func show(on viewController: UIViewController) {
         let alert = UIAlertController(title: title, message: "\n\(message)", preferredStyle: .alert)
         
@@ -61,8 +69,10 @@ final class Alert {
         viewController.present(alert, animated: true)
     }
     
+    /// 사용자가 선택한 Action의 title을 리턴합니다.
     @MainActor
-    func show(on viewController: UIViewController) async {
+    @discardableResult
+    func show(on viewController: UIViewController) async -> String {
         let alert = UIAlertController(title: title, message: "\n\(message)", preferredStyle: .alert)
         
         return await withCheckedContinuation { [weak self] continuation in
@@ -70,9 +80,10 @@ final class Alert {
             
             self.continuation = continuation
             
-            for action in [cancelAction, defaultAction].compactMap({ $0 }) {
+            let actions = [cancelAction, defaultAction, destructiveAction].compactMap({ $0 })
+            for action in actions {
                 let alertAction = alertAction(action) {
-                    continuation.resume()
+                    continuation.resume(returning: action.title)
                 }
                 alert.addAction(alertAction)
             }

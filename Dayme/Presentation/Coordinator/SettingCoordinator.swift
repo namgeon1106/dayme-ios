@@ -40,6 +40,9 @@ private extension SettingCoordinator {
     func pushTermsDetailScreen(_ terms: Terms) {
         let termsDetailVC = TermsDetailVC(terms: terms)
         termsDetailVC.coordinator = self
+        termsDetailVC.naviBarHiddenOnAppear = true
+        termsDetailVC.naviBarHiddenOnDisappear = false
+        termsDetailVC.hidesBottomBarWhenPushed = true
         nav.interactivePopGestureRecognizer?.delegate = self
         nav.pushViewController(termsDetailVC, animated: true)
     }

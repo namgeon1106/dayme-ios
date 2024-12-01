@@ -15,6 +15,8 @@ class VC: UIViewController {
     let flexView = UIView()
     
     var cancellables = Set<AnyCancellable>()
+    var naviBarHiddenOnAppear: Bool?
+    var naviBarHiddenOnDisappear: Bool?
     
     deinit {
         Logger.debug { "\(type(of: self)) \(#function)" }
@@ -33,6 +35,22 @@ class VC: UIViewController {
         super.viewDidLayoutSubviews()
         
         layoutFlex()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if let naviBarHiddenOnAppear {
+            navigationController?.setNavigationBarHidden(naviBarHiddenOnAppear, animated: true)
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        if let naviBarHiddenOnDisappear {
+            navigationController?.setNavigationBarHidden(naviBarHiddenOnDisappear, animated: true)
+        }
     }
     
     // MARK: - Helpers
