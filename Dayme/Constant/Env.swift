@@ -18,6 +18,8 @@ enum Env {
     static let kakakoAppKey: String = infoValue("KAKAO_APP_KEY")
     
     static let firebaseClientId: String = infoValue("FIREBASE_CLIENT_ID")
+    
+    static let appVersion: String = infoValue("CFBundleShortVersionString")
 }
 
 private extension Env {

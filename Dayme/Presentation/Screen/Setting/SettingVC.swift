@@ -11,8 +11,8 @@ import PinLayout
 
 #Preview { SettingVC() }
 
-enum Setting: CaseIterable {
-    case privacyPolicy, logout, withdraw
+enum Setting: String, CaseIterable {
+    case privacyPolicy, logout, withdraw, version
     
     var title: String {
         switch self {
@@ -22,6 +22,8 @@ enum Setting: CaseIterable {
             "로그아웃"
         case .withdraw:
             "탈퇴하기"
+        case .version:
+            "앱 버전"
         }
     }
 }
@@ -110,10 +112,22 @@ extension SettingVC: UITableViewDataSource {
         let setting = settings[indexPath.row]
         var content = cell.defaultContentConfiguration()
         content.text = setting.title
-        content.textProperties.font = .pretendard(.medium, 16)
+        content.textProperties.font = .pretendard(.medium, 18)
         content.textProperties.color = .colorDark70
         cell.contentConfiguration = content
-        cell.accessoryType = .disclosureIndicator
+        
+        if [.version].contains(setting) {
+            cell.accessoryType = .none
+            Logger.debug(Env.appVersion)
+            let label = UILabel("v\(Env.appVersion)")
+                .textColor(.colorDark70)
+                .font(.pretendard(.medium, 18))
+            label.sizeToFit()
+            cell.accessoryView = label
+        } else {
+            cell.accessoryType = .disclosureIndicator
+            cell.accessoryView = nil
+        }
         
         let selectedView = UIView()
         selectedView.backgroundColor = .colorMain1.withAlphaComponent(0.1)
@@ -132,13 +146,23 @@ extension SettingVC: UITableViewDelegate {
         switch setting {
         case .privacyPolicy:
             coordinator?.trigger(with: .termsNeeded(.privacyPolicy))
+            
         case .logout:
             Task { await logout() }
+            
         case .withdraw:
             Task { await withdraw() }
+            
+        case .version:
+            break
         }
         
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
+        let setting = settings[indexPath.row]
+        return ![.version].contains(setting)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
