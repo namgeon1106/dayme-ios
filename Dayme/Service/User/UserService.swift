@@ -36,8 +36,9 @@ class UserService: TokenAccessible {
         
         try await network.request(endpoint)
         
-        Keychain.delete(key: Env.Keychain.accessTokenKey)
-        Keychain.delete(key: Env.Keychain.refreshTokenKey)
+        removeToken()
+        UserDefault.loggedIn = false
+        UserDefault.socialLogin = nil
     }
     
     @MainActor

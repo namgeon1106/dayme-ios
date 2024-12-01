@@ -14,7 +14,7 @@ struct OAuthToken {
     let refreshToken: String
 }
 
-enum OAuthProvider: String {
+enum OAuthProvider: String, Codable {
     case google, kakao, apple
     
     var code: String {

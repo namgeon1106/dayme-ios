@@ -53,6 +53,8 @@ class AuthService: NSObject {
         let oAuthToken = response.toDomain()
         
         saveToken(oAuthToken)
+        UserDefault.loggedIn = true
+        UserDefault.socialLogin = provider
         
         return oAuthToken
     }
@@ -71,6 +73,8 @@ class AuthService: NSObject {
         let oAuthToken = response.toDomain()
         
         saveToken(oAuthToken)
+        UserDefault.loggedIn = true
+        UserDefault.socialLogin = nil
         
         return oAuthToken
     }
@@ -97,6 +101,13 @@ class AuthService: NSObject {
             params: ["email": email, "password": password, "nickname": nickname]
         )
         try await network.request(endpoint)
+    }
+    
+    @MainActor
+    func logout() async throws {
+        removeToken()
+        UserDefault.loggedIn = false
+        UserDefault.socialLogin = nil
     }
     
 }
@@ -236,6 +247,11 @@ private extension AuthService {
     func saveToken(_ oAuthToken: OAuthToken) {
         Keychain.create(key: Env.Keychain.accessTokenKey, token: oAuthToken.accessToken)
         Keychain.create(key: Env.Keychain.refreshTokenKey, token: oAuthToken.refreshToken)
+    }
+    
+    func removeToken() {
+        Keychain.delete(key: Env.Keychain.accessTokenKey)
+        Keychain.delete(key: Env.Keychain.refreshTokenKey)
     }
     
 }

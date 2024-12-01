@@ -19,6 +19,11 @@ extension TokenAccessible {
         throw TokenError.emptyAccessToken
     }
     
+    func removeToken() {
+        Keychain.delete(key: Env.Keychain.accessTokenKey)
+        Keychain.delete(key: Env.Keychain.refreshTokenKey)
+    }
+    
 }
 
 

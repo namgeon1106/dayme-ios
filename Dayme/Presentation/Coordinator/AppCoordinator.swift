@@ -12,7 +12,7 @@ final class AppCoordinator: Coordinator {
     override func start(animated: Bool) {
         let isAuthorized = Keychain.read(key: Env.Keychain.accessTokenKey) != nil
         
-        if isAuthorized {
+        if UserDefault.loggedIn, isAuthorized {
             startMainFlow(animated: false)
         } else {
             startOnboardingFlow(animated: false)

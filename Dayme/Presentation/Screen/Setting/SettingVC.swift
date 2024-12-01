@@ -13,6 +13,7 @@ import PinLayout
 
 final class SettingVC: VC {
     
+    private let authService = AuthService()
     private let userService = UserService()
     private let settings: [Setting] = Setting.allCases
     
@@ -49,8 +50,7 @@ private extension SettingVC {
     
     @MainActor
     func logout() async {
-        Keychain.delete(key: Env.Keychain.accessTokenKey)
-        Keychain.delete(key: Env.Keychain.refreshTokenKey)
+        try? await authService.logout()
         coordinator?.trigger(with: .logout)
         Haptic.noti(.success)
     }
