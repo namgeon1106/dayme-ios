@@ -15,8 +15,11 @@ final class MainTC: UITabBarController {
         super.init(nibName: nil, bundle: nil)
         
         self.viewControllers = viewControllers
-        self.selectedIndex = 2
         
+        selectedIndex = 2
+        tabBar.tintColor = .colorMain1
+        tabBar.unselectedItemTintColor = .colorGrey30
+        tabBar.isTranslucent = false
         delegate = self
     }
     

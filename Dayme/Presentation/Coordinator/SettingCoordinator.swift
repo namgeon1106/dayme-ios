@@ -20,9 +20,28 @@ final class SettingCoordinator: Coordinator {
         case .logout, .userDeleted:
             parent?.trigger(with: event)
             
+        case .termsNeeded(let terms):
+            pushTermsDetailScreen(terms)
+            
+        case .termsCanceled:
+            popViewController(animated: true)
+            
         default:
             break
         }
+    }
+    
+}
+
+// MARK: - Navigate
+
+private extension SettingCoordinator {
+    
+    func pushTermsDetailScreen(_ terms: Terms) {
+        let termsDetailVC = TermsDetailVC(terms: terms)
+        termsDetailVC.coordinator = self
+        nav.interactivePopGestureRecognizer?.delegate = self
+        nav.pushViewController(termsDetailVC, animated: true)
     }
     
 }
