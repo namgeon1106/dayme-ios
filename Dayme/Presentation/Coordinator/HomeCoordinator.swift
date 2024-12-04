@@ -10,7 +10,8 @@ import UIKit
 final class HomeCoordinator: Coordinator {
     
     override func start(animated: Bool) {
-        nav.viewControllers = [UIViewController()]
+        nav.viewControllers = [HomeVC()]
+        nav.navigationBar.prefersLargeTitles = false
     }
     
 }

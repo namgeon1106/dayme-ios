@@ -46,12 +46,12 @@ private extension MainCoordinator {
     
     func nav(tab: MainTab) -> UINavigationController {
         let nav = UINavigationController()
-        nav.navigationBar.prefersLargeTitles = true
         nav.tabBarItem = UITabBarItem(title: tab.title, image: tab.image, tag: tab.tag)
         
         startFlow(tab: tab, nav: nav)
         
-        if let rootVC = nav.viewControllers.first {
+        if tab != .home, let rootVC = nav.viewControllers.first {
+            nav.navigationBar.prefersLargeTitles = true
             rootVC.title = tab.title
         }
         
