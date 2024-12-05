@@ -18,6 +18,8 @@ final class HomeVC: VC {
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     
+    private let dashboard = HomeDashboard()
+    
     private let logo = UILabel("DAYME").then {
         $0.textColor(.colorMain1)
             .font(.montserrat(.black, 20))
@@ -45,20 +47,31 @@ final class HomeVC: VC {
         userSV.addArrangedSubview(profileIV)
         navigationItem.leftBarButtonItem = .init(customView: logo)
         navigationItem.rightBarButtonItem = .init(customView: userSV)
+        scrollView.showsVerticalScrollIndicator = false
     }
     
     override func setupFlex() {
         view.addSubview(flexView)
         flexView.addSubview(scrollView)
         scrollView.addSubview(contentView)
+        
+        contentView.flex.height(1000).define { flex in
+            flex.addItem(dashboard).margin(15).height(276)
+            
+            flex.addItem().grow(1)
+        }
     }
     
     override func layoutFlex() {
         flexView.pin.all()
         scrollView.pin.all()
         contentView.pin.all()
-        contentView.frame.size.height = 1000
+        contentView.flex.layout(mode: .adjustHeight)
         scrollView.contentSize = contentView.bounds.size
+    }
+    
+    override func bind() {
+        dashboard.updateItems(mockGoalTrackingItems)
     }
     
 }

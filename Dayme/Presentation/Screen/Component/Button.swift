@@ -7,6 +7,8 @@
 
 import UIKit
 
+// MARK: - FilledButton
+
 final class FilledButton: UIButton {
     
     init(_ title: String) {
@@ -27,6 +29,31 @@ final class FilledButton: UIButton {
         super.init(coder: coder)
     }
 }
+
+// MARK: - FilledSecondaryButton
+
+final class FilledSecondaryButton: UIButton {
+    
+    init(_ title: String) {
+        super.init(frame: .zero)
+        
+        var attrString = AttributedString(title)
+        attrString.font = .pretendard(.medium, 12)
+        
+        var config = UIButton.Configuration.filled()
+        config.baseBackgroundColor = .colorMain3
+        config.background.cornerRadius = 5
+        config.baseForegroundColor = .colorMain1
+        config.attributedTitle = attrString
+        configuration = config
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+}
+
+// MARK: - SocialLoginButton
 
 final class SocialLoginButton: UIButton {
     
