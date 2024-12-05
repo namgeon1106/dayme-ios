@@ -14,7 +14,7 @@ struct GoalTrackingItem {
     let hex: String
 }
 
-#if DEBUG
+//#if DEBUG
 let mockGoalTrackingItems: [GoalTrackingItem] = [
     GoalTrackingItem(
         emoji: "✍",
@@ -35,4 +35,4 @@ let mockGoalTrackingItems: [GoalTrackingItem] = [
         hex: "#00EF89"
     ),
 ]
-#endif
+//#endif
