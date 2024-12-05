@@ -38,7 +38,7 @@ final class FilledSecondaryButton: UIButton {
         super.init(frame: .zero)
         
         var attrString = AttributedString(title)
-        attrString.font = .pretendard(.medium, 12)
+        attrString.font = .pretendard(.semiBold, 12)
         
         var config = UIButton.Configuration.filled()
         config.baseBackgroundColor = .colorMain3

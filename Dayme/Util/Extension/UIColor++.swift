@@ -23,3 +23,11 @@ extension UIColor {
     }
     
 }
+
+extension CGColor {
+    
+    static func uiColor(_ color: UIColor) -> CGColor {
+        color.cgColor
+    }
+    
+}

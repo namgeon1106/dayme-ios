@@ -19,6 +19,7 @@ final class HomeVC: VC {
     private let contentView = UIView()
     
     private let dashboard = HomeDashboard()
+    private let dateView = HomeDateView()
     
     private let logo = UILabel("DAYME").then {
         $0.textColor(.colorMain1)
@@ -32,9 +33,9 @@ final class HomeVC: VC {
         $0.distribution = .fill
     }
     
-    private let nicknameLbl = UILabel("우채윤님").then {
+    private let nicknameLbl = UILabel("OOO님").then {
         $0.textColor(.colorGrey50)
-            .font(.pretendard(.medium, 16))
+            .font(.pretendard(.semiBold, 16))
     }
     
     private let profileIV = UIImageView(image: .icProfileDefault)
@@ -55,8 +56,10 @@ final class HomeVC: VC {
         flexView.addSubview(scrollView)
         scrollView.addSubview(contentView)
         
-        contentView.flex.height(1000).define { flex in
-            flex.addItem(dashboard).margin(15).height(276)
+        contentView.flex.height(700).define { flex in
+            flex.addItem(dashboard).margin(15)
+            
+            flex.addItem(dateView).marginTop(15)
             
             flex.addItem().grow(1)
         }

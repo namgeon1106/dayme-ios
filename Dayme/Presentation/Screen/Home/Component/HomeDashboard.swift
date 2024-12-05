@@ -16,7 +16,7 @@ final class HomeDashboard: Vue {
     private let titleLbl = UILabel().then {
         $0.textColor(.black)
             .numberOfLines(0)
-            .typo(.body16M)
+            .font(.pretendard(.semiBold, 16))
     }
     
     private let goalContainer = UIView()
@@ -74,7 +74,7 @@ final class HomeDashboard: Vue {
     }
     
     override func bind() {
-        titleLbl.text = "우채윤님,\n토익 900점 달성까지 49% 달성했어요!"
+        titleLbl.text = "OOO님,\n토익 900점 달성까지 49% 달성했어요!"
         titleLbl.lineHeight(multiple: 1.2)
     }
     
