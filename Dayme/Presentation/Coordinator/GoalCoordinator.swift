@@ -10,7 +10,9 @@ import UIKit
 final class GoalCoordinator: Coordinator {
     
     override func start(animated: Bool) {
-        nav.viewControllers = [UIViewController()]
+        let goalVC = GoalVC()
+        goalVC.coordinator = self
+        nav.viewControllers = [goalVC]
     }
     
 }

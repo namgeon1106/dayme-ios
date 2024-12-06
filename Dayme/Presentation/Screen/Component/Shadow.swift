@@ -14,16 +14,22 @@ struct Shadow {
 }
 
 extension Shadow {
-    static let `default` = Shadow(
+    static let card = Shadow(
         color: .colorDarkA10,
         offset: .zero,
         blur: 8
+    )
+    
+    static let button = Shadow(
+        color: .colorDarkA25,
+        offset: .zero,
+        blur: 4
     )
 }
 
 extension UIView {
     @discardableResult
-    func addShadow(_ shadow: Shadow = .default) -> Self {
+    func addShadow(_ shadow: Shadow = .card) -> Self {
         layer.masksToBounds = false
         layer.shadowColor = shadow.color.cgColor
         layer.shadowOffset = shadow.offset

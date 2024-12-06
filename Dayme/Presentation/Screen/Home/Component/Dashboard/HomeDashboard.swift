@@ -30,7 +30,7 @@ final class HomeDashboard: Vue {
         backgroundColor = .colorBackground
         layer.cornerRadius = 20
         layer.cornerCurve = .continuous
-        addShadow(.default)
+        addShadow(.card)
     }
     
     override func setupFlex() {
