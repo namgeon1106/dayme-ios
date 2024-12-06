@@ -13,6 +13,7 @@ class Vue: UIView {
     
     let flexView = UIView()
     
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -26,9 +27,6 @@ class Vue: UIView {
         super.init(coder: coder)
     }
     
-    deinit {
-        Logger.debug { "\(type(of: self)) \(#function)" }
-    }
     
     override func layoutSubviews() {
         super.layoutSubviews()

@@ -24,23 +24,6 @@ final class HomeDashboard: Vue {
     private let manageGoalBtn = FilledSecondaryButton("주요목표 관리")
     
     
-    func updateItems(_ items: [GoalTrackingItem]) {
-        self.items = items
-        
-        goalContainer.subviews.forEach {
-            $0.removeFromSuperview()
-        }
-        
-        goalContainer.flex.define { flex in
-            items.forEach { item in
-                let trackingView = GoalTrackingView(item)
-                flex.addItem(trackingView).marginBottom(20)
-            }
-        }
-        
-        setNeedsLayout()
-    }
-    
     // MARK: Helpers
     
     override func setup() {
@@ -71,11 +54,30 @@ final class HomeDashboard: Vue {
     
     override func layoutFlex() {
         flexView.pin.all()
+        flexView.flex.layout()
     }
     
     override func bind() {
         titleLbl.text = "OOO님,\n토익 900점 달성까지 49% 달성했어요!"
         titleLbl.lineHeight(multiple: 1.2)
+    }
+    
+    
+    func updateItems(_ items: [GoalTrackingItem]) {
+        self.items = items
+        
+        goalContainer.subviews.forEach {
+            $0.removeFromSuperview()
+        }
+        
+        goalContainer.flex.define { flex in
+            items.forEach { item in
+                let trackingView = GoalTrackingView(item)
+                flex.addItem(trackingView).marginBottom(20)
+            }
+        }
+        
+        setNeedsLayout()
     }
     
 }
