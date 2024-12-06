@@ -10,17 +10,13 @@ import UIKit
 extension UIButton {
     
     @discardableResult
-    func onAction(for controlEvent: UIControl.Event = .touchUpInside,
-                  _ handler: @escaping() -> Void) -> Self {
-        addAction(UIAction { _ in handler() }, for: controlEvent)
-        return self
+    func onAction(_ handler: @escaping() -> Void) -> Self {
+        onAction(for: .touchUpInside, handler)
     }
     
     @discardableResult
-    func onAction(for controlEvent: UIControl.Event = .touchUpInside,
-                  _ handler: @escaping() async -> Void) -> Self {
-        addAction(UIAction { _ in Task { await handler() } }, for: controlEvent)
-        return self
+    func onAction(_ handler: @escaping() async -> Void) -> Self {
+        onAction(for: .touchUpInside, handler)
     }
     
     @discardableResult

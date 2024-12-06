@@ -103,7 +103,7 @@ final class NicknameVC: VC {
             self?.coordinator?.trigger(with: .nicknameCanceled)
         }
         
-        nicknameTF.onEditingChanged { [weak self] in
+        nicknameTF.onAction { [weak self] in
             guard let self else { return }
             vm.nickname = nicknameTF.text.orEmpty
         }

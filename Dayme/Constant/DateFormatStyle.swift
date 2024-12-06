@@ -17,6 +17,8 @@ enum DateFormatStyle: String {
     /// EEE
     case weekday = "EEE"
     
+    case goalDuration = "M월 d일 (EEE)"
+    
     
     var format: String { rawValue }
 }
