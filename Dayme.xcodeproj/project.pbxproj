@@ -17,6 +17,7 @@
 		9A7BFB732CD5FBD800E48C31 /* KakaoSDKUser in Frameworks */ = {isa = PBXBuildFile; productRef = 9A7BFB722CD5FBD800E48C31 /* KakaoSDKUser */; };
 		9AB0EC782CF06B7000BD01E1 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 9AB0EC772CF06B7000BD01E1 /* FirebaseAuth */; };
 		9AD2B3132CFB34F200BB4EB6 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 9AD2B3122CFB34F200BB4EB6 /* FirebaseMessaging */; };
+		9AE8B91C2D03474E00D7672D /* ElegantEmojiPicker in Frameworks */ = {isa = PBXBuildFile; productRef = 9AE8B91B2D03474E00D7672D /* ElegantEmojiPicker */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -67,6 +68,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9A1E35422CD3DEEA00753F8A /* PinLayout in Frameworks */,
+				9AE8B91C2D03474E00D7672D /* ElegantEmojiPicker in Frameworks */,
 				9A33A2832CF6CE8600D40F2D /* Then in Frameworks */,
 				9AD2B3132CFB34F200BB4EB6 /* FirebaseMessaging in Frameworks */,
 				9A1E35452CD3DF0200753F8A /* FlexLayout in Frameworks */,
@@ -140,6 +142,7 @@
 				9A1069E92CF0BE9100221178 /* JGProgressHUD */,
 				9A33A2822CF6CE8600D40F2D /* Then */,
 				9AD2B3122CFB34F200BB4EB6 /* FirebaseMessaging */,
+				9AE8B91B2D03474E00D7672D /* ElegantEmojiPicker */,
 			);
 			productName = Dayme;
 			productReference = 9A1E35222CD3CA4700753F8A /* Dayme.app */;
@@ -179,6 +182,7 @@
 				9AB0EC742CF06B7000BD01E1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				9A1069E82CF0BE9100221178 /* XCRemoteSwiftPackageReference "JGProgressHUD" */,
 				9A33A2812CF6CE8600D40F2D /* XCRemoteSwiftPackageReference "Then" */,
+				9AE8B91A2D03474E00D7672D /* XCRemoteSwiftPackageReference "Elegant-Emoji-Picker" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9A1E35232CD3CA4700753F8A /* Products */;
@@ -498,6 +502,14 @@
 				minimumVersion = 11.5.0;
 			};
 		};
+		9AE8B91A2D03474E00D7672D /* XCRemoteSwiftPackageReference "Elegant-Emoji-Picker" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Finalet/Elegant-Emoji-Picker.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -550,6 +562,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 9AB0EC742CF06B7000BD01E1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseMessaging;
+		};
+		9AE8B91B2D03474E00D7672D /* ElegantEmojiPicker */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9AE8B91A2D03474E00D7672D /* XCRemoteSwiftPackageReference "Elegant-Emoji-Picker" */;
+			productName = ElegantEmojiPicker;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -151,6 +151,14 @@ extension GoalVC: GoalFloatingMenuDelegate {
     
     func goalFloatingMenuDidSelect(item: GoalFloatingMenuItem) {
         Task { await hideMenu() }
+        Haptic.impact(.light)
+        
+        switch item {
+        case .goal:
+            coordinator?.trigger(with: .goalAddNeeded)
+        case .subGoal: break
+        case .checklist: break
+        }
     }
     
 }

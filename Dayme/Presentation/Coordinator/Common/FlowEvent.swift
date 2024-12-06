@@ -18,6 +18,12 @@ enum FlowEvent {
     case nicknameCanceled
     case signupFinished
     
+    // MARK: Goal
+    case goalAddNeeded
+    case goalAddCanceled
+    case goalEditNeeded
+    case goalEditCanceled
+    
     // MARK: Setting
     case logout
     case userDeleted
