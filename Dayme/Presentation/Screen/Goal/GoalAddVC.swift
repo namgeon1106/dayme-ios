@@ -35,8 +35,7 @@ final class GoalAddVC: VC {
     }
     
     private let emojiCaptionLbl = UILabel("목표 이모지").then {
-        $0.textColor(.colorGrey50)
-            .font(.pretendard(.bold, 14))
+        $0.textColor(.colorGrey50).font(.pretendard(.bold, 14))
     }
     
     private let emojiLbl = UILabel().then {
@@ -46,7 +45,7 @@ final class GoalAddVC: VC {
     
     private let emojiBtn = UIButton()
     
-    private let plusIV = UIImageView().then {
+    private let emojiPlusIV = UIImageView().then {
         let config = UIImage.SymbolConfiguration(pointSize: 12, weight: .heavy)
         let image = UIImage(systemName: "plus", withConfiguration: config)
         $0.image = image
@@ -54,6 +53,17 @@ final class GoalAddVC: VC {
         $0.tintColor = .white
         $0.backgroundColor = .colorMain1
         $0.layer.cornerRadius = 10
+    }
+    
+    private let titleCaptionLbl = UILabel("제목").then {
+        $0.textColor(.colorGrey50).font(.pretendard(.bold, 14))
+    }
+    
+    private let titleTF = BorderedTF("제목을 입력해주세요").then {
+        $0.contentInsets = UIEdgeInsets(0, 12, 0, 6)
+        $0.keyboardType = .asciiCapable
+        $0.returnKeyType = .next
+        $0.clearButtonMode = .whileEditing
     }
     
     
@@ -69,6 +79,7 @@ final class GoalAddVC: VC {
         }
         navigationItem.leftBarButtonItem = .init(customView: backBtn)
         view.backgroundColor = .colorBackground
+        scrollView.keyboardDismissMode = .onDrag
     }
     
     override func setupAction() {
@@ -96,7 +107,7 @@ final class GoalAddVC: VC {
                         .backgroundColor(.colorGrey10)
                         .position(.absolute)
                     
-                    flex.addItem(plusIV)
+                    flex.addItem(emojiPlusIV)
                         .width(20).height(20)
                         .right(0).bottom(0)
                         .position(.absolute)
@@ -110,6 +121,12 @@ final class GoalAddVC: VC {
                         .position(.absolute)
                 }
             }
+            
+            flex.addItem(titleCaptionLbl).margin(8, 24, 0, 0)
+            
+            flex.addItem(titleTF).margin(8, 24, 0, 24).height(51)
+            
+            flex.addItem().margin(24, 0).height(4).backgroundColor(.colorGrey10)
         }
     }
     
@@ -128,10 +145,21 @@ final class GoalAddVC: VC {
             }.store(in: &cancellables)
     }
     
+    override func keyboardWillShow(_ height: CGFloat) {
+        scrollView.contentInset.bottom = height
+    }
+    
+    override func keyboardWillHide() {
+        scrollView.contentInset.bottom = 0
+    }
+    
     private func showEmojiPicker() {
         Haptic.impact(.medium)
         
-        let picker = ElegantEmojiPicker(delegate: self)
+        view.endEditing(true)
+        
+        let config = ElegantConfiguration(showRandom: false, showReset: false, showClose: false)
+        let picker = ElegantEmojiPicker(delegate: self, configuration: config)
         present(picker, animated: true)
     }
     
