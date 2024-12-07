@@ -10,8 +10,15 @@ import Foundation
 extension Data {
     
     var prettyString: String? {
-        let json = try? JSONSerialization.jsonObject(with: self, options: .fragmentsAllowed) as? [String: Any]
-        return json?.prettyString
+        let jsonObject = try? JSONSerialization.jsonObject(with: self, options: .fragmentsAllowed)
+        
+        if let jsonDict = jsonObject as? [String: Any] {
+            return jsonDict.prettyString
+        } else if let jsonArray = jsonObject as? [[String: Any]] {
+            return jsonArray.compactMap(\.prettyString).joined(separator: ",\n")
+        }
+        
+        return nil
     }
     
 }

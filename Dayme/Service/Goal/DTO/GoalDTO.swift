@@ -13,7 +13,7 @@ struct GoalResponse: Decodable {
     let emoji: String
     let startDate: String
     let endDate: String
-//    let achievementRate: Int
+    let achievementRate: Int
     let color: String
     let isHomeView: Bool
     
@@ -30,7 +30,8 @@ struct GoalResponse: Decodable {
             startDate: startDate,
             endDate: endDate,
             hex: color,
-            displayHome: isHomeView
+            displayHome: isHomeView,
+            progress: Double(achievementRate) / 100
         )
     }
 }

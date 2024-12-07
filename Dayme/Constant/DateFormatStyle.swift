@@ -10,6 +10,8 @@ import Foundation
 enum DateFormatStyle: String {
     /// yyyy-MM-dd
     case api = "yyyy-MM-dd"
+    /// yyyy.MM.dd.
+    case dotted = "yyyy.MM.dd."
     /// yyyy
     case year = "yyyy"
     /// M

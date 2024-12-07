@@ -15,6 +15,7 @@ struct Goal {
     let endDate: Date
     let hex: String
     let displayHome: Bool
+    let progress: Double
     
     static func create(
         title: String,
@@ -31,7 +32,8 @@ struct Goal {
             startDate: startDate,
             endDate: endDate,
             hex: hex,
-            displayHome: displayHome
+            displayHome: displayHome,
+            progress: 0
         )
     }
 }
@@ -42,6 +44,21 @@ struct GoalTrackingItem {
     let progress: Double
     let hex: String
 }
+
+#if DEBUG
+let mockGoals: [Goal] = [
+    Goal(
+        id: 1,
+        title: "Dayme 앱 출시하기",
+        emoji: "🚀",
+        startDate: Date().addingDays(-20),
+        endDate: Date().addingDays(100),
+        hex: "#FF0000",
+        displayHome: true,
+        progress: 0.5
+    )
+]
+#endif
 
 //#if DEBUG
 let mockGoalTrackingItems: [GoalTrackingItem] = [
