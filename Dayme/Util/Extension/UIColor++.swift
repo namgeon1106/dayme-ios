@@ -30,4 +30,8 @@ extension CGColor {
         color.cgColor
     }
     
+    static func hex(_ hex: String, alpha: CGFloat = 1.0) -> CGColor {
+        uiColor(.hex(hex, alpha: alpha))
+    }
+    
 }

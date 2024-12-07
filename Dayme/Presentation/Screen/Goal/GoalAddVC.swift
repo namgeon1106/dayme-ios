@@ -18,6 +18,7 @@ final class GoalAddVM: ObservableObject {
     @Published var emoji: String = "🚀"
     @Published var startDate: Date?
     @Published var endDate: Date?
+    @Published var color: PalleteColor?
 }
 
 final class GoalAddVC: VC {
@@ -110,6 +111,14 @@ final class GoalAddVC: VC {
         $0.isTranslucent = false
     }
     
+    // 색상
+    
+    private let colorCaptionLbl = UILabel("목표 색상").then {
+        $0.textColor(.colorGrey50).font(.pretendard(.bold, 14))
+    }
+    
+    private let palleteView = PalleteView()
+    
     
     // MARK: Helpers
     
@@ -125,6 +134,7 @@ final class GoalAddVC: VC {
         view.backgroundColor = .colorBackground
         scrollView.keyboardDismissMode = .onDrag
         titleTF.delegate = self
+        palleteView.delegate = self
     }
     
     override func setupAction() {
@@ -218,6 +228,15 @@ final class GoalAddVC: VC {
             
             flex.addItem().margin(24, 0).height(4)
                 .backgroundColor(.colorGrey10)
+            
+            flex.addItem().direction(.row).alignItems(.start).padding(6, 24).define { flex in
+                flex.addItem(colorCaptionLbl).marginTop(10)
+                
+                flex.addItem(palleteView).marginLeft(25)
+                
+                flex.addItem().grow(1)
+            }
+            
         }
     }
     
@@ -245,6 +264,11 @@ final class GoalAddVC: VC {
             .sink { [weak self] date in
                 let text = date?.string(style: .goalDuration)
                 self?.durationEndTF.text = text
+            }.store(in: &cancellables)
+        
+        vm.$color.receive(on: RunLoop.main)
+            .sink { [weak self] color in
+                self?.palleteView.selectedColor = color
             }.store(in: &cancellables)
     }
     
@@ -314,6 +338,16 @@ extension GoalAddVC: ElegantEmojiPickerDelegate {
         if let emoji = emoji?.emoji {
             vm.emoji = emoji
         }
+    }
+    
+}
+
+// MARK: - PalleteViewDelegate
+
+extension GoalAddVC: PalleteViewDelegate {
+    
+    func palleteViewDidSelect(_ color: PalleteColor) {
+        vm.color = color
     }
     
 }

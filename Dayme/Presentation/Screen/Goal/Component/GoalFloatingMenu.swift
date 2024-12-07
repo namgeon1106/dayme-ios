@@ -50,6 +50,8 @@ final class GoalFloatingMenu: UITableView {
     
 }
 
+// MARK: - UITableViewDataSource
+
 extension GoalFloatingMenu: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -72,6 +74,8 @@ extension GoalFloatingMenu: UITableViewDataSource {
     }
     
 }
+
+// MARK: - UITableViewDelegate
 
 extension GoalFloatingMenu: UITableViewDelegate {
     
