@@ -7,6 +7,35 @@
 
 import Foundation
 
+struct Goal {
+    let id: Int
+    let title: String
+    let emoji: String
+    let startDate: Date
+    let endDate: Date
+    let hex: String
+    let displayHome: Bool
+    
+    static func create(
+        title: String,
+        emoji: String,
+        startDate: Date,
+        endDate: Date,
+        hex: String,
+        displayHome: Bool
+    ) -> Goal {
+        Goal(
+            id: 0,
+            title: title,
+            emoji: emoji,
+            startDate: startDate,
+            endDate: endDate,
+            hex: hex,
+            displayHome: displayHome
+        )
+    }
+}
+
 struct GoalTrackingItem {
     let emoji: String
     let title: String

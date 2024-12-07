@@ -33,4 +33,11 @@ extension Date {
         return calendar.date(byAdding: .day, value: offset, to: self)!
     }
     
+    static func string(_ string: String, format: String) -> Date? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale.current
+        dateFormatter.dateFormat = format
+        return dateFormatter.date(from: string)
+    }
+    
 }

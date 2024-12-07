@@ -6,20 +6,12 @@
 //
 
 import UIKit
+import Combine
 import FlexLayout
 import PinLayout
 import ElegantEmojiPicker
 
-#Preview {
-    UINavigationController(rootViewController: GoalAddVC())
-}
-
-final class GoalAddVM: ObservableObject {
-    @Published var emoji: String = "🚀"
-    @Published var startDate: Date?
-    @Published var endDate: Date?
-    @Published var color: PalleteColor?
-}
+#Preview { UINavigationController(rootViewController: GoalAddVC()) }
 
 final class GoalAddVC: VC {
     
@@ -29,27 +21,28 @@ final class GoalAddVC: VC {
     
     private let scrollView = UIScrollView()
     private let contentView = UIView()
-    
     private let backBtn = UIButton().then {
         let config = UIImage.SymbolConfiguration(pointSize: 20)
         let image = UIImage(systemName: "chevron.backward", withConfiguration: config)
         $0.setImage(image, for: .normal)
         $0.tintColor = .colorGrey30
     }
+    private let doneBtn = FilledButton("추가하기").then {
+        $0.isEnabled = false
+    }
+    private let doneBtnContainer = UIView().then {
+        $0.backgroundColor = .colorBackground
+    }
     
     // 이모지
-    
     private let emojiCaptionLbl = UILabel("목표 이모지").then {
         $0.textColor(.colorGrey50).font(.pretendard(.bold, 14))
     }
-    
     private let emojiLbl = UILabel().then {
         $0.font(.pretendard(.semiBold, 40))
             .textAlignment(.center)
     }
-    
     private let emojiBtn = UIButton()
-    
     private let emojiPlusIV = UIImageView().then {
         let config = UIImage.SymbolConfiguration(pointSize: 12, weight: .heavy)
         let image = UIImage(systemName: "plus", withConfiguration: config)
@@ -61,11 +54,9 @@ final class GoalAddVC: VC {
     }
     
     // 제목
-    
     private let titleCaptionLbl = UILabel("제목").then {
         $0.textColor(.colorGrey50).font(.pretendard(.bold, 14))
     }
-    
     private let titleTF = BorderedTF("제목을 입력해주세요").then {
         $0.contentInsets = UIEdgeInsets(0, 12, 0, 6)
         $0.returnKeyType = .next
@@ -73,34 +64,28 @@ final class GoalAddVC: VC {
     }
     
     // 기간
-    
     private let durationCaptionLbl = UILabel("기간").then {
         $0.textColor(.colorGrey50).font(.pretendard(.bold, 14))
     }
-    
     private lazy var durationStartTF = BorderedTF("시작일").then {
         $0.textAlignment = .center
         $0.inputView = datePicker
         $0.inputAccessoryView = dateToolbar
     }
-    
     private lazy var durationEndTF = BorderedTF("목표일").then {
         $0.textAlignment = .center
         $0.inputView = datePicker
         $0.inputAccessoryView = dateToolbar
     }
-    
     private let durationTildeLbl = UILabel("~").then {
         $0.textColor(.colorGrey30).font(.pretendard(.medium, 16))
     }
-    
     private let datePicker = UIDatePicker().then {
         $0.datePickerMode = .date
         $0.preferredDatePickerStyle = .inline
         $0.tintColor = .colorMain1
         $0.backgroundColor = .white
     }
-    
     private lazy var dateToolbar = UIToolbar().then {
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dateDoneButtonDidTap))
@@ -112,17 +97,25 @@ final class GoalAddVC: VC {
     }
     
     // 색상
-    
     private let colorCaptionLbl = UILabel("목표 색상").then {
         $0.textColor(.colorGrey50).font(.pretendard(.bold, 14))
     }
-    
     private let palleteView = PalleteView()
+    
+    // 홈에 표시
+    private let homeCaptionLbl = UILabel("홈에 표시").then {
+        $0.textColor(.colorDark100).font(.pretendard(.medium, 16))
+    }
+    private let homeSwitch = UISwitch().then {
+        $0.onTintColor = .colorMain1
+    }
     
     
     // MARK: Helpers
     
     override func setup() {
+        addKeyboardObeserver()
+        
         title = "주요목표 추가"
         if let naviBar = navigationController?.navigationBar {
             var attributes = naviBar.titleTextAttributes.orEmpty
@@ -132,7 +125,7 @@ final class GoalAddVC: VC {
         }
         navigationItem.leftBarButtonItem = .init(customView: backBtn)
         view.backgroundColor = .colorBackground
-        scrollView.keyboardDismissMode = .onDrag
+        scrollView.keyboardDismissMode = .interactive
         titleTF.delegate = self
         palleteView.delegate = self
     }
@@ -144,6 +137,11 @@ final class GoalAddVC: VC {
         
         emojiBtn.onAction { [weak self] in
             self?.showEmojiPicker()
+        }
+        
+        titleTF.onAction { [weak self] in
+            guard let self else { return }
+            vm.title = titleTF.text.orEmpty
         }
         
         durationStartTF.onAction(for: .editingDidBegin) { [weak self] in
@@ -177,12 +175,24 @@ final class GoalAddVC: VC {
         datePicker.onAction(for: .valueChanged) { [weak self] in
             self?.pickerValueChanged()
         }
+        
+        homeSwitch.onAction(for: .valueChanged) { [weak self] in
+            guard let self else { return }
+            vm.displayeHome = homeSwitch.isOn
+        }
+        
+        doneBtn.onAction { [weak self] in
+            await self?.addGoal()
+        }
     }
     
     override func setupFlex() {
         view.addSubview(flexView)
         flexView.addSubview(scrollView)
         scrollView.addSubview(contentView)
+        
+        view.addSubview(doneBtnContainer)
+        doneBtnContainer.addSubview(doneBtn)
         
         contentView.flex.define { flex in
             flex.addItem(emojiCaptionLbl).margin(20, 24, 0, 0)
@@ -237,6 +247,18 @@ final class GoalAddVC: VC {
                 flex.addItem().grow(1)
             }
             
+            let homeContainer = UIView()
+            homeContainer.layer.cornerRadius = 8
+            homeContainer.layer.borderWidth = 1
+            homeContainer.layer.borderColor = .uiColor(.colorGrey20)
+            
+            flex.addItem(homeContainer).direction(.row).alignItems(.center).margin(20, 24).height(58).padding(0, 12).define { flex in
+                flex.addItem(homeCaptionLbl)
+                
+                flex.addItem().grow(1)
+                
+                flex.addItem(homeSwitch)
+            }
         }
     }
     
@@ -246,6 +268,12 @@ final class GoalAddVC: VC {
         contentView.pin.all()
         contentView.flex.layout(mode: .adjustHeight)
         scrollView.contentSize = contentView.bounds.size
+        
+        let bottomInset = view.safeAreaInsets.bottom
+        let buttonHeight: CGFloat = 56
+        let containerHeight = buttonHeight + bottomInset + 8 * 2
+        doneBtnContainer.pin.horizontally().bottom().height(containerHeight)
+        doneBtn.pin.bottom(bottomInset + 8).horizontally(24).height(buttonHeight)
     }
     
     override func bind() {
@@ -269,6 +297,12 @@ final class GoalAddVC: VC {
         vm.$color.receive(on: RunLoop.main)
             .sink { [weak self] color in
                 self?.palleteView.selectedColor = color
+            }.store(in: &cancellables)
+        
+        vm.$isValidate
+            .receive(on: RunLoop.main)
+            .sink { [weak self] validate in
+                self?.doneBtn.isEnabled = validate
             }.store(in: &cancellables)
     }
     
@@ -309,6 +343,20 @@ final class GoalAddVC: VC {
             }
         } else if durationEndTF.isFirstResponder {
             _ = durationEndTF.resignFirstResponder()
+        }
+    }
+    
+    @MainActor
+    private func addGoal() async {
+        do {
+            Loader.show(in: view)
+            try await vm.addGoal()
+            Loader.dismiss()
+            Haptic.noti(.success)
+            coordinator?.trigger(with: .goalAddCanceled)
+        } catch {
+            Loader.dismiss()
+            showAlert(title: "🚨 목표 추가 실패", message: error.localizedDescription)
         }
     }
     

@@ -8,6 +8,8 @@
 import Foundation
 
 enum DateFormatStyle: String {
+    /// yyyy-MM-dd
+    case api = "yyyy-MM-dd"
     /// yyyy
     case year = "yyyy"
     /// M
@@ -27,6 +29,10 @@ extension Date {
     
     func string(style: DateFormatStyle) -> String {
         string(format: style.format)
+    }
+    
+    static func string(_ string: String, style: DateFormatStyle) -> Date? {
+        Date.string(string, format: style.format)
     }
     
 }

@@ -20,6 +20,7 @@ final class GoalVM: ObservableObject {
 final class GoalVC: VC {
     
     private let vm = GoalVM()
+    private let service = GoalService()
     
     
     // MARK: UI properties
@@ -58,6 +59,21 @@ final class GoalVC: VC {
         $0.backgroundColor = .colorBackground
         $0.layer.cornerRadius = 12
         $0.alpha = 0
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        Task {
+            do {
+                let goals = try await service.getGoals()
+                goals.enumerated().forEach {
+                    Logger.debug("goal\($0) \($1)")
+                }
+            } catch {
+                Logger.error(error)
+            }
+        }
     }
     
     
