@@ -80,11 +80,13 @@ final class GoalAddVC: VC {
     private lazy var durationStartTF = BorderedTF("시작일").then {
         $0.textAlignment = .center
         $0.inputView = datePicker
+        $0.inputAccessoryView = dateToolbar
     }
     
-    private lazy var durationEndTF = BorderedTF("마감일").then {
+    private lazy var durationEndTF = BorderedTF("목표일").then {
         $0.textAlignment = .center
         $0.inputView = datePicker
+        $0.inputAccessoryView = dateToolbar
     }
     
     private let durationTildeLbl = UILabel("~").then {
@@ -96,11 +98,16 @@ final class GoalAddVC: VC {
         $0.preferredDatePickerStyle = .inline
         $0.tintColor = .colorMain1
         $0.backgroundColor = .white
-        
-        let separator = UIView().backgroundColor(.colorGrey20)
-        $0.addSubview(separator)
-        let width = UIScreen.main.bounds.width
-        separator.frame.size = CGSize(width: width, height: 1)
+    }
+    
+    private lazy var dateToolbar = UIToolbar().then {
+        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dateDoneButtonDidTap))
+        $0.items = [flexibleSpace, doneButton]
+        $0.sizeToFit()
+        $0.tintColor = .colorMain1
+        $0.backgroundColor = .colorBackground
+        $0.isTranslucent = false
     }
     
     
@@ -260,13 +267,23 @@ final class GoalAddVC: VC {
     }
     
     private func pickerValueChanged() {
+        if durationStartTF.isFirstResponder {
+            vm.startDate = datePicker.date
+        } else if durationEndTF.isFirstResponder {
+            vm.endDate = datePicker.date
+        }
+    }
+    
+    @objc private func dateDoneButtonDidTap() {
         Haptic.impact(.light)
         
         if durationStartTF.isFirstResponder {
-            vm.startDate = datePicker.date
-            _ = durationEndTF.becomeFirstResponder()
+            if vm.endDate == nil {
+                _ = durationEndTF.becomeFirstResponder()
+            } else {
+                _ = durationStartTF.resignFirstResponder()
+            }
         } else if durationEndTF.isFirstResponder {
-            vm.endDate = datePicker.date
             _ = durationEndTF.resignFirstResponder()
         }
     }
@@ -278,7 +295,11 @@ final class GoalAddVC: VC {
 extension GoalAddVC: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField == titleTF {
-            return durationStartTF.becomeFirstResponder()
+            if vm.startDate == nil {
+                _ = durationStartTF.becomeFirstResponder()
+            } else {
+                _ = titleTF.resignFirstResponder()
+            }
         }
         
         return true
