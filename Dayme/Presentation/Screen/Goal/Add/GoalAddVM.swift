@@ -18,11 +18,13 @@ final class GoalAddVM: ObservableObject {
     
     @Published private(set) var isValidate: Bool = false
     
-    private let service = GoalService()
+    private let service: GoalService = .shared
+    
     
     init() {
         bind()
     }
+    
     
     func addGoal() async throws {
         guard let startDate, let endDate, let color else {

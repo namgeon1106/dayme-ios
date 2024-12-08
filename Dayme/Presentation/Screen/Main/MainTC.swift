@@ -11,6 +11,9 @@ final class MainTC: UITabBarController {
     
     weak var coordinator: Coordinator?
     
+    private let vm = MainVM()
+    
+    
     init(_ viewControllers: [UIViewController]) {
         super.init(nibName: nil, bundle: nil)
         

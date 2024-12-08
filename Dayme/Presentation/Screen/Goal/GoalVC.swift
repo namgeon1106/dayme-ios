@@ -17,8 +17,6 @@ import PinLayout
 final class GoalVC: VC {
     
     private let vm = GoalVM()
-    private let service = GoalService()
-    
     
     // MARK: UI properties
     

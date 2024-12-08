@@ -6,12 +6,25 @@
 //
 
 import Foundation
+import Combine
 
 class GoalService: TokenAccessible {
     
+    static let shared = GoalService()
+    
+    var goals: AnyPublisher<[Goal], Never> {
+        _goals.eraseToAnyPublisher()
+    }
+    
+    private let _goals = CurrentValueSubject<[Goal], Never>([])
     private let network = Network()
     
+    
+    private init() {}
+    
+    
     @MainActor
+    @discardableResult
     func getGoals() async throws -> [Goal] {
         let token = try getAccessToken()
         let endpoint = Endpoint(
@@ -21,8 +34,10 @@ class GoalService: TokenAccessible {
         ).withAuthorization(token)
         
         let reponse: [GoalResponse] = try await network.request(endpoint)
+        let goals = reponse.compactMap { $0.toDomain() }
+        _goals.send(goals)
         
-        return reponse.compactMap { $0.toDomain() }
+        return goals
     }
     
     @MainActor
@@ -36,6 +51,8 @@ class GoalService: TokenAccessible {
         ).withAuthorization(token)
         
         try await network.request(endpoint)
+        
+        _goals.send(_goals.value + [goal])
     }
     
 }

@@ -6,12 +6,25 @@
 //
 
 import Foundation
+import Combine
 
 class UserService: TokenAccessible {
     
+    static let shared = UserService()
+    
+    var user: AnyPublisher<User?, Never> {
+        _user.eraseToAnyPublisher()
+    }
+    
+    private let _user = CurrentValueSubject<User?, Never>(nil)
     private let network = Network()
     
+    
+    private init() {}
+    
+    
     @MainActor
+    @discardableResult
     func getUser() async throws -> User {
         let token = try getAccessToken()
         let endpoint = Endpoint(
@@ -21,8 +34,10 @@ class UserService: TokenAccessible {
         ).withAuthorization(token)
         
         let reponse: UserResponse = try await network.request(endpoint)
+        let user = reponse.toDomain()
+        _user.send(user)
         
-        return reponse.toDomain()
+        return user
     }
     
     @MainActor
@@ -36,6 +51,7 @@ class UserService: TokenAccessible {
         
         try await network.request(endpoint)
         
+        _user.send(nil)
         removeToken()
         UserDefault.loggedIn = false
         UserDefault.socialLogin = nil

@@ -12,14 +12,9 @@ import PinLayout
 
 #Preview { GoalPageVC() }
 
-final class GoalPageVM: ObservableObject {
-    @Published var ongoingGoals: [Goal] = []
-    @Published var pastGoals: [Goal] = []
-}
-
 final class GoalPageVC: VC {
     
-    private let vm = GoalPageVM()
+    let vm = GoalPageVM()
     
     private var currentIndex: Int = 0
     

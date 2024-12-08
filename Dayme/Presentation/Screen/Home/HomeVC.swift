@@ -14,16 +14,9 @@ import Combine
     UINavigationController(rootViewController: HomeVC())
 }
 
-final class HomeVM: ObservableObject {
-    @Published var nickname: String = "OOO"
-    @Published var selectedDate = Date()
-    @Published var weekDates: [Date] = Calendar.current.weekDates(from: Date())
-}
-
 final class HomeVC: VC {
     
     private let vm = HomeVM()
-    
     
     // MARK: UI Properties
     

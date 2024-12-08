@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  VC.swift
 //  Dayme
 //
 //  Created by 정동천 on 11/1/24.

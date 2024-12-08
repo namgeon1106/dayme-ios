@@ -13,15 +13,16 @@ import PinLayout
 
 final class SettingVC: VC {
     
-    private let authService = AuthService()
-    private let userService = UserService()
+    private let vm = SettingVM()
     private let settings: [Setting] = Setting.allCases
+    
     
     // MARK: UI properties
     
     private let tableView = UITableView()
     private let logoutBtn = FilledButton("로그아웃")
     private let withdrawBtn = FilledButton("회원 탈퇴")
+    
     
     // MARK: Helpers
     
@@ -50,7 +51,7 @@ private extension SettingVC {
     
     @MainActor
     func logout() async {
-        try? await authService.logout()
+        try? await vm.logout()
         coordinator?.trigger(with: .logout)
         Haptic.noti(.success)
     }
@@ -69,7 +70,7 @@ private extension SettingVC {
         }
         
         do {
-            try await userService.deleteUser()
+            try await vm.deleteUser()
             coordinator?.trigger(with: .userDeleted)
             Haptic.noti(.success)
         } catch {

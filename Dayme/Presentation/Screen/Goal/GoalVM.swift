@@ -10,4 +10,6 @@ import Combine
 
 final class GoalVM: ObservableObject {
     @Published var isMenuHidden: Bool = true
+    
+    private let service: GoalService = .shared
 }
