@@ -10,7 +10,9 @@ import Combine
 import FlexLayout
 import PinLayout
 
+#if DEBUG
 #Preview { GoalPageVC() }
+#endif
 
 final class GoalPageVC: VC {
     

@@ -10,9 +10,11 @@ import Combine
 import FlexLayout
 import PinLayout
 
+#if DEBUG
 #Preview {
     UINavigationController(rootViewController: GoalVC())
 }
+#endif
 
 final class GoalVC: VC {
     

@@ -11,7 +11,11 @@ import FlexLayout
 import PinLayout
 import ElegantEmojiPicker
 
-#Preview { UINavigationController(rootViewController: GoalAddVC()) }
+#if DEBUG
+#Preview {
+    UINavigationController(rootViewController: GoalAddVC())
+}
+#endif
 
 final class GoalAddVC: VC {
     

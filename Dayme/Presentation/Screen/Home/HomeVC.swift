@@ -10,9 +10,11 @@ import FlexLayout
 import PinLayout
 import Combine
 
+#if DEBUG
 #Preview {
     UINavigationController(rootViewController: HomeVC())
 }
+#endif
 
 final class HomeVC: VC {
     

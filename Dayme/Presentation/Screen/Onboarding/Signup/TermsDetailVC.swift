@@ -10,7 +10,9 @@ import FlexLayout
 import PinLayout
 import Then
 
+#if DEBUG
 #Preview { TermsDetailVC(terms: .termsOfService) }
+#endif
 
 final class TermsDetailVC: VC {
     

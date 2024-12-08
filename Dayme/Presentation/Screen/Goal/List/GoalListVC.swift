@@ -9,13 +9,13 @@ import UIKit
 import FlexLayout
 import PinLayout
 
+#if DEBUG
 #Preview {
     let vc = GoalListVC()
-    #if DEBUG
     vc.goals = mockGoals
-    #endif
     return vc
 }
+#endif
 
 final class GoalListVC: UITableViewController {
     

@@ -11,11 +11,13 @@ import FlexLayout
 import PinLayout
 import ElegantEmojiPicker
 
+#if DEBUG
 #Preview {
     let vm = GoalEditVM(goal: mockGoals[0])
     let vc = GoalEditVC(vm: vm)
     return UINavigationController(rootViewController: vc)
 }
+#endif
 
 final class GoalEditVC: VC {
     

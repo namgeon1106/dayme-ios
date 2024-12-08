@@ -11,7 +11,9 @@ import FlexLayout
 import PinLayout
 import Then
 
+#if DEBUG
 #Preview { NicknameVC() }
+#endif
 
 final class NicknameVM: ObservableObject {
     @Published var nickname: String = ""

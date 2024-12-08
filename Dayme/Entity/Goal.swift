@@ -72,7 +72,7 @@ struct GoalTrackingItem {
     let hex: String
 }
 
-#if DEBUG
+//#if DEBUG
 let mockGoals: [Goal] = [
     Goal(
         id: 1,
@@ -85,9 +85,7 @@ let mockGoals: [Goal] = [
         progress: 0.5
     )
 ]
-#endif
 
-//#if DEBUG
 let mockGoalTrackingItems: [GoalTrackingItem] = [
     GoalTrackingItem(
         emoji: "✍",

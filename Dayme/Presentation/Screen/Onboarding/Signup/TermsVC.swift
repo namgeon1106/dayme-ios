@@ -10,7 +10,9 @@ import FlexLayout
 import PinLayout
 import Then
 
+#if DEBUG
 #Preview { TermsVC() }
+#endif
 
 final class TermsVM: ObservableObject {
     @Published var agreeAll: Bool = false

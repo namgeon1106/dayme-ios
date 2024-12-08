@@ -9,7 +9,9 @@ import UIKit
 import FlexLayout
 import PinLayout
 
+#if DEBUG
 #Preview { SettingVC() }
+#endif
 
 final class SettingVC: VC {
     
