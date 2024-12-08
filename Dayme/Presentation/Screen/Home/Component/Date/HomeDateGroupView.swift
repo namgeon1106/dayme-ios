@@ -143,8 +143,10 @@ final class HomeDateGroupView: Vue {
     
     private func updateButton() {
         let today = Date()
-        let isPrevPressed = today > weekDates.last ?? selectedDate
-        let isNextPressed = today < weekDates.first ?? selectedDate
+        let first = weekDates.first ?? selectedDate
+        let last = weekDates.last ?? selectedDate
+        let isPrevPressed = today > last && !today.isSameDay(with: last)
+        let isNextPressed = today < first && !today.isSameDay(with: first)
         
         prevBG.isHidden = !isPrevPressed
         nextBG.isHidden = !isNextPressed

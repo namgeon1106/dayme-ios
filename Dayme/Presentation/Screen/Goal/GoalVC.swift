@@ -61,20 +61,7 @@ final class GoalVC: VC {
         $0.alpha = 0
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        Task {
-            do {
-                let goals = try await service.getGoals()
-                goals.enumerated().forEach {
-                    Logger.debug("goal\($0) \($1)")
-                }
-            } catch {
-                Logger.error(error)
-            }
-        }
-    }
+    private let pageVC = GoalPageVC()
     
     
     // MARK: Helpers
@@ -99,9 +86,15 @@ final class GoalVC: VC {
     }
     
     override func setupFlex() {
+        addChild(pageVC)
+        
         view.addSubview(flexView)
         
         flexView.flex.define { flex in
+            flex.addItem(pageVC.view)
+                .all(0)
+                .position(.absolute)
+            
             flex.addItem(dimmedView)
                 .width(100%).height(100%)
                 .position(.absolute)
@@ -116,10 +109,14 @@ final class GoalVC: VC {
                 .right(24).bottom(24)
                 .position(.absolute)
         }
+        
+        pageVC.didMove(toParent: self)
     }
     
     override func layoutFlex() {
         flexView.pin.all()
+        pageVC.view.flex.top(safeArea.top)
+            .bottom(window?.safeAreaInsets.bottom ?? 0)
         flexView.flex.layout()
     }
     

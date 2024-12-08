@@ -39,6 +39,10 @@ final class GoalListVC: UITableViewController {
         tableView.register(GoalListCell.self)
         tableView.separatorStyle = .none
         tableView.rowHeight = 110
+        tableView.tableHeaderView = UIView()
+        tableView.tableHeaderView?.frame.size.height = 24
+        tableView.tableFooterView = UIView()
+        tableView.tableFooterView?.frame.size.height = 24
     }
     
 }
