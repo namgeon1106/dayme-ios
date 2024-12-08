@@ -11,7 +11,9 @@ import PinLayout
 
 #Preview {
     let vc = GoalListVC()
+    #if DEBUG
     vc.goals = mockGoals
+    #endif
     return vc
 }
 
