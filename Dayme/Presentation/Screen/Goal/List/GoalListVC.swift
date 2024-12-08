@@ -19,6 +19,8 @@ import PinLayout
 
 final class GoalListVC: UITableViewController {
     
+    weak var cellDelegate: GoalListCellDelegate?
+    
     var goals: [Goal] = [] {
         didSet {
             DispatchQueue.main.async {
@@ -26,6 +28,7 @@ final class GoalListVC: UITableViewController {
             }
         }
     }
+    
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -36,6 +39,7 @@ final class GoalListVC: UITableViewController {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
+    
     
     private func setup() {
         tableView.register(GoalListCell.self)
@@ -60,6 +64,7 @@ extension GoalListVC {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: GoalListCell = tableView.dequeueReusableCell(for: indexPath)
         cell.bind(goals[indexPath.row])
+        cell.delegate = cellDelegate
         return cell
     }
     

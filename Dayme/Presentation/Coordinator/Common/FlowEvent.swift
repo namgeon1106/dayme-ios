@@ -8,6 +8,7 @@
 import Foundation
 
 enum FlowEvent {
+    
     // MARK: Onboarding
     case loginFinished
     case signupNeeded(OAuthSignupInfo)
@@ -21,10 +22,11 @@ enum FlowEvent {
     // MARK: Goal
     case goalAddNeeded
     case goalAddCanceled
-    case goalEditNeeded
+    case goalEditNeeded(Goal)
     case goalEditCanceled
     
     // MARK: Setting
     case logout
     case userDeleted
+    
 }

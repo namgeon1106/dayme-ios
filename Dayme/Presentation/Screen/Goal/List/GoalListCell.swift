@@ -9,7 +9,15 @@ import UIKit
 import FlexLayout
 import PinLayout
 
+protocol GoalListCellDelegate: AnyObject {
+    func goalListCellDidTapEdit(_ goal: Goal)
+}
+
 final class GoalListCell: TableViewCell {
+    
+    weak var delegate: GoalListCellDelegate?
+    
+    private(set) var goal: Goal!
     
     private let progressBar = ProgressBar()
     private let emojiLbl = UILabel().then {
@@ -28,8 +36,16 @@ final class GoalListCell: TableViewCell {
     private let percentileLbl = UILabel().then {
         $0.textColor(.colorGrey50).font(.pretendard(.bold, 14))
     }
+    private let editBtn = UIButton().then {
+        $0.setImage(.icEllipsis, for: .normal)
+    }
+    
+    
+    // MARK: Helpers
     
     func bind(_ goal: Goal) {
+        self.goal = goal
+        
         emojiLbl.text = goal.emoji
         titleLbl.text = goal.title
         let startDate = goal.startDate.string(style: .dotted)
@@ -50,6 +66,10 @@ final class GoalListCell: TableViewCell {
         selectionStyle = .none
     }
     
+    override func setupAction() {
+        editBtn.addTarget(self, action: #selector(editButtonDidTap), for: .touchUpInside)
+    }
+    
     override func setupFlex() {
         contentView.addSubview(flexView)
         
@@ -59,10 +79,10 @@ final class GoalListCell: TableViewCell {
                     flex.addItem(emojiLbl).alignSelf(.center).position(.absolute)
                 }
                 
-                flex.addItem().margin(2, 8, 0, 0).define { flex in
-                    flex.addItem(titleLbl)
+                flex.addItem().grow(1).margin(2, 8, 0, 20).define { flex in
+                    flex.addItem(titleLbl).width(100%)
                     
-                    flex.addItem(dateLbl).marginTop(6)
+                    flex.addItem(dateLbl).width(100%).marginTop(6)
                 }
             }
             
@@ -72,11 +92,17 @@ final class GoalListCell: TableViewCell {
                 flex.addItem(percentileLbl).marginLeft(8)
             }
         }
+        contentView.addSubview(editBtn)
     }
     
     override func layoutFlex() {
         flexView.pin.vertically(5).horizontally(24)
+        editBtn.pin.width(44).height(44).top(3).right(16)
         flexView.flex.layout()
+    }
+    
+    @objc private func editButtonDidTap() {
+        delegate?.goalListCellDidTapEdit(goal)
     }
     
 }

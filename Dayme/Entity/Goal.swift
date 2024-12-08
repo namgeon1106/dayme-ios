@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Goal {
+struct Goal: Equatable, Identifiable {
     let id: Int
     let title: String
     let emoji: String
@@ -16,6 +16,11 @@ struct Goal {
     let hex: String
     let displayHome: Bool
     let progress: Double
+    
+    
+    static func == (lhs: Goal, rhs: Goal) -> Bool {
+        lhs.id == rhs.id
+    }
     
     static func create(
         title: String,
@@ -34,6 +39,28 @@ struct Goal {
             hex: hex,
             displayHome: displayHome,
             progress: 0
+        )
+    }
+    
+    func copyWith(
+        id: Int? = nil,
+        title: String? = nil,
+        emoji: String? = nil,
+        startDate: Date? = nil,
+        endDate: Date? = nil,
+        hex: String? = nil,
+        displayHome: Bool? = nil,
+        progress: Double? = nil
+    ) -> Goal {
+        Goal(
+            id: id ?? self.id,
+            title: title ?? self.title,
+            emoji: emoji ?? self.emoji,
+            startDate: startDate ?? self.startDate,
+            endDate: endDate ?? self.endDate,
+            hex: hex ?? self.hex,
+            displayHome: displayHome ?? self.displayHome,
+            progress: progress ?? self.progress
         )
     }
 }

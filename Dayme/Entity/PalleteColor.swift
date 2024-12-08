@@ -21,4 +21,12 @@ enum PalleteColor: CaseIterable {
         }
     }
     
+    init?(hex: String) {
+        if let color = PalleteColor.allCases.first(where: { $0.hex == hex }) {
+            self = color
+        } else {
+            return nil
+        }
+    }
+    
 }

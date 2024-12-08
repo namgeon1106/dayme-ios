@@ -14,6 +14,8 @@ import PinLayout
 
 final class GoalPageVC: VC {
     
+    weak var cellDelegate: GoalListCellDelegate?
+    
     let vm = GoalPageVM()
     
     private var currentIndex: Int = 0
@@ -49,6 +51,9 @@ final class GoalPageVC: VC {
     
     override func setup() {
         updateMenuButtons()
+        
+        ongoingVC.cellDelegate = cellDelegate
+        pastVC.cellDelegate = cellDelegate
         
         for subview in pageVC.view.subviews {
             if let scrollView = subview as? UIScrollView {

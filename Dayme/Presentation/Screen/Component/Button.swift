@@ -7,6 +7,31 @@
 
 import UIKit
 
+// MARK: - BoarderdButton
+
+final class BoarderdButton: UIButton {
+    
+    init(_ title: String, color: UIColor) {
+        super.init(frame: .zero)
+        
+        var attrString = AttributedString(title)
+        attrString.font = .pretendard(.bold, 18)
+        
+        var config = UIButton.Configuration.filled()
+        config.baseBackgroundColor = .clear
+        config.background.cornerRadius = 12
+        config.background.strokeWidth = 1
+        config.background.strokeColor = color
+        config.baseForegroundColor = color
+        config.attributedTitle = attrString
+        configuration = config
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+}
+
 // MARK: - FilledButton
 
 final class FilledButton: UIButton {

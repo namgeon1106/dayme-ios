@@ -23,7 +23,6 @@ class GoalService: TokenAccessible {
     private init() {}
     
     
-    @MainActor
     @discardableResult
     func getGoals() async throws -> [Goal] {
         let token = try getAccessToken()
@@ -40,7 +39,6 @@ class GoalService: TokenAccessible {
         return goals
     }
     
-    @MainActor
     func createGoal(_ goal: Goal) async throws {
         let token = try getAccessToken()
         let endpoint = Endpoint(
@@ -52,7 +50,43 @@ class GoalService: TokenAccessible {
         
         try await network.request(endpoint)
         
-        _goals.send(_goals.value + [goal])
+        // 생성한 id를 현재 모르기 때문에 서버 동기화
+        _ = try? await getGoals()
+    }
+    
+    func editGoal(_ goal: Goal) async throws {
+        let token = try getAccessToken()
+        let endpoint = Endpoint(
+            method: .put,
+            baseUrl: Env.serverBaseUrl,
+            path: "/goal/\(goal.id)",
+            params: AddGoalRequest.fromDomain(goal).toDictionary()
+        ).withAuthorization(token)
+        
+        try await network.request(endpoint)
+        
+        var goals = _goals.value
+        if let index = goals.firstIndex(of: goal) {
+            goals[index] = goal
+            _goals.send(goals)
+        }
+    }
+    
+    func deleteGoal(_ id: Int) async throws {
+        let token = try getAccessToken()
+        let endpoint = Endpoint(
+            method: .delete,
+            baseUrl: Env.serverBaseUrl,
+            path: "/goal/\(id)"
+        ).withAuthorization(token)
+        
+        try await network.request(endpoint)
+        
+        var goals = _goals.value
+        if let index = goals.firstIndex(where: { $0.id == id }) {
+            goals.remove(at: index)
+            _goals.send(goals)
+        }
     }
     
 }

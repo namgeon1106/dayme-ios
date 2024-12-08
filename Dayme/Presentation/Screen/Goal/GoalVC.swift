@@ -66,6 +66,7 @@ final class GoalVC: VC {
         navigationItem.leftBarButtonItem = .init(customView: titleLbl)
         menu.menuDelegate = self
         pageVC.emptyView.delegate = self
+        pageVC.cellDelegate = self
     }
     
     override func setupAction() {
@@ -179,6 +180,16 @@ extension GoalVC: GoalListEmptyViewDelegate {
     func goalListEmptyViewDidTapAddGoal() {
         Haptic.impact(.light)
         coordinator?.trigger(with: .goalAddNeeded)
+    }
+    
+}
+
+// MARK: - GoalListCellDelegate
+
+extension GoalVC: GoalListCellDelegate {
+    
+    func goalListCellDidTapEdit(_ goal: Goal) {
+        coordinator?.trigger(with: .goalEditNeeded(goal))
     }
     
 }
