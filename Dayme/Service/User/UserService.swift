@@ -40,7 +40,6 @@ class UserService: TokenAccessible {
         return user
     }
     
-    @MainActor
     func deleteUser() async throws {
         let token = try getAccessToken()
         let endpoint = Endpoint(
@@ -57,7 +56,6 @@ class UserService: TokenAccessible {
         UserDefault.socialLogin = nil
     }
     
-    @MainActor
     func resetPassword(_ password: String) async throws {
         let token = try getAccessToken()
         let endpoint = Endpoint(

@@ -14,6 +14,7 @@ import PinLayout
 final class LoginVC: VC {
     
     private let authService = AuthService()
+    private let userService: UserService = .shared
     
     // MARK: UI properties
     
@@ -89,6 +90,7 @@ private extension LoginVC {
             
             do {
                 try await authService.loginWithSocial(provider, idToken: idToken)
+                _ = try? await userService.getUser()
                 Loader.dismiss()
                 coordinator?.trigger(with: .loginFinished)
                 Haptic.noti(.success)

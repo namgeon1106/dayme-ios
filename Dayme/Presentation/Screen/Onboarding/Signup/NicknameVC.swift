@@ -22,6 +22,7 @@ final class NicknameVC: VC {
     private let authInfo: OAuthSignupInfo
     private let vm = NicknameVM()
     private let authService = AuthService()
+    private let userService: UserService = .shared
     
     private let maxLength: Int = 10
     
@@ -193,6 +194,7 @@ private extension NicknameVC {
                     newInfo.provider,
                     idToken: newInfo.token
                 )
+                _ = try? await userService.getUser()
                 
                 Loader.dismiss()
                 
