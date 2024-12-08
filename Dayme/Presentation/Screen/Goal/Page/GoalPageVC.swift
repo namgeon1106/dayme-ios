@@ -23,6 +23,10 @@ final class GoalPageVC: VC {
     
     private var currentIndex: Int = 0
     
+    // MARK: UI properties
+    
+    let emptyView = GoalListEmptyView()
+    
     private lazy var pageVC = UIPageViewController(
         transitionStyle: .scroll,
         navigationOrientation: .horizontal
@@ -31,6 +35,7 @@ final class GoalPageVC: VC {
         $0.delegate = self
         $0.setViewControllers([ongoingVC], direction: .forward, animated: false)
     }
+    
     private let ongoingVC = GoalListVC()
     private let pastVC = GoalListVC()
     private let ongoingBtn = UIButton()
@@ -44,15 +49,6 @@ final class GoalPageVC: VC {
         [ongoingBtn, pastBtn]
     }
     
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        DispatchQueue.main.async {
-            self.vm.ongoingGoals = mockGoals
-            self.vm.pastGoals = (1...10).flatMap { _ in mockGoals }
-        }
-    }
     
     // MARK: Helpers
     
@@ -120,6 +116,8 @@ final class GoalPageVC: VC {
             return
         }
         
+        Haptic.impact(.light)
+        
         indicator.flex.left(button.frame.origin.x)
             .width(button.frame.width)
         indicator.flex.markDirty()
@@ -174,6 +172,7 @@ final class GoalPageVC: VC {
     }
     
     private func updateGoals(ongoing: [Goal], past: [Goal]) {
+        ongoingVC.tableView.backgroundView = ongoing.isEmpty ? emptyView : nil
         ongoingVC.goals = ongoing
         pastVC.goals = past
         

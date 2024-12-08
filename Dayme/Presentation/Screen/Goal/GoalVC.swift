@@ -6,15 +6,12 @@
 //
 
 import UIKit
+import Combine
 import FlexLayout
 import PinLayout
 
 #Preview {
     UINavigationController(rootViewController: GoalVC())
-}
-
-final class GoalVM: ObservableObject {
-    @Published var isMenuHidden: Bool = true
 }
 
 final class GoalVC: VC {
@@ -70,6 +67,7 @@ final class GoalVC: VC {
         view.backgroundColor = .colorBackground
         navigationItem.leftBarButtonItem = .init(customView: titleLbl)
         menu.menuDelegate = self
+        pageVC.emptyView.delegate = self
     }
     
     override func setupAction() {
@@ -172,6 +170,17 @@ extension GoalVC: GoalFloatingMenuDelegate {
         case .subGoal: break
         case .checklist: break
         }
+    }
+    
+}
+
+// MARK: - GoalListEmptyViewDelegate
+
+extension GoalVC: GoalListEmptyViewDelegate {
+    
+    func goalListEmptyViewDidTapAddGoal() {
+        Haptic.impact(.light)
+        coordinator?.trigger(with: .goalAddNeeded)
     }
     
 }
