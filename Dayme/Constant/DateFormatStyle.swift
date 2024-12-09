@@ -7,24 +7,34 @@
 
 import Foundation
 
-enum DateFormatStyle: String {
+enum DateFormatStyle {
     /// yyyy-MM-dd
-    case api = "yyyy-MM-dd"
+    case standard
     /// yyyy.MM.dd.
-    case dotted = "yyyy.MM.dd."
+    case dotted
     /// yyyy
-    case year = "yyyy"
+    case year
     /// M
-    case month = "M"
+    case month
     /// d
-    case day = "d"
+    case day
     /// EEE
-    case weekday = "EEE"
+    case weekday
+    /// yyyy.MM.dd (EEE)
+    case goalDuration
     
-    case goalDuration = "M월 d일 (EEE)"
     
-    
-    var format: String { rawValue }
+    var format: String {
+        switch self {
+        case .standard: "yyyy-MM-dd"
+        case .dotted: "yyyy.MM.dd."
+        case .year: "yyyy"
+        case .month: "M"
+        case .day: "d"
+        case .weekday: "EEE"
+        case .goalDuration: "yyyy.MM.dd (EEE)"
+        }
+    }
 }
 
 extension Date {

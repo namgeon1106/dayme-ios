@@ -18,8 +18,8 @@ struct GoalResponse: Decodable {
     let isHomeView: Bool
     
     func toDomain() -> Goal? {
-        guard let startDate = Date.string(startDate, style: .api),
-              let endDate = Date.string(endDate, style: .api) else {
+        guard let startDate = Date.string(startDate, style: .standard),
+              let endDate = Date.string(endDate, style: .standard) else {
             return nil
         }
         
@@ -48,8 +48,8 @@ struct AddGoalRequest: Encodable {
         AddGoalRequest(
             title: goal.title,
             emoji: goal.emoji,
-            startDate: goal.startDate.string(style: .api),
-            endDate: goal.endDate.string(style: .api),
+            startDate: goal.startDate.string(style: .standard),
+            endDate: goal.endDate.string(style: .standard),
             color: goal.hex,
             isHomeView: goal.displayHome
         )

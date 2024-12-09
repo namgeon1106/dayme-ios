@@ -65,7 +65,7 @@ final class HomeVC: VC {
         flexView.addSubview(scrollView)
         scrollView.addSubview(contentView)
         
-        contentView.flex.height(700).define { flex in
+        contentView.flex.define { flex in
             flex.addItem(dashboard).margin(15)
             
             flex.addItem(dateGroupView).marginTop(15)

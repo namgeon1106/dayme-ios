@@ -113,6 +113,16 @@ final class GoalAddVC: VC {
     private let homeSwitch = UISwitch().then {
         $0.onTintColor = .colorMain1
     }
+    private let homeContainer = UIView().then {
+        $0.layer.cornerRadius = 8
+        $0.layer.borderWidth = 1
+        $0.layer.borderColor = .uiColor(.colorGrey20)
+    }
+    private let homeWarningLbl = UILabel("홈 화면에는 목표가 최대 3개까지만 표시됩니다.").then {
+        $0.textColor(.colorRed)
+        $0.font(.pretendard(.medium, 14))
+        $0.alpha = 0
+    }
     
     
     // MARK: Helpers
@@ -153,10 +163,8 @@ final class GoalAddVC: VC {
             
             Haptic.impact(.light)
             
-            datePicker.minimumDate = nil
-            if let startDate = vm.startDate {
-                datePicker.date = startDate
-                vm.startDate = nil
+            if vm.startDate == nil {
+                vm.startDate = datePicker.date
             }
             if let endDate = vm.endDate {
                 datePicker.maximumDate = endDate
@@ -166,13 +174,8 @@ final class GoalAddVC: VC {
         durationEndTF.onAction(for: .editingDidBegin) { [weak self] in
             guard let self else { return }
             
-            datePicker.maximumDate = nil
             if let startDate = vm.startDate {
                 datePicker.minimumDate = startDate
-            }
-            if let endDate = vm.endDate {
-                datePicker.date = endDate
-                vm.endDate = nil
             }
         }
         
@@ -182,7 +185,15 @@ final class GoalAddVC: VC {
         
         homeSwitch.onAction(for: .valueChanged) { [weak self] in
             guard let self else { return }
-            vm.displayeHome = homeSwitch.isOn
+            
+            if vm.isDisplayLimited {
+                homeSwitch.isOn = false
+                homeContainer.layer.borderColor = .uiColor(.colorRed)
+                homeWarningLbl.alpha = 1
+                Haptic.noti(.warning)
+            } else {
+                vm.displayeHome = homeSwitch.isOn
+            }
         }
         
         doneBtn.onAction { [weak self] in
@@ -251,18 +262,15 @@ final class GoalAddVC: VC {
                 flex.addItem().grow(1)
             }
             
-            let homeContainer = UIView()
-            homeContainer.layer.cornerRadius = 8
-            homeContainer.layer.borderWidth = 1
-            homeContainer.layer.borderColor = .uiColor(.colorGrey20)
-            
-            flex.addItem(homeContainer).direction(.row).alignItems(.center).margin(20, 24).height(58).padding(0, 12).define { flex in
+            flex.addItem(homeContainer).direction(.row).alignItems(.center).margin(20, 24, 0, 24).height(58).padding(0, 12).define { flex in
                 flex.addItem(homeCaptionLbl)
                 
                 flex.addItem().grow(1)
                 
                 flex.addItem(homeSwitch)
             }
+            
+            flex.addItem(homeWarningLbl).margin(15, 24, 20, 0)
         }
     }
     
@@ -303,8 +311,7 @@ final class GoalAddVC: VC {
                 self?.palleteView.selectedColor = color
             }.store(in: &cancellables)
         
-        vm.$isValidate
-            .receive(on: RunLoop.main)
+        vm.$isValidate.receive(on: RunLoop.main)
             .sink { [weak self] validate in
                 self?.doneBtn.isEnabled = validate
             }.store(in: &cancellables)
@@ -399,6 +406,7 @@ extension GoalAddVC: ElegantEmojiPickerDelegate {
 extension GoalAddVC: PalleteViewDelegate {
     
     func palleteViewDidSelect(_ color: PalleteColor) {
+        Haptic.impact(.light)
         vm.color = color
     }
     

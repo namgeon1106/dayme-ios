@@ -8,22 +8,18 @@
 import Foundation
 import Combine
 
-final class GoalAddVM: ObservableObject {
+final class GoalAddVM: VM {
     @Published var emoji: String = "🚀"
     @Published var title: String = ""
     @Published var startDate: Date?
     @Published var endDate: Date?
     @Published var color: PalleteColor?
     @Published var displayeHome: Bool = false
+    @Published var isDisplayLimited: Bool = false
     
     @Published private(set) var isValidate: Bool = false
     
     private let service: GoalService = .shared
-    
-    
-    init() {
-        bind()
-    }
     
     
     func addGoal() async throws {
@@ -42,7 +38,7 @@ final class GoalAddVM: ObservableObject {
         try await service.createGoal(goal)
     }
     
-    private func bind() {
+    override func bind() {
         Publishers.CombineLatest4(
             $emoji.map({ !$0.isEmpty }),
             $title.map({ !$0.isEmpty }),
@@ -52,5 +48,15 @@ final class GoalAddVM: ObservableObject {
         .map { $0 && $1 && $2 && $3 }
         .combineLatest($color.map({ $0 != nil })) { $0 && $1 }
         .assign(to: &$isValidate)
+        
+        service.goals.map { goals in
+            let displayCount = goals.filter(\.displayHome).count
+            let maximumCount = 3
+            return displayCount >= maximumCount
+        }
+        .sink { [weak self] limited in
+            self?.isDisplayLimited = limited
+        }.store(in: &cancellables)
     }
+    
 }

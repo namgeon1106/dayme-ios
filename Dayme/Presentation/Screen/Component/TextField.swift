@@ -21,6 +21,7 @@ final class BorderedTF: UITextField {
         $0.tintColor = .colorMain1
     }
     
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -34,6 +35,7 @@ final class BorderedTF: UITextField {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
+    
     
     override func textRect(forBounds bounds: CGRect) -> CGRect {
         return bounds.inset(by: contentInsets)

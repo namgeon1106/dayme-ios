@@ -8,13 +8,14 @@
 import Foundation
 import Combine
 
-final class GoalEditVM: ObservableObject {
+final class GoalEditVM: VM {
     @Published var emoji: String
     @Published var title: String
     @Published var startDate: Date?
     @Published var endDate: Date?
     @Published var color: PalleteColor?
     @Published var displayeHome: Bool
+    @Published var isDisplayLimited: Bool = false
     
     @Published private(set) var isValidate: Bool = false
     
@@ -31,8 +32,7 @@ final class GoalEditVM: ObservableObject {
         self.endDate = goal.endDate
         self.color = .init(hex: goal.hex)
         self.displayeHome = goal.displayHome
-        
-        bind()
+        super.init()
     }
     
     
@@ -56,7 +56,7 @@ final class GoalEditVM: ObservableObject {
         try await service.deleteGoal(goal.id)
     }
     
-    private func bind() {
+    override func bind() {
         Publishers.CombineLatest4(
             $emoji.map({ !$0.isEmpty }),
             $title.map({ !$0.isEmpty }),
@@ -66,5 +66,17 @@ final class GoalEditVM: ObservableObject {
         .map { $0 && $1 && $2 && $3 }
         .combineLatest($color.map({ $0 != nil })) { $0 && $1 }
         .assign(to: &$isValidate)
+        
+        if !goal.displayHome {
+            service.goals.map { goals in
+                let displayCount = goals.filter(\.displayHome).count
+                let maximumCount = 3
+                return displayCount >= maximumCount
+            }
+            .sink { [weak self] limited in
+                self?.isDisplayLimited = limited
+            }.store(in: &cancellables)
+        }
     }
+    
 }

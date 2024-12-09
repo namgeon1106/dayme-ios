@@ -119,6 +119,13 @@ final class GoalVC: VC {
         flexView.flex.layout()
     }
     
+    override func bind() {
+        vm.$isFABHidden.receive(on: RunLoop.main)
+            .sink { [weak self] isHidden in
+                self?.floatingBtn.isHidden = isHidden
+            }.store(in: &cancellables)
+    }
+    
     private func showMenu() async {
         Haptic.impact(.medium)
         
@@ -191,6 +198,7 @@ extension GoalVC: GoalListEmptyViewDelegate {
 extension GoalVC: GoalListCellDelegate {
     
     func goalListCellDidTapEdit(_ goal: Goal) {
+        Haptic.impact(.light)
         coordinator?.trigger(with: .goalEditNeeded(goal))
     }
     

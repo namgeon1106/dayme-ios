@@ -195,8 +195,9 @@ final class GoalPageVC: VC {
         
         ongoingBtn.flex.markDirty()
         pastBtn.flex.markDirty()
-        updateIndicator()
         view.setNeedsLayout()
+        view.layoutIfNeeded()
+        updateIndicator()
     }
     
 }
