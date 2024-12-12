@@ -163,6 +163,7 @@ final class GoalAddVC: VC {
             
             Haptic.impact(.light)
             
+            datePicker.minimumDate = nil
             if vm.startDate == nil {
                 vm.startDate = datePicker.date
             }
@@ -174,6 +175,7 @@ final class GoalAddVC: VC {
         durationEndTF.onAction(for: .editingDidBegin) { [weak self] in
             guard let self else { return }
             
+            datePicker.maximumDate = nil
             if let startDate = vm.startDate {
                 datePicker.minimumDate = startDate
             }
