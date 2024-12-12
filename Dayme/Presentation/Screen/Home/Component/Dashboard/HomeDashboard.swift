@@ -9,7 +9,8 @@ import UIKit
 
 final class HomeDashboard: Vue {
     
-    private var items: [GoalTrackingItem] = []
+    private(set) var nickname: String = "OOO"
+    private(set) var goals: [Goal] = []
     
     // MARK: UI Properties
     
@@ -17,6 +18,10 @@ final class HomeDashboard: Vue {
         $0.textColor(.black)
             .numberOfLines(0)
             .font(.pretendard(.semiBold, 16))
+    }
+    
+    private let emptyLbl = UILabel("앗, 아직 설정된 목표가 없어요 !").then {
+        $0.textColor(.colorGrey30).font(.pretendard(.bold, 14))
     }
     
     private let goalContainer = UIView()
@@ -54,29 +59,46 @@ final class HomeDashboard: Vue {
     
     override func layoutFlex() {
         flexView.pin.all()
-        flexView.flex.layout()
-    }
-    
-    override func bind() {
-        titleLbl.text = "OOO님,\n토익 900점 달성까지 49% 달성했어요!"
-        titleLbl.lineHeight(multiple: 1.2)
+        flexView.flex.layout(mode: .adjustHeight)
     }
     
     
-    func updateItems(_ items: [GoalTrackingItem]) {
-        self.items = items
+    func update(nickname: String? = nil, goals: [Goal]? = nil) {
+        let nickname = nickname ?? self.nickname
+        let goals = goals ?? self.goals
         
+        self.nickname = nickname
+        self.goals = goals
+        
+        let comment = if let goal = goals.first {
+            "\n\(goal.title)까지 \(String(format: "%.0f", goal.progress * 100))%달성했어요 !"
+        } else {
+            "어떤 목표를 이루고 싶으신가요 ?"
+        }
+        
+        titleLbl.text = "\(nickname)님, \(comment)"
+        titleLbl.lineHeight(multiple: 1.2)
+        titleLbl.flex.markDirty()
+        
+        goalContainer.flex.isIncludedInLayout = false
         goalContainer.subviews.forEach {
             $0.removeFromSuperview()
         }
         
-        goalContainer.flex.define { flex in
-            items.forEach { item in
-                let trackingView = GoalTrackingView(item)
-                flex.addItem(trackingView).marginBottom(20)
+        if goals.isEmpty {
+            goalContainer.flex.alignItems(.center).justifyContent(.center).define { flex in
+                flex.addItem(emptyLbl).marginBottom(20)
+            }
+        } else {
+            goalContainer.flex.alignItems(.stretch).justifyContent(.start).define { flex in
+                goals.forEach { goal in
+                    let trackingView = GoalTrackingView(goal)
+                    flex.addItem(trackingView).marginBottom(20)
+                }
             }
         }
         
+        goalContainer.flex.isIncludedInLayout = true
         setNeedsLayout()
     }
     

@@ -69,8 +69,6 @@ final class HomeVC: VC {
             flex.addItem(dashboard).margin(15)
             
             flex.addItem(dateGroupView).marginTop(15)
-            
-            flex.addItem().grow(1)
         }
     }
     
@@ -83,12 +81,19 @@ final class HomeVC: VC {
     }
     
     override func bind() {
-        dashboard.updateItems(mockGoalTrackingItems)
-        
         vm.$nickname.receive(on: RunLoop.main)
             .sink { [weak self] nickname in
                 self?.nicknameLbl.text = "\(nickname)님"
+                self?.dashboard.update(nickname: nickname)
             }.store(in: &cancellables)
+        
+        vm.$nickname.combineLatest(vm.$goals)
+            .receive(on: RunLoop.main)
+            .sink { [weak self] nickname, goals in
+                self?.dashboard.update(nickname: nickname, goals: goals)
+                self?.view.setNeedsLayout()
+            }.store(in: &cancellables)
+        
         
         vm.$selectedDate.combineLatest(vm.$weekDates)
             .receive(on: RunLoop.main)

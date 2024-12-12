@@ -25,15 +25,17 @@ final class Network {
             throw response.error ?? ServerError(errorCode: .unknown, message: "응답이 없습니다.")
         }
         
+        let isValid: Bool = (200 ..< 300) ~= statusCode
+        
         Logger.debug {
             """
-            NETWORK RESPONSE
+            NETWORK RESPONSE \(isValid ? "🟢" : "🔴")
             [\(endpoint.method.code)] \(endpoint.baseUrl)\(endpoint.path)
             \(data.prettyString.orEmpty)
             """
         }
         
-        if !((200 ..< 300) ~= statusCode) {
+        if !isValid {
             throw try decoder.decode(ServerError.self, from: data)
         }
         
@@ -49,15 +51,17 @@ final class Network {
             throw response.error ?? ServerError(errorCode: .unknown, message: "응답이 없습니다.")
         }
         
+        let isValid: Bool = (200 ..< 300) ~= statusCode
+        
         Logger.debug {
             """
-            NETWORK RESPONSE
+            NETWORK RESPONSE \(isValid ? "🟢" : "🔴")
             [\(endpoint.method.code)] \(endpoint.baseUrl)\(endpoint.path)
             \(data.prettyString.orEmpty)
             """
         }
         
-        if !((200 ..< 300) ~= statusCode) {
+        if !isValid {
             throw try decoder.decode(ServerError.self, from: data)
         }
     }

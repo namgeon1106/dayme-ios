@@ -9,38 +9,34 @@ import UIKit
 
 final class GoalTrackingView: Vue {
     
-    let item: GoalTrackingItem
+    let goal: Goal
     
-    private lazy var emojiLbl = UILabel(item.emoji).then {
+    private lazy var emojiLbl = UILabel(goal.emoji).then {
         $0.font(.pretendard(.semiBold, 24))
     }
     
-    private lazy var titleLbl = UILabel(item.title).then {
+    private lazy var titleLbl = UILabel(goal.title).then {
         $0.textColor(.colorDark100).font(.pretendard(.semiBold, 14))
     }
     
     private lazy var progressLbl = UILabel().then {
-        $0.text(String(format: "%.0f", item.progress * 100))
+        $0.text(String(format: "%.0f", goal.progress * 100))
             .textColor(.colorGrey50)
             .font(.pretendard(.bold, 12))
     }
     
     private lazy var progressBar = ProgressBar().then {
-        $0.progress = item.progress
-        $0.tintColor = .hex(item.hex)
+        $0.progress = goal.progress
+        $0.tintColor = .hex(goal.hex)
     }
     
-    init(_ item: GoalTrackingItem) {
-        self.item = item
+    init(_ goal: Goal) {
+        self.goal = goal
         super.init(frame: .zero)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func setup() {
-        
     }
     
     override func setupFlex() {
