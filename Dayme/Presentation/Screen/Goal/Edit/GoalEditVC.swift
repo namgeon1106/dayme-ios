@@ -27,12 +27,7 @@ final class GoalEditVC: VC {
     
     private let scrollView = UIScrollView()
     private let contentView = UIView()
-    private let backBtn = UIButton().then {
-        let config = UIImage.SymbolConfiguration(pointSize: 20)
-        let image = UIImage(systemName: "chevron.backward", withConfiguration: config)
-        $0.setImage(image, for: .normal)
-        $0.tintColor = .colorGrey30
-    }
+    private let backBtn = naviBackButton()
     private let deleteBtn = BoarderdButton("삭제하기", color: .colorRed)
     private let doneBtn = FilledButton("수정하기").then {
         $0.isEnabled = false
@@ -144,14 +139,7 @@ final class GoalEditVC: VC {
     
     override func setup() {
         addKeyboardObeserver()
-        
-        title = "주요목표 수정"
-        if let naviBar = navigationController?.navigationBar {
-            var attributes = naviBar.titleTextAttributes.orEmpty
-            attributes[.foregroundColor] = UIColor.colorDark100
-            attributes[.font] = UIFont.pretendard(.semiBold, 16)
-            naviBar.titleTextAttributes = attributes
-        }
+        setNaviTitle("주요목표 수정")
         navigationItem.leftBarButtonItem = .init(customView: backBtn)
         view.backgroundColor = .colorBackground
         scrollView.keyboardDismissMode = .interactive

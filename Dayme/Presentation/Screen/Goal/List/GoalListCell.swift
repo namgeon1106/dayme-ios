@@ -10,6 +10,7 @@ import FlexLayout
 import PinLayout
 
 protocol GoalListCellDelegate: AnyObject {
+    func goalListCellDidSelect(_ goal: Goal)
     func goalListCellDidTapEdit(_ goal: Goal)
 }
 

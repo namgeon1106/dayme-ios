@@ -24,6 +24,8 @@ enum FlowEvent {
     case goalAddCanceled
     case goalEditNeeded(Goal)
     case goalEditCanceled
+    case goalDetailNeeded(Goal)
+    case goalDetailCanceled
     
     // MARK: Setting
     case logout

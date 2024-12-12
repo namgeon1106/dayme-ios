@@ -23,7 +23,10 @@ final class GoalCoordinator: Coordinator {
         case .goalEditNeeded(let goal):
             pushGoalEditScreen(goal: goal)
             
-        case .goalAddCanceled, .goalEditCanceled:
+        case .goalDetailNeeded(let goal):
+            pushGoalDetailScreen(goal: goal)
+            
+        case .goalAddCanceled, .goalEditCanceled, .goalDetailCanceled:
             popViewController(animated: true)
             
         default: break
@@ -51,6 +54,15 @@ private extension GoalCoordinator {
         goalEditVC.hidesBottomBarWhenPushed = true
         nav.interactivePopGestureRecognizer?.delegate = self
         nav.pushViewController(goalEditVC, animated: true)
+    }
+    
+    func pushGoalDetailScreen(goal: Goal) {
+        let goalDetailVM = GoalDetailVM(goal: goal)
+        let goalDetailVC = GoalDetailVC(vm: goalDetailVM)
+        goalDetailVC.coordinator = self
+        goalDetailVC.hidesBottomBarWhenPushed = true
+        nav.interactivePopGestureRecognizer?.delegate = self
+        nav.pushViewController(goalDetailVC, animated: true)
     }
     
 }

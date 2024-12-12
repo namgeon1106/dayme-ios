@@ -85,6 +85,11 @@ extension GoalListVC {
 
 extension GoalListVC {
     
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let goal = indexPath.section == 0 ? homeGoals[indexPath.row] : etcGoals[indexPath.row]
+        cellDelegate?.goalListCellDidSelect(goal)
+    }
+    
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if homeGoals.isEmpty {
             return nil

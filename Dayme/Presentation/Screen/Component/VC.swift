@@ -61,14 +61,6 @@ class VC: UIViewController {
     func layoutFlex() {}
     func bind() {}
     
-    func showAlert(title: String, message: String) {
-        Haptic.noti(.warning)
-        
-        Alert(title: title, message: message)
-            .onAction(title: "확인")
-            .show(on: self)
-    }
-    
     // MARK: - Keyboard Obeserver
     
     func keyboardWillShow(_ height: CGFloat) {}
@@ -98,6 +90,37 @@ class VC: UIViewController {
         let keyboardInfoKey = UIResponder.keyboardFrameEndUserInfoKey
         let rect = (notification.userInfo?[keyboardInfoKey] as? NSValue)?.cgRectValue
         return rect?.height ?? 0
+    }
+    
+}
+
+extension VC {
+    
+    static func naviBackButton() -> UIButton {
+        let button = UIButton()
+        let config = UIImage.SymbolConfiguration(pointSize: 20)
+        let image = UIImage(systemName: "chevron.backward", withConfiguration: config)
+        button.setImage(image, for: .normal)
+        button.tintColor = .colorGrey30
+        return button
+    }
+    
+    func setNaviTitle(_ title: String) {
+        self.title = title
+        if let naviBar = navigationController?.navigationBar {
+            var attributes = naviBar.titleTextAttributes.orEmpty
+            attributes[.foregroundColor] = UIColor.colorDark100
+            attributes[.font] = UIFont.pretendard(.semiBold, 16)
+            naviBar.titleTextAttributes = attributes
+        }
+    }
+    
+    func showAlert(title: String, message: String) {
+        Haptic.noti(.warning)
+        
+        Alert(title: title, message: message)
+            .onAction(title: "확인")
+            .show(on: self)
     }
     
 }

@@ -197,6 +197,11 @@ extension GoalVC: GoalListEmptyViewDelegate {
 
 extension GoalVC: GoalListCellDelegate {
     
+    func goalListCellDidSelect(_ goal: Goal) {
+        Haptic.impact(.light)
+        coordinator?.trigger(with: .goalDetailNeeded(goal))
+    }
+    
     func goalListCellDidTapEdit(_ goal: Goal) {
         Haptic.impact(.light)
         coordinator?.trigger(with: .goalEditNeeded(goal))
