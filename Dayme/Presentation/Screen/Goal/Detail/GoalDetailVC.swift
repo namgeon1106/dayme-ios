@@ -48,9 +48,7 @@ final class GoalDetailVC: VC {
     }
     
     // 세부 목표
-    private let subgoalSubtitleLbl = UILabel("세부목표").then {
-        $0.textColor(.colorDark100).font(.pretendard(.semiBold, 16))
-    }
+    private let subgoalSection = SubgoalSection()
     
     // 체크리스트
     private let checklistSubtitleLbl = UILabel("체크리스트").then {
@@ -98,6 +96,7 @@ final class GoalDetailVC: VC {
         navigationItem.leftBarButtonItem = .init(customView: backBtn)
         view.backgroundColor = .colorBackground
         scrollView.keyboardDismissMode = .interactive
+        subgoalSection.update(subgoals: [])
     }
     
     override func setupAction() {
@@ -116,6 +115,7 @@ final class GoalDetailVC: VC {
         emojiContainer.layer.borderWidth = 2
         
         contentView.flex.define { flex in
+            // 주요 목표
             flex.addItem().padding(0, 28).marginTop(32).define { flex in
                 flex.addItem().direction(.row).alignItems(.center).height(60).define { flex in
                     flex.addItem(emojiContainer).justifyContent(.center).width(60).height(60).define { flex in
@@ -134,18 +134,19 @@ final class GoalDetailVC: VC {
             
             flex.addItem().height(1).backgroundColor(.colorGrey20)
             
-            flex.addItem().height(242).define { flex in
-                flex.addItem(subgoalSubtitleLbl).margin(24, 24, 0, 0)
-            }
+            // 세부 목표
+            flex.addItem(subgoalSection)
             
             flex.addItem().height(8).backgroundColor(.colorGrey20)
             
+            // 체크리스트
             flex.addItem().height(283).define { flex in
                 flex.addItem(checklistSubtitleLbl).margin(24, 24, 0, 0)
             }
             
             flex.addItem().height(8).backgroundColor(.colorGrey20)
             
+            // 홈 표시
             flex.addItem(homeSubtitleLbl).margin(24, 24, 0, 0)
             
             flex.addItem(homeContainer).direction(.row).alignItems(.center).margin(12, 24, 0, 24).height(58).padding(0, 12).define { flex in
