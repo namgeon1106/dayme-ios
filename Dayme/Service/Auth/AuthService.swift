@@ -39,14 +39,14 @@ class AuthService: NSObject {
         }
     }
     
-    @MainActor
     @discardableResult
     func loginWithSocial(_ provider: OAuthProvider, idToken: String) async throws -> OAuthToken {
         let endpoint = Endpoint(
             method: .post,
             baseUrl: Env.serverBaseUrl,
             path: "/auth/loginBySns",
-            params: ["socialLoginType": provider.code]
+            params: ["socialLoginType": provider.code],
+            intercept: false
         ).withAuthorization(idToken)
         
         let response: LoginResponse = try await network.request(endpoint)
@@ -59,14 +59,14 @@ class AuthService: NSObject {
         return oAuthToken
     }
     
-    @MainActor
     @discardableResult
     func login(email: String, password: String) async throws -> OAuthToken {
         let endpoint = Endpoint(
             method: .post,
             baseUrl: Env.serverBaseUrl,
             path: "/auth/login",
-            params: ["email": email, "password": password]
+            params: ["email": email, "password": password],
+            intercept: false
         )
         
         let response: LoginResponse = try await network.request(endpoint)
@@ -79,35 +79,55 @@ class AuthService: NSObject {
         return oAuthToken
     }
     
-    @MainActor
     func signupWithSocial(_ info: OAuthSignupInfo) async throws {
         Logger.debug("Bearer \(info.token)")
         let endpoint = Endpoint(
             method: .post,
             baseUrl: Env.serverBaseUrl,
             path: "/auth/signupBySns",
-            params: ["socialLoginType": info.provider.code, "nickname": info.nickname]
+            params: ["socialLoginType": info.provider.code, "nickname": info.nickname],
+            intercept: false
         ).withAuthorization(info.token)
         
         try await network.request(endpoint)
     }
     
-    @MainActor
     func signup(email: String, password: String, nickname: String) async throws {
         let endpoint = Endpoint(
             method: .post,
             baseUrl: Env.serverBaseUrl,
             path: "/auth/signup",
-            params: ["email": email, "password": password, "nickname": nickname]
+            params: ["email": email, "password": password, "nickname": nickname],
+            intercept: false
         )
         try await network.request(endpoint)
     }
     
-    @MainActor
     func logout() async throws {
         removeToken()
         UserDefault.loggedIn = false
         UserDefault.socialLogin = nil
+    }
+    
+    @discardableResult
+    func refreshToken() async throws -> OAuthToken {
+        guard let refreshToken = Keychain.read(key: Env.Keychain.refreshTokenKey) else {
+            throw AuthError.emptyRefreshToken
+        }
+        
+        let endpoint = Endpoint(
+            method: .post,
+            baseUrl: Env.serverBaseUrl,
+            path: "/auth/refresh",
+            intercept: false
+        ).withAuthorization(refreshToken)
+        
+        let response: LoginResponse = try await network.request(endpoint)
+        let oAuthToken = response.toDomain()
+        
+        saveToken(oAuthToken)
+        
+        return oAuthToken
     }
     
 }

@@ -10,10 +10,14 @@ import UIKit
 final class AppCoordinator: Coordinator {
     
     override func start(animated: Bool) {
-        let isAuthorized = Keychain.read(key: Env.Keychain.accessTokenKey) != nil
+        let accessToken = Keychain.read(key: Env.Keychain.accessTokenKey)
+        let isAuthorized = accessToken != nil
         
         // 앱 삭제시 키체인은 삭제가 안 되기 때문에 이중 검증
         if UserDefault.loggedIn, isAuthorized {
+            Logger.debug { "ACCESS TOKEN\n\(accessToken.orEmpty)" }
+            Logger.debug { "REFRESH TOKEN\n\(Keychain.read(key: Env.Keychain.refreshTokenKey).orEmpty)" }
+            
             let splashVC = SplashVC()
             splashVC.coordinator = self
             nav.viewControllers = [splashVC]

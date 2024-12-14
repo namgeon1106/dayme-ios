@@ -30,7 +30,7 @@ final class Network {
         Logger.debug {
             """
             NETWORK RESPONSE \(isValid ? "🟢" : "🔴")
-            [\(endpoint.method.code)] \(endpoint.baseUrl)\(endpoint.path)
+            [\(endpoint.method.code)/\(statusCode)] \(endpoint.baseUrl)\(endpoint.path)
             \(data.prettyString.orEmpty)
             """
         }
@@ -56,7 +56,7 @@ final class Network {
         Logger.debug {
             """
             NETWORK RESPONSE \(isValid ? "🟢" : "🔴")
-            [\(endpoint.method.code)] \(endpoint.baseUrl)\(endpoint.path)
+            [\(endpoint.method.code)/\(statusCode)] \(endpoint.baseUrl)\(endpoint.path)
             \(data.prettyString.orEmpty)
             """
         }
@@ -68,11 +68,12 @@ final class Network {
     
     // MARK: - 네트워크 설정
     
+    private let logger = NetworkLogger()
+    
     private lazy var session: Session = {
         let config = URLSessionConfiguration.default
         config.timeoutIntervalForRequest = 10
         config.timeoutIntervalForResource = 10
-        let logger = NetworkLogger()
         return Session(configuration: config, eventMonitors: [logger])
     }()
     
@@ -101,12 +102,15 @@ private extension Network {
             return self.session
         }.value
         
+        let interceptor = endpoint.intercept ? NetworkInterceptor() : nil
+        
         return session.request(
             endpoint.baseUrl + endpoint.path,
             method: endpoint.method.af,
             parameters: endpoint.params,
             encoding: JSONEncoding.default,
-            headers: HTTPHeaders(header)
+            headers: HTTPHeaders(header),
+            interceptor: interceptor
         )
     }
     
