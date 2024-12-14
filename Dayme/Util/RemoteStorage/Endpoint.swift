@@ -38,7 +38,8 @@ struct Endpoint {
             baseUrl: baseUrl,
             path: path,
             params: params,
-            headers: headers.orEmpty.merging(authorization) { $1 }
+            headers: headers.orEmpty.merging(authorization) { $1 },
+            intercept: intercept
         )
     }
 }
