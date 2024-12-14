@@ -170,7 +170,6 @@ extension GoalVC: GoalFloatingMenuDelegate {
     
     func goalFloatingMenuDidSelect(item: GoalFloatingMenuItem) {
         Task { await hideMenu() }
-        Haptic.impact(.light)
         
         switch item {
         case .goal:
@@ -187,7 +186,6 @@ extension GoalVC: GoalFloatingMenuDelegate {
 extension GoalVC: GoalListEmptyViewDelegate {
     
     func goalListEmptyViewDidTapAddGoal() {
-        Haptic.impact(.light)
         coordinator?.trigger(with: .goalAddNeeded)
     }
     

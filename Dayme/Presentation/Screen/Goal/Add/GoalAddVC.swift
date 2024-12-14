@@ -346,8 +346,6 @@ final class GoalAddVC: VC {
     }
     
     @objc private func dateDoneButtonDidTap() {
-        Haptic.impact(.light)
-        
         if durationStartTF.isFirstResponder {
             if vm.endDate == nil {
                 _ = durationEndTF.becomeFirstResponder()
