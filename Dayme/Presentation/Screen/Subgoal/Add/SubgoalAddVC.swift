@@ -99,6 +99,7 @@ final class SubgoalAddVC: VC {
         layout.minimumInteritemSpacing = 6
         layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        cv.showsHorizontalScrollIndicator = false
         cv.register(CategoryCell.self)
         cv.dataSource = self
         cv.delegate = self
@@ -286,7 +287,7 @@ extension SubgoalAddVC {
             coordinator?.trigger(with: .subgoalAddCanceled)
         } catch {
             Loader.dismiss()
-            showAlert(title: "🚨 목표 추가 실패", message: error.localizedDescription)
+            showAlert(title: "🚨 세부목표 추가 실패", message: error.localizedDescription)
         }
     }
     
@@ -327,6 +328,23 @@ extension SubgoalAddVC: UICollectionViewDelegate {
         } else {
             vm.category = category
         }
+    }
+    
+}
+
+// MARK: - UICollectionViewDelegateFlowLayout
+
+extension SubgoalAddVC: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let category = vm.categories[indexPath.item] as NSString
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.pretendard(.medium, 14)
+        ]
+        let textSize = category.size(withAttributes: attributes)
+        let width = textSize.width + 24
+        let height = collectionView.frame.height
+        return CGSize(width: width, height: height)
     }
     
 }
@@ -383,55 +401,6 @@ extension SubgoalAddVC: UIPickerViewDelegate {
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         vm.goal = vm.goals[row]
-    }
-    
-}
-
-
-
-final class CategoryPopup: UIAlertController {
-    
-    var continuation: CheckedContinuation<String?, Never>?
-    var textField: UITextField!
-    
-    static func show(on viewController: UIViewController, animated: Bool = true) async -> String? {
-        return await withCheckedContinuation { continuation in
-            let alert = CategoryPopup(
-                title: "세부목표 추가",
-                message: "카테고리",
-                preferredStyle: .alert
-            )
-            alert.setup()
-            alert.continuation = continuation
-            
-            viewController.present(alert, animated: animated)
-        }
-    }
-
-    private func setup() {
-        addTextField { [weak self] textField in
-            textField.placeholder = "새로운 카테고리를 입력하세요"
-            textField.autocapitalizationType = .none
-            textField.autocorrectionType = .no
-            textField.clearButtonMode = .whileEditing
-            self?.textField = textField
-        }
-        
-        let confirmAction = UIAlertAction(title: "확인", style: .default) { [weak self] _ in
-            self?.continuation?.resume(returning: self?.textField.text)
-        }
-        confirmAction.isEnabled = false
-        
-        let cancelAction = UIAlertAction(title: "취소", style: .cancel) { [weak self] _ in
-            self?.continuation?.resume(returning: nil)
-        }
-        
-        textField.addAction(UIAction { [weak self] _ in
-            confirmAction.isEnabled = !(self?.textField.text ?? "").isEmpty
-        }, for: .editingChanged)
-        
-        addAction(confirmAction)
-        addAction(cancelAction)
     }
     
 }

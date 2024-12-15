@@ -22,14 +22,11 @@ final class CategoryCell: CollectionViewCell {
     }
     
     override func setupFlex() {
-        let insets = UIEdgeInsets(8, 12)
         contentView.addSubview(titleLbl)
         
         NSLayoutConstraint.activate([
-            titleLbl.topAnchor.constraint(equalTo: contentView.topAnchor, constant: insets.top),
-            titleLbl.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: insets.left),
-            titleLbl.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -insets.right),
-            titleLbl.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -insets.bottom),
+            titleLbl.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            titleLbl.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
         ])
     }
     
