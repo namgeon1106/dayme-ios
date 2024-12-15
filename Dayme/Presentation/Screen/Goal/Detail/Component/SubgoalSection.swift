@@ -105,7 +105,10 @@ final class SubgoalSection: Vue {
         
         container.flex.isIncludedInLayout = false
         
-        container.subviews.forEach { $0.removeFromSuperview() }
+        [container, scrollView, contentView]
+            .flatMap(\.subviews)
+            .forEach { $0.removeFromSuperview() }
+        
         if subgoals.isEmpty {
             container.flex.define { flex in
                 flex.addItem().alignItems(.center).justifyContent(.center).height(194).define { flex in

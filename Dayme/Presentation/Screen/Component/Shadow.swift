@@ -25,6 +25,12 @@ extension Shadow {
         offset: .zero,
         blur: 4
     )
+    
+    static let modal = Shadow(
+        color: .white.withAlphaComponent(0.07),
+        offset: CGSize(width: 0, height: 1),
+        blur: 2
+    )
 }
 
 extension UIView {

@@ -96,7 +96,7 @@ final class GoalDetailVC: VC {
         navigationItem.leftBarButtonItem = .init(customView: backBtn)
         view.backgroundColor = .colorBackground
         scrollView.keyboardDismissMode = .interactive
-        subgoalSection.update(subgoals: [])
+        subgoalSection.delegate = self
     }
     
     override func setupAction() {
@@ -171,7 +171,13 @@ final class GoalDetailVC: VC {
     }
     
     override func bind() {
-        let goal = vm.goal
+        vm.$goal.receive(on: RunLoop.main)
+            .sink { [weak self] goal in
+                self?.updateGoal(goal)
+            }.store(in: &cancellables)
+    }
+    
+    private func updateGoal(_ goal: Goal) {
         let startDate = goal.startDate.string(style: .dotted)
         let endDate = goal.endDate.string(style: .dotted)
         goalEmojiLbl.text = goal.emoji
@@ -180,7 +186,23 @@ final class GoalDetailVC: VC {
         goalProgressBar.progress = goal.progress
         goalProgressBar.tintColor = .hex(goal.hex)
         
+        subgoalSection.update(subgoals: goal.subgoals)
+        
+        goalEmojiLbl.flex.markDirty()
+        goalTitleLbl.flex.markDirty()
+        goalDateLbl.flex.markDirty()
+        
         view.setNeedsLayout()
+    }
+    
+}
+
+// MARK: - SubgoalSectionDelegate
+
+extension GoalDetailVC: SubgoalSectionDelegate {
+    
+    func subgoalSectionDidTapAddButton() {
+        coordinator?.trigger(with: .subgoalAddNeeded(vm.goal))
     }
     
 }

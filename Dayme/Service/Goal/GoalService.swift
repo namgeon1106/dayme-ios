@@ -89,4 +89,19 @@ class GoalService: TokenAccessible {
         }
     }
     
+    func createSubgoal(goalId: Int, _ subgoal: Subgoal) async throws {
+        let token = try getAccessToken()
+        let endpoint = Endpoint(
+            method: .post,
+            baseUrl: Env.serverBaseUrl,
+            path: "/goal/\(goalId)/subGoal",
+            params: AddSubgoalRequest.fromDomain(subgoal).toDictionary()
+        ).withAuthorization(token)
+        
+        try await network.request(endpoint)
+        
+        // 생성한 id를 현재 모르기 때문에 서버 동기화
+        _ = try? await getGoals()
+    }
+    
 }

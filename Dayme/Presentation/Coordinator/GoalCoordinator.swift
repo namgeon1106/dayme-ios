@@ -26,8 +26,14 @@ final class GoalCoordinator: Coordinator {
         case .goalDetailNeeded(let goal):
             pushGoalDetailScreen(goal: goal)
             
+        case .subgoalAddNeeded(let goal):
+            presentSubgoalAddScreen(goal: goal)
+            
         case .goalAddCanceled, .goalEditCanceled, .goalDetailCanceled:
             popViewController(animated: true)
+            
+        case .subgoalAddCanceled:
+            dismissPresentedViewController(animated: true)
             
         default: break
         }
@@ -63,6 +69,20 @@ private extension GoalCoordinator {
         goalDetailVC.hidesBottomBarWhenPushed = true
         nav.interactivePopGestureRecognizer?.delegate = self
         nav.pushViewController(goalDetailVC, animated: true)
+    }
+    
+    func presentSubgoalAddScreen(goal: Goal) {
+        let vm = SubgoalAddVM(goal: goal)
+        let vc = SubgoalAddVC(vm: vm)
+        vc.coordinator = self
+        vc.modalPresentationStyle = .pageSheet
+        
+        if let sheet = vc.sheetPresentationController {
+            sheet.detents = [.custom { _ in 600 }]
+            sheet.preferredCornerRadius = 0
+        }
+        
+        nav.present(vc, animated: true)
     }
     
 }

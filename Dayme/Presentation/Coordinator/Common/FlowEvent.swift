@@ -27,6 +27,10 @@ enum FlowEvent {
     case goalDetailNeeded(Goal)
     case goalDetailCanceled
     
+    // MARK: Subgoal
+    case subgoalAddNeeded(Goal)
+    case subgoalAddCanceled
+    
     // MARK: Setting
     case logout
     case userDeleted

@@ -53,4 +53,8 @@ extension Coordinator {
         nav.popToRootViewController(animated: animated)
     }
     
+    func dismissPresentedViewController(animated: Bool) {
+        nav.presentedViewController?.dismiss(animated: animated)
+    }
+    
 }

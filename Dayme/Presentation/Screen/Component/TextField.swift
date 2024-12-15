@@ -19,6 +19,20 @@ final class BorderedTF: UITextField {
         $0.items = [flexibleSpace, button]
         $0.sizeToFit()
         $0.tintColor = .colorMain1
+        $0.backgroundColor = .white
+        $0.isTranslucent = false
+    }
+    
+    override var placeholder: String? {
+        didSet {
+            attributedPlaceholder = NSAttributedString(
+                string: placeholder.orEmpty,
+                attributes: [
+                    .foregroundColor: UIColor.colorGrey30,
+                    .font: UIFont.pretendard(.medium, 16)
+                ]
+            )
+        }
     }
     
     
