@@ -4,7 +4,6 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
-        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -12,31 +11,43 @@
         <scene sceneID="EHf-IW-A2E">
             <objects>
                 <viewController id="01J-lp-oVM" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
+                    <view key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Ze5-6b-2t3">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_logo" translatesAutoresizingMaskIntoConstraints="NO" id="v48-wb-3be">
-                                <rect key="frame" x="82" y="384" width="229" height="42"/>
-                            </imageView>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="ftB-1s-ZmA">
+                                <rect key="frame" x="83.666666666666686" y="314.66666666666669" width="226" height="183"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="img_timo_face.png" translatesAutoresizingMaskIntoConstraints="NO" id="v48-wb-3be">
+                                        <rect key="frame" x="49.999999999999986" y="0.0" width="126.00000000000001" height="126"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="126" id="68M-cM-4Z4"/>
+                                            <constraint firstAttribute="width" secondItem="v48-wb-3be" secondAttribute="height" multiplier="1:1" id="OqV-JU-idf"/>
+                                        </constraints>
+                                    </imageView>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_logo" translatesAutoresizingMaskIntoConstraints="NO" id="ibu-CY-tel">
+                                        <rect key="frame" x="0.0" y="141" width="226" height="42"/>
+                                    </imageView>
+                                </subviews>
+                            </stackView>
                         </subviews>
-                        <viewLayoutGuide key="safeArea" id="CGq-iY-2NM"/>
-                        <color key="backgroundColor" name="color_background"/>
+                        <color key="backgroundColor" name="color_main_1"/>
                         <constraints>
-                            <constraint firstItem="v48-wb-3be" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="QtS-PV-Irp"/>
-                            <constraint firstItem="v48-wb-3be" firstAttribute="bottom" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="S4s-GI-QL0"/>
+                            <constraint firstItem="ftB-1s-ZmA" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" constant="-20" id="VEa-ID-Ids"/>
+                            <constraint firstItem="ftB-1s-ZmA" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="Z8h-GN-hrq"/>
                         </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="53" y="375"/>
+            <point key="canvasLocation" x="-819" y="423"/>
         </scene>
     </scenes>
     <resources>
-        <image name="ic_logo" width="229" height="42"/>
-        <namedColor name="color_background">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        <image name="ic_logo" width="226" height="42"/>
+        <image name="img_timo_face.png" width="126" height="126"/>
+        <namedColor name="color_main_1">
+            <color red="0.96100002527236938" green="0.4309999942779541" blue="0.059000000357627869" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>

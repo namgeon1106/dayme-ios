@@ -20,6 +20,7 @@ final class SplashVC: VC {
     // MARK: UI properties
     
     private let logo = UIImageView(image: .icLogo)
+    private let timo = UIImageView(image: .timoFace)
     
     
     // MARK: Lifecycles
@@ -34,15 +35,27 @@ final class SplashVC: VC {
     // MARK: Helpers
     
     override func setup() {
-        view.backgroundColor = .colorBackground
+        view.backgroundColor = .colorMain1
     }
     
     override func setupFlex() {
-        view.addSubview(logo)
+        view.addSubview(flexView)
+        
+        flexView.flex
+            .alignItems(.center)
+            .justifyContent(.center)
+            .define { flex in
+                flexView.flex.define { flex in
+                    flex.addItem(timo).width(126).height(126)
+                    
+                    flex.addItem(logo).margin(15, 0, 40)
+                }
+            }
     }
     
     override func layoutFlex() {
-        logo.pin.bottom(view.bounds.height / 2).hCenter()
+        flexView.pin.all()
+        flexView.flex.layout()
     }
     
     @MainActor
