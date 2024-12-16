@@ -20,7 +20,7 @@ final class LoginVC: VC {
     
     // MARK: UI properties
     
-    private let logo = UILabel("DAYME")
+    private let logo = UIImageView(image: .logoWithTimo)
     private let subTitleLbl = UILabel(L10n.Login.subTitle)
     
     private let kakaoBtn = SocialLoginButton(.kakao)
@@ -33,9 +33,7 @@ final class LoginVC: VC {
         addKeyboardObeserver()
         view.backgroundColor(.colorBackground)
         
-        logo.textColor(.colorMain1)
-            .font(.montserrat(.black, 32))
-            .textAlignment(.center)
+        logo.contentMode = .scaleAspectFit
         
         subTitleLbl.textColor(.colorDark100)
             .textAlignment(.center)
@@ -60,7 +58,7 @@ final class LoginVC: VC {
                 .justifyContent(.center)
                 .grow(1)
                 .define { flex in
-                    flex.addItem(logo)
+                    flex.addItem(logo).width(259).height(87)
                     flex.addItem(subTitleLbl).marginTop(20)
                     flex.addItem().height(80)
                 }
