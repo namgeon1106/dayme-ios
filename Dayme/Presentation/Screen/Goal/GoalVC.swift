@@ -174,6 +174,7 @@ extension GoalVC: GoalFloatingMenuDelegate {
         switch item {
         case .goal:
             coordinator?.trigger(with: .goalAddNeeded)
+            
         case .subGoal:
             if let goal = vm.goals.first {
                 coordinator?.trigger(with: .subgoalAddNeeded(goal))
@@ -181,7 +182,14 @@ extension GoalVC: GoalFloatingMenuDelegate {
                 // 현재 가능하지 않은 케이스
                 showAlert(title: "🥺", message: "주요목표를 먼저 생성해주세요")
             }
-        case .checklist: break
+            
+        case .checklist:
+            if let goal = vm.goals.first {
+                coordinator?.trigger(with: .checklistAddNeeded(goal: goal, subgoal: nil))
+            } else {
+                // 현재 가능하지 않은 케이스
+                showAlert(title: "🥺", message: "주요목표를 먼저 생성해주세요")
+            }
         }
     }
     

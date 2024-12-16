@@ -29,10 +29,13 @@ final class GoalCoordinator: Coordinator {
         case .subgoalAddNeeded(let goal):
             presentSubgoalAddScreen(goal: goal)
             
+        case .checklistAddNeeded(let goal, let subgoal):
+            presentChecklistAddScreen(goal: goal, subgoal: subgoal)
+            
         case .goalAddCanceled, .goalEditCanceled, .goalDetailCanceled:
             popViewController(animated: true)
             
-        case .subgoalAddCanceled:
+        case .subgoalAddCanceled, .checklistAddCanceled:
             dismissPresentedViewController(animated: true)
             
         default: break
@@ -78,7 +81,21 @@ private extension GoalCoordinator {
         vc.modalPresentationStyle = .pageSheet
         
         if let sheet = vc.sheetPresentationController {
-            sheet.detents = [.custom { _ in 600 }]
+            sheet.detents = [.custom { _ in vc.modalHeight }]
+            sheet.preferredCornerRadius = 0
+        }
+        
+        nav.present(vc, animated: true)
+    }
+    
+    func presentChecklistAddScreen(goal: Goal, subgoal: Subgoal?) {
+        let vm = ChecklistAddVM(goal: goal, subgoal: subgoal)
+        let vc = ChecklistAddVC(vm: vm)
+        vc.coordinator = self
+        vc.modalPresentationStyle = .pageSheet
+        
+        if let sheet = vc.sheetPresentationController {
+            sheet.detents = [.custom { _ in vc.modalHeight }]
             sheet.preferredCornerRadius = 0
         }
         

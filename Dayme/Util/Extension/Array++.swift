@@ -7,6 +7,14 @@
 
 import Foundation
 
+extension Array {
+    
+    subscript(orNil index: Int) -> Element? {
+        indices ~= index ? self[index] : nil
+    }
+    
+}
+
 extension Array where Element: Equatable, Element: Hashable {
     
     func removeDuplicates() -> [Element] {

@@ -60,7 +60,7 @@ final class SettingVC: VC {
                 flex.addItem(CircleView())
                     .width(100)
                     .height(100)
-                    .backgroundColor(.colorMain2)
+                    .backgroundColor(.colorMain1)
                     .alignItems(.center)
                     .justifyContent(.center)
                     .define { flex in

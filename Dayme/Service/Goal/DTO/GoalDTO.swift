@@ -98,3 +98,11 @@ struct AddSubgoalRequest: Encodable {
         )
     }
 }
+
+struct AddChecklistRequest: Encodable {
+    let title: String
+    
+    static func fromDomain(_ checklist: Checklist) -> AddChecklistRequest {
+        AddChecklistRequest(title: checklist.title)
+    }
+}

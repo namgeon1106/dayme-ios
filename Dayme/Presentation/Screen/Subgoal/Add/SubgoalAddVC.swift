@@ -19,6 +19,8 @@ import PinLayout
 
 final class SubgoalAddVC: VC {
     
+    let modalHeight: CGFloat = 600
+    
     let vm: SubgoalAddVM
     
     // MARK: - UI properties
@@ -48,12 +50,12 @@ final class SubgoalAddVC: VC {
     private lazy var durationStartTF = BorderedTF("시작일").then {
         $0.textAlignment = .center
         $0.inputView = datePicker
-        $0.inputAccessoryView = dateToolbar
+        $0.inputAccessoryView = toolbar
     }
     private lazy var durationEndTF = BorderedTF("목표일").then {
         $0.textAlignment = .center
         $0.inputView = datePicker
-        $0.inputAccessoryView = dateToolbar
+        $0.inputAccessoryView = toolbar
     }
     private let durationTildeLbl = UILabel("~").then {
         $0.textColor(.colorGrey30).font(.pretendard(.medium, 16))
@@ -64,15 +66,6 @@ final class SubgoalAddVC: VC {
         $0.tintColor = .colorMain1
         $0.backgroundColor = .white
     }
-    private lazy var dateToolbar = UIToolbar().then {
-        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dateDoneButtonDidTap))
-        $0.items = [flexibleSpace, doneButton]
-        $0.sizeToFit()
-        $0.tintColor = .colorMain1
-        $0.backgroundColor = .colorBackground
-        $0.isTranslucent = false
-    }
     
     // 상위 목표
     private let goalCaptionLbl = UILabel("상위목표").then {
@@ -81,6 +74,7 @@ final class SubgoalAddVC: VC {
     private lazy var goalTF = BorderedTF("상위목표 선택").then {
         $0.contentInsets = UIEdgeInsets(0, 12, 0, 6)
         $0.inputView = goalPicker
+        $0.inputAccessoryView = toolbar
     }
     private lazy var goalPicker = UIPickerView().then {
         $0.tintColor = .colorMain1
@@ -105,6 +99,16 @@ final class SubgoalAddVC: VC {
         cv.delegate = self
         return cv
     }()
+    
+    private lazy var toolbar = UIToolbar().then {
+        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(toolbarDoneButtonDidTap))
+        $0.items = [flexibleSpace, doneButton]
+        $0.sizeToFit()
+        $0.tintColor = .colorMain1
+        $0.backgroundColor = .colorBackground
+        $0.isTranslucent = false
+    }
     
     
     // MARK: - Lifecycles
@@ -164,6 +168,9 @@ final class SubgoalAddVC: VC {
             guard let self else { return }
             
             datePicker.maximumDate = nil
+            if vm.endDate == nil {
+                vm.endDate = datePicker.date
+            }
             if let startDate = vm.startDate {
                 datePicker.minimumDate = startDate
             }
@@ -219,7 +226,9 @@ final class SubgoalAddVC: VC {
     }
     
     override func layoutFlex() {
-        flexView.pin.top().horizontally(8).height(571)
+        let bottomInset: CGFloat = 30
+        let height = modalHeight - bottomInset
+        flexView.pin.top().horizontally(8).height(height)
         flexView.flex.layout()
     }
     
@@ -265,7 +274,7 @@ extension SubgoalAddVC {
         }
     }
     
-    @objc private func dateDoneButtonDidTap() {
+    @objc private func toolbarDoneButtonDidTap() {
         if durationStartTF.isFirstResponder {
             if vm.endDate == nil {
                 _ = durationEndTF.becomeFirstResponder()
@@ -274,6 +283,10 @@ extension SubgoalAddVC {
             }
         } else if durationEndTF.isFirstResponder {
             _ = durationEndTF.resignFirstResponder()
+        } else if goalTF.isFirstResponder {
+            let row = goalPicker.selectedRow(inComponent: 0)
+            vm.goal = vm.goals[row]
+            _ = goalTF.resignFirstResponder()
         }
     }
     
@@ -397,10 +410,6 @@ extension SubgoalAddVC: UIPickerViewDelegate {
                 .foregroundColor: UIColor.colorDark100,
             ]
         )
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        vm.goal = vm.goals[row]
     }
     
 }

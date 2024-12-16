@@ -22,6 +22,27 @@ class GoalService: TokenAccessible {
     
     private init() {}
     
+    @discardableResult
+    func getGoal(id: Int) async throws -> Goal? {
+        let token = try getAccessToken()
+        let endpoint = Endpoint(
+            method: .get,
+            baseUrl: Env.serverBaseUrl,
+            path: "/goal/\(id)"
+        ).withAuthorization(token)
+        
+        let response: GoalResponse = try await network.request(endpoint)
+        let goal = response.toDomain()
+        
+        if let goal, let index = _goals.value.firstIndex(of: goal) {
+            var goals = _goals.value
+            goals[index] = goal
+            _goals.send(goals)
+        }
+        
+        return goal
+    }
+    
     
     @discardableResult
     func getGoals() async throws -> [Goal] {
@@ -100,8 +121,22 @@ class GoalService: TokenAccessible {
         
         try await network.request(endpoint)
         
-        // 생성한 id를 현재 모르기 때문에 서버 동기화
-        _ = try? await getGoals()
+        _ = try? await getGoal(id: goalId)
+    }
+    
+    func createChecklist(goalId: Int, subgoalId: Int?, _ checklist: Checklist) async throws {
+        let subgoalPath = subgoalId.map({ "/\($0)" }).orEmpty
+        let token = try getAccessToken()
+        let endpoint = Endpoint(
+            method: .post,
+            baseUrl: Env.serverBaseUrl,
+            path: "/goal/\(goalId)\(subgoalPath)/todo",
+            params: AddChecklistRequest.fromDomain(checklist).toDictionary()
+        ).withAuthorization(token)
+        
+        try await network.request(endpoint)
+        
+        _ = try? await getGoal(id: goalId)
     }
     
 }
