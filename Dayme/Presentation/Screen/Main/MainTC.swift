@@ -19,7 +19,7 @@ final class MainTC: UITabBarController {
         
         self.viewControllers = viewControllers
         
-        tabBar.tintColor = .colorMain1
+        tabBar.tintColor = .colorDark100
         tabBar.unselectedItemTintColor = .colorGrey30
         tabBar.isTranslucent = false
         delegate = self

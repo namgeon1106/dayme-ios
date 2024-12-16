@@ -50,11 +50,6 @@ private extension MainCoordinator {
         
         startFlow(tab: tab, nav: nav)
         
-        if tab == .setting, let rootVC = nav.viewControllers.first {
-            nav.navigationBar.prefersLargeTitles = true
-            rootVC.title = tab.title
-        }
-        
         return nav
     }
     

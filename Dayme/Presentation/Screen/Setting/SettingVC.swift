@@ -10,7 +10,9 @@ import FlexLayout
 import PinLayout
 
 #if DEBUG
-#Preview { SettingVC() }
+#Preview {
+    UINavigationController(rootViewController: SettingVC())
+}
 #endif
 
 final class SettingVC: VC {
@@ -21,6 +23,16 @@ final class SettingVC: VC {
     
     // MARK: UI properties
     
+    private let timo = UIImageView(image: .timoFace).then {
+        $0.contentMode = .scaleAspectFit
+    }
+    private let titleLbl = UILabel("설정").then {
+        $0.textColor(.colorDark100).font(.pretendard(.bold, 20))
+    }
+    private let nicknameLbl = UILabel().then {
+        $0.textColor(.colorDark100).font(.pretendard(.semiBold, 16))
+    }
+    private let headerView = UIView()
     private let tableView = UITableView()
     private let logoutBtn = FilledButton("로그아웃")
     private let withdrawBtn = FilledButton("회원 탈퇴")
@@ -33,18 +45,48 @@ final class SettingVC: VC {
         tableView.delegate = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         tableView.separatorStyle = .none
+        tableView.tableHeaderView = headerView
+        headerView.frame.size.height = 183
+        
+        navigationItem.leftBarButtonItem = .init(customView: titleLbl)
     }
     
     override func setupFlex() {
-        view.addSubview(flexView)
+        view.addSubview(tableView)
+        
+        headerView.addSubview(flexView)
         flexView.flex.define { flex in
-            flex.addItem(tableView).grow(1)
+            flex.addItem().grow(1).justifyContent(.center).alignItems(.center).define { flex in
+                flex.addItem(CircleView())
+                    .width(100)
+                    .height(100)
+                    .backgroundColor(.colorMain2)
+                    .alignItems(.center)
+                    .justifyContent(.center)
+                    .define { flex in
+                        flex.addItem(timo).height(74%)
+                    }
+                
+                flex.addItem(nicknameLbl).marginTop(12)
+            }
+            
+            flex.addItem().height(8).marginBottom(9).backgroundColor(.colorGrey10)
         }
     }
     
     override func layoutFlex() {
+        tableView.pin.all()
         flexView.pin.all()
         flexView.flex.layout()
+    }
+    
+    override func bind() {
+        vm.$nickname.receive(on: RunLoop.main)
+            .sink { [weak self] nickname in
+                self?.nicknameLbl.text = nickname
+                self?.nicknameLbl.flex.markDirty()
+                self?.flexView.flex.layout()
+            }.store(in: &cancellables)
     }
     
 }
@@ -95,7 +137,7 @@ extension SettingVC: UITableViewDataSource {
         let setting = settings[indexPath.row]
         var content = cell.defaultContentConfiguration()
         content.text = setting.title
-        content.textProperties.font = .pretendard(.medium, 18)
+        content.textProperties.font = .pretendard(.medium, 14)
         content.textProperties.color = .colorDark70
         cell.contentConfiguration = content
         
@@ -104,7 +146,7 @@ extension SettingVC: UITableViewDataSource {
             Logger.debug(Env.appVersion)
             let label = UILabel("v\(Env.appVersion)")
                 .textColor(.colorDark70)
-                .font(.pretendard(.medium, 18))
+                .font(.pretendard(.medium, 14))
             label.sizeToFit()
             cell.accessoryView = label
         } else {
@@ -149,7 +191,7 @@ extension SettingVC: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        60
+        44
     }
     
 }
