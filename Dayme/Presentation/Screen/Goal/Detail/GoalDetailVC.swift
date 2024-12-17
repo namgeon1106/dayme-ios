@@ -213,7 +213,7 @@ final class GoalDetailVC: VC {
         do {
             try await vm.toggleDisplayHome()
         } catch {
-            homeSwitch.isOn = goal.displayHome
+            homeSwitch.isOn = vm.goal.displayHome
             showAlert(title: "🚨 홈화면 표시 변경 실패", message: error.localizedDescription)
         }
     }
