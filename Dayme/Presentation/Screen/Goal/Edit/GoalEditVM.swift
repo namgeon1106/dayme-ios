@@ -15,7 +15,7 @@ final class GoalEditVM: VM {
     @Published var endDate: Date?
     @Published var color: PalleteColor?
     @Published var displayeHome: Bool
-    @Published var isDisplayLimited: Bool = false
+    @Published private(set) var isDisplayLimited: Bool = false
     
     @Published private(set) var isValidate: Bool = false
     

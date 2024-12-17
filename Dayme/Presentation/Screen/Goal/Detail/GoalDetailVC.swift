@@ -99,12 +99,6 @@ final class GoalDetailVC: VC {
         subgoalSection.delegate = self
     }
     
-    override func setupAction() {
-        backBtn.onAction { [weak self] in
-            self?.coordinator?.trigger(with: .goalDetailCanceled)
-        }
-    }
-    
     override func setupFlex() {
         view.addSubview(flexView)
         flexView.addSubview(scrollView)
@@ -170,6 +164,25 @@ final class GoalDetailVC: VC {
         scrollView.contentSize = contentView.bounds.size
     }
     
+    override func setupAction() {
+        backBtn.onAction { [weak self] in
+            self?.coordinator?.trigger(with: .goalDetailCanceled)
+        }
+        
+        homeSwitch.onAction(for: .valueChanged) { [weak self] in
+            guard let self else { return }
+            
+            if vm.isDisplayLimited {
+                homeSwitch.isOn = false
+                homeContainer.layer.borderColor = .uiColor(.colorRed)
+                homeWarningLbl.alpha = 1
+                Haptic.noti(.warning)
+            } else {
+                await toggleDisplayHome()
+            }
+        }
+    }
+    
     override func bind() {
         vm.$goal.receive(on: RunLoop.main)
             .sink { [weak self] goal in
@@ -185,6 +198,7 @@ final class GoalDetailVC: VC {
         goalDateLbl.text = "\(startDate) ~ \(endDate)"
         goalProgressBar.progress = goal.progress
         goalProgressBar.tintColor = .hex(goal.hex)
+        homeSwitch.isOn = goal.displayHome
         
         subgoalSection.update(subgoals: goal.subgoals)
         
@@ -193,6 +207,15 @@ final class GoalDetailVC: VC {
         goalDateLbl.flex.markDirty()
         
         view.setNeedsLayout()
+    }
+    
+    private func toggleDisplayHome() async {
+        do {
+            try await vm.toggleDisplayHome()
+        } catch {
+            homeSwitch.isOn = goal.displayHome
+            showAlert(title: "🚨 홈화면 표시 변경 실패", message: error.localizedDescription)
+        }
     }
     
 }
