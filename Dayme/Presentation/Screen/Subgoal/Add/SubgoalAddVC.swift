@@ -91,6 +91,7 @@ final class SubgoalAddVC: VC {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.minimumInteritemSpacing = 6
+        layout.minimumLineSpacing = 6
         layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.showsHorizontalScrollIndicator = false

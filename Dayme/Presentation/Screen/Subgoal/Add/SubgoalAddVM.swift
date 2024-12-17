@@ -28,9 +28,10 @@ final class SubgoalAddVM: VM {
     
     
     override func bind() {
+        let defaultGoals = ["+", "건강", "재테크", "자기계발", "여가"]
         goalService.goals.sink { [weak self] goals in
             self?.goals = goals
-            self?.categories = ["+"] + goals
+            self?.categories = defaultGoals + goals
                 .flatMap(\.subgoals)
                 .map(\.category)
                 .removeDuplicates()
