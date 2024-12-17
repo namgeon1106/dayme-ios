@@ -22,6 +22,8 @@ class GoalService: TokenAccessible {
     
     private init() {}
     
+    // MARK: - 주요목표
+    
     @discardableResult
     func getGoal(id: Int) async throws -> Goal? {
         let token = try getAccessToken()
@@ -110,6 +112,8 @@ class GoalService: TokenAccessible {
         }
     }
     
+    // MARK: - 세부목표
+    
     func createSubgoal(goalId: Int, _ subgoal: Subgoal) async throws {
         let token = try getAccessToken()
         let endpoint = Endpoint(
@@ -123,6 +127,36 @@ class GoalService: TokenAccessible {
         
         _ = try? await getGoal(id: goalId)
     }
+    
+    func editSubgoal(goalId: Int, _ subgoal: Subgoal) async throws {
+        Logger.debug("\(AddSubgoalRequest.fromDomain(subgoal).toDictionary())")
+        let token = try getAccessToken()
+        let endpoint = Endpoint(
+            method: .put,
+            baseUrl: Env.serverBaseUrl,
+            path: "/goal/subGoal/\(subgoal.id)",
+            params: AddSubgoalRequest.fromDomain(subgoal).toDictionary()
+        ).withAuthorization(token)
+        
+        try await network.request(endpoint)
+        
+        _ = try? await getGoal(id: goalId)
+    }
+    
+    func deleteSubgoal(goalId: Int, subgoalId: Int) async throws {
+        let token = try getAccessToken()
+        let endpoint = Endpoint(
+            method: .delete,
+            baseUrl: Env.serverBaseUrl,
+            path: "/goal/subGoal/\(subgoalId)"
+        ).withAuthorization(token)
+        
+        try await network.request(endpoint)
+        
+        _ = try? await getGoal(id: goalId)
+    }
+    
+    // MARK: - 체크리스트
     
     func createChecklist(goalId: Int, subgoalId: Int?, _ checklist: Checklist) async throws {
         let subgoalPath = subgoalId.map({ "/\($0)" }).orEmpty

@@ -20,6 +20,7 @@ import PinLayout
 
 protocol SubgoalSectionDelegate: AnyObject {
     func subgoalSectionDidTapAddButton()
+    func subgoalSectionDidTapEditButton(_ subgoal: Subgoal)
 }
 
 final class SubgoalSection: Vue {
@@ -121,8 +122,9 @@ final class SubgoalSection: Vue {
             container.flex.define { flex in
                 flex.addItem(scrollView).grow(1).define { flex in
                     flex.addItem(contentView).direction(.row).define { flex in
-                        subgoals.map(SubgoalCard.init).forEach {
-                            flex.addItem($0).width(152).height(164).marginHorizontal(4)
+                        for card in subgoals.map(SubgoalCard.init) {
+                            card.delegate = self
+                            flex.addItem(card).width(152).height(164).marginHorizontal(4)
                         }
                     }
                 }
@@ -133,6 +135,16 @@ final class SubgoalSection: Vue {
         
         container.flex.isIncludedInLayout = true
         setNeedsLayout()
+    }
+    
+}
+
+// MARK: - SubgoalCardDelegate
+
+extension SubgoalSection: SubgoalCardDelegate {
+    
+    func subgoalCardEditButtonTapped(_ subgoal: Subgoal) {
+        delegate?.subgoalSectionDidTapEditButton(subgoal)
     }
     
 }

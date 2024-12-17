@@ -30,6 +30,8 @@ enum FlowEvent {
     // MARK: Subgoal
     case subgoalAddNeeded(Goal)
     case subgoalAddCanceled
+    case subgoalEditNeeded(goal: Goal, subgoal: Subgoal)
+    case subgoalEditCanceled
     
     // MARK: Checklist
     case checklistAddNeeded(goal: Goal, subgoal: Subgoal?)

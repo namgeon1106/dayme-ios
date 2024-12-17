@@ -15,7 +15,13 @@ import PinLayout
 }
 #endif
 
+protocol SubgoalCardDelegate: AnyObject {
+    func subgoalCardEditButtonTapped(_ subgoal: Subgoal)
+}
+
 final class SubgoalCard: Vue {
+    
+    weak var delegate: SubgoalCardDelegate?
     
     let subgoal: Subgoal
     
@@ -133,6 +139,15 @@ final class SubgoalCard: Vue {
         flexView.pin.all()
         flexView.flex.layout()
         editBtn.pin.top().right().width(44).height(44)
+    }
+    
+    // MARK: - Events
+    
+    override func setupAction() {
+        editBtn.onAction { [weak self] in
+            guard let self else { return }
+            delegate?.subgoalCardEditButtonTapped(subgoal)
+        }
     }
     
 }

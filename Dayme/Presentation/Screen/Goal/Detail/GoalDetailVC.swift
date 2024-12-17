@@ -205,4 +205,8 @@ extension GoalDetailVC: SubgoalSectionDelegate {
         coordinator?.trigger(with: .subgoalAddNeeded(vm.goal))
     }
     
+    func subgoalSectionDidTapEditButton(_ subgoal: Subgoal) {
+        coordinator?.trigger(with: .subgoalEditNeeded(goal: vm.goal, subgoal: subgoal))
+    }
+    
 }
