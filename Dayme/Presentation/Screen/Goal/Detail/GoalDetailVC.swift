@@ -209,6 +209,7 @@ final class GoalDetailVC: VC {
         view.setNeedsLayout()
     }
     
+    @MainActor
     private func toggleDisplayHome() async {
         do {
             try await vm.toggleDisplayHome()

@@ -23,9 +23,9 @@ final class GoalListVC: UITableViewController {
     
     var goals: [Goal] = [] {
         didSet {
-            homeGoals = goals.filter { $0.displayHome }
-            etcGoals = goals.filter { !$0.displayHome }
             DispatchQueue.main.async {
+                self.homeGoals = self.goals.filter { $0.displayHome }
+                self.etcGoals = self.goals.filter { !$0.displayHome }
                 self.tableView.reloadData()
             }
         }
