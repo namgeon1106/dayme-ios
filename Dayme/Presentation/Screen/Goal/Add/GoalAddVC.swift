@@ -144,65 +144,6 @@ final class GoalAddVC: VC {
         palleteView.delegate = self
     }
     
-    override func setupAction() {
-        backBtn.onAction { [weak self] in
-            self?.coordinator?.trigger(with: .goalAddCanceled)
-        }
-        
-        emojiBtn.onAction { [weak self] in
-            self?.showEmojiPicker()
-        }
-        
-        titleTF.onAction { [weak self] in
-            guard let self else { return }
-            vm.title = titleTF.text.orEmpty
-        }
-        
-        durationStartTF.onAction(for: .editingDidBegin) { [weak self] in
-            guard let self else { return }
-            
-            Haptic.impact(.light)
-            
-            datePicker.minimumDate = nil
-            if vm.startDate == nil {
-                vm.startDate = datePicker.date
-            }
-            if let endDate = vm.endDate {
-                datePicker.maximumDate = endDate
-            }
-        }
-        
-        durationEndTF.onAction(for: .editingDidBegin) { [weak self] in
-            guard let self else { return }
-            
-            datePicker.maximumDate = nil
-            if let startDate = vm.startDate {
-                datePicker.minimumDate = startDate
-            }
-        }
-        
-        datePicker.onAction(for: .valueChanged) { [weak self] in
-            self?.pickerValueChanged()
-        }
-        
-        homeSwitch.onAction(for: .valueChanged) { [weak self] in
-            guard let self else { return }
-            
-            if vm.isDisplayLimited {
-                homeSwitch.isOn = false
-                homeContainer.layer.borderColor = .uiColor(.colorRed)
-                homeWarningLbl.alpha = 1
-                Haptic.noti(.warning)
-            } else {
-                vm.displayeHome = homeSwitch.isOn
-            }
-        }
-        
-        doneBtn.onAction { [weak self] in
-            await self?.addGoal()
-        }
-    }
-    
     override func setupFlex() {
         view.addSubview(flexView)
         flexView.addSubview(scrollView)
@@ -288,6 +229,65 @@ final class GoalAddVC: VC {
         let containerHeight = buttonHeight + bottomInset + 8 * 2
         doneBtnContainer.pin.horizontally().bottom().height(containerHeight)
         doneBtn.pin.bottom(bottomInset + 8).horizontally(24).height(buttonHeight)
+    }
+    
+    override func setupAction() {
+        backBtn.onAction { [weak self] in
+            self?.coordinator?.trigger(with: .goalAddCanceled)
+        }
+        
+        emojiBtn.onAction { [weak self] in
+            self?.showEmojiPicker()
+        }
+        
+        titleTF.onAction { [weak self] in
+            guard let self else { return }
+            vm.title = titleTF.text.orEmpty
+        }
+        
+        durationStartTF.onAction(for: .editingDidBegin) { [weak self] in
+            guard let self else { return }
+            
+            Haptic.impact(.light)
+            
+            datePicker.minimumDate = nil
+            if vm.startDate == nil {
+                vm.startDate = datePicker.date
+            }
+            if let endDate = vm.endDate {
+                datePicker.maximumDate = endDate
+            }
+        }
+        
+        durationEndTF.onAction(for: .editingDidBegin) { [weak self] in
+            guard let self else { return }
+            
+            datePicker.maximumDate = nil
+            if let startDate = vm.startDate {
+                datePicker.minimumDate = startDate
+            }
+        }
+        
+        datePicker.onAction(for: .valueChanged) { [weak self] in
+            self?.pickerValueChanged()
+        }
+        
+        homeSwitch.onAction(for: .valueChanged) { [weak self] in
+            guard let self else { return }
+            
+            if vm.isDisplayLimited {
+                homeSwitch.isOn = false
+                homeContainer.layer.borderColor = .uiColor(.colorRed)
+                homeWarningLbl.alpha = 1
+                Haptic.noti(.warning)
+            } else {
+                vm.displayeHome = homeSwitch.isOn
+            }
+        }
+        
+        doneBtn.onAction { [weak self] in
+            await self?.addGoal()
+        }
     }
     
     override func bind() {

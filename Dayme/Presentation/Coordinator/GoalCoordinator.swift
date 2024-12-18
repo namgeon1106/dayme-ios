@@ -33,12 +33,13 @@ final class GoalCoordinator: Coordinator {
             presentSubgoalEditScreen(goal: goal, subgoal: subgoal)
             
         case .checklistAddNeeded(let goal, let subgoal):
-            presentChecklistAddScreen(goal: goal, subgoal: subgoal)
+            pushChecklistAddScreen(goal: goal, subgoal: subgoal)
             
-        case .goalAddCanceled, .goalEditCanceled, .goalDetailCanceled:
+        case .goalAddCanceled, .goalEditCanceled,
+                .goalDetailCanceled, .checklistAddCanceled:
             popViewController(animated: true)
             
-        case .subgoalAddCanceled, .subgoalEditCanceled, .checklistAddCanceled:
+        case .subgoalAddCanceled, .subgoalEditCanceled:
             dismissPresentedViewController(animated: true)
             
         default: break
@@ -105,18 +106,13 @@ private extension GoalCoordinator {
         nav.present(vc, animated: true)
     }
     
-    func presentChecklistAddScreen(goal: Goal, subgoal: Subgoal?) {
+    func pushChecklistAddScreen(goal: Goal, subgoal: Subgoal?) {
         let vm = ChecklistAddVM(goal: goal, subgoal: subgoal)
         let vc = ChecklistAddVC(vm: vm)
         vc.coordinator = self
-        vc.modalPresentationStyle = .pageSheet
-        
-        if let sheet = vc.sheetPresentationController {
-            sheet.detents = [.custom { _ in vc.modalHeight }]
-            sheet.preferredCornerRadius = 0
-        }
-        
-        nav.present(vc, animated: true)
+        vc.hidesBottomBarWhenPushed = true
+        nav.interactivePopGestureRecognizer?.delegate = self
+        nav.pushViewController(vc, animated: true)
     }
     
 }

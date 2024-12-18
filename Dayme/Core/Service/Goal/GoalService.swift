@@ -129,7 +129,6 @@ class GoalService: TokenAccessible {
     }
     
     func editSubgoal(goalId: Int, _ subgoal: Subgoal) async throws {
-        Logger.debug("\(AddSubgoalRequest.fromDomain(subgoal).toDictionary())")
         let token = try getAccessToken()
         let endpoint = Endpoint(
             method: .put,

@@ -10,6 +10,9 @@ import Foundation
 struct Checklist: Equatable, Identifiable {
     let id: Int
     let title: String
+    let startDate: Date
+    let endDate: Date
+    let repeatDays: [String]
     let isCompleted: Bool
     
     
@@ -17,14 +20,36 @@ struct Checklist: Equatable, Identifiable {
         lhs.id == rhs.id
     }
     
-    static func create(title: String) -> Checklist {
-        Checklist(id: 0, title: title, isCompleted: false)
+    static func create(
+        title: String,
+        startDate: Date,
+        endDate: Date,
+        repeatDays: [String]
+    ) -> Checklist {
+        Checklist(
+            id: 0,
+            title: title,
+            startDate: startDate,
+            endDate: endDate,
+            repeatDays: repeatDays,
+            isCompleted: false
+        )
     }
     
-    func copyWith(id: Int? = nil, title: String? = nil, isCompleted: Bool? = nil) -> Checklist {
+    func copyWith(
+        id: Int? = nil,
+        title: String? = nil,
+        startDate: Date? = nil,
+        endDate: Date? = nil,
+        repeatDays: [String]? = nil,
+        isCompleted: Bool? = nil
+    ) -> Checklist {
         Checklist(
             id: id ?? self.id,
             title: title ?? self.title,
+            startDate: startDate ?? self.startDate,
+            endDate: endDate ?? self.endDate,
+            repeatDays: repeatDays ?? self.repeatDays,
             isCompleted: isCompleted ?? self.isCompleted
         )
     }
@@ -35,6 +60,9 @@ let mockChecklists: [Checklist] = [
     Checklist(
         id: 1,
         title: "Dayme 앱 프론트 개발",
+        startDate: Date().addingDays(-10),
+        endDate: Date().addingDays(10),
+        repeatDays: ["월", "수", "금"],
         isCompleted: false
     )
 ]

@@ -101,8 +101,16 @@ struct AddSubgoalRequest: Encodable {
 
 struct AddChecklistRequest: Encodable {
     let title: String
+    let startDate: String
+    let endDate: String
+    let repeatType: String
     
     static func fromDomain(_ checklist: Checklist) -> AddChecklistRequest {
-        AddChecklistRequest(title: checklist.title)
+        AddChecklistRequest(
+            title: checklist.title,
+            startDate: checklist.startDate.string(style: .standard),
+            endDate: checklist.endDate.string(style: .standard),
+            repeatType: checklist.repeatDays.joined(separator: ", ")
+        )
     }
 }
