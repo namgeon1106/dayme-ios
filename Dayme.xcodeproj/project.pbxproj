@@ -17,6 +17,7 @@
 		9A7BFB732CD5FBD800E48C31 /* KakaoSDKUser in Frameworks */ = {isa = PBXBuildFile; productRef = 9A7BFB722CD5FBD800E48C31 /* KakaoSDKUser */; };
 		9AB0EC782CF06B7000BD01E1 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 9AB0EC772CF06B7000BD01E1 /* FirebaseAuth */; };
 		9AD2B3132CFB34F200BB4EB6 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 9AD2B3122CFB34F200BB4EB6 /* FirebaseMessaging */; };
+		9AD80C9B2D12E40900394FF5 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 9AD80C9A2D12E40900394FF5 /* FirebaseCrashlytics */; };
 		9AE8B91C2D03474E00D7672D /* ElegantEmojiPicker in Frameworks */ = {isa = PBXBuildFile; productRef = 9AE8B91B2D03474E00D7672D /* ElegantEmojiPicker */; };
 /* End PBXBuildFile section */
 
@@ -76,6 +77,7 @@
 				9A32AF502CDBA2E000F9CBF1 /* Alamofire in Frameworks */,
 				9A1069EA2CF0BE9100221178 /* JGProgressHUD in Frameworks */,
 				9A7BFB732CD5FBD800E48C31 /* KakaoSDKUser in Frameworks */,
+				9AD80C9B2D12E40900394FF5 /* FirebaseCrashlytics in Frameworks */,
 				9A7BFB712CD5FBD800E48C31 /* KakaoSDKAuth in Frameworks */,
 				9AB0EC782CF06B7000BD01E1 /* FirebaseAuth in Frameworks */,
 			);
@@ -121,6 +123,7 @@
 				9A1E351E2CD3CA4700753F8A /* Sources */,
 				9A1E351F2CD3CA4700753F8A /* Frameworks */,
 				9A1E35202CD3CA4700753F8A /* Resources */,
+				9AD80C9C2D12E44700394FF5 /* Firebase Crashlytics */,
 			);
 			buildRules = (
 			);
@@ -143,6 +146,7 @@
 				9A33A2822CF6CE8600D40F2D /* Then */,
 				9AD2B3122CFB34F200BB4EB6 /* FirebaseMessaging */,
 				9AE8B91B2D03474E00D7672D /* ElegantEmojiPicker */,
+				9AD80C9A2D12E40900394FF5 /* FirebaseCrashlytics */,
 			);
 			productName = Dayme;
 			productReference = 9A1E35222CD3CA4700753F8A /* Dayme.app */;
@@ -204,6 +208,32 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		9AD80C9C2D12E44700394FF5 /* Firebase Crashlytics */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${PRODUCT_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/GoogleService-Info.plist",
+				"$(TARGET_BUILD_DIR)/$(EXECUTABLE_PATH)",
+			);
+			name = "Firebase Crashlytics";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		9A1E351E2CD3CA4700753F8A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -225,7 +255,9 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = K6MUDP7694;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Dayme/Resource/Info.plist;
 				INFOPLIST_KEY_NSRemindersUsageDescription = "눌러주쇼~";
@@ -264,6 +296,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = K6MUDP7694;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Dayme/Resource/Info.plist;
 				INFOPLIST_KEY_NSRemindersUsageDescription = "눌러주쇼~";
@@ -562,6 +595,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 9AB0EC742CF06B7000BD01E1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseMessaging;
+		};
+		9AD80C9A2D12E40900394FF5 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9AB0EC742CF06B7000BD01E1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
 		};
 		9AE8B91B2D03474E00D7672D /* ElegantEmojiPicker */ = {
 			isa = XCSwiftPackageProductDependency;
