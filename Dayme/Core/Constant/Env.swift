@@ -19,6 +19,8 @@ enum Env {
     
     static let firebaseClientId: String = infoValue("FIREBASE_CLIENT_ID")
     
+    static let appId: String = infoValue("APP_ID")
+    
     static let appVersion: String = infoValue("CFBundleShortVersionString")
 }
 

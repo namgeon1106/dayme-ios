@@ -16,6 +16,7 @@ import PinLayout
 final class SplashVC: VC {
     
     private let userService: UserService = .shared
+    private let deviceManager: DeviceManager = .shared
     
     // MARK: UI properties
     
@@ -28,7 +29,11 @@ final class SplashVC: VC {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        Task { await validateUser() }
+        Task {
+            if await checkVersion() {
+                await validateUser()
+            }
+        }
     }
     
     
@@ -67,6 +72,30 @@ final class SplashVC: VC {
             Logger.error(error)
             coordinator?.trigger(with: .logout)
         }
+    }
+    
+    @MainActor
+    private func checkVersion() async -> Bool {
+        do {
+            if try await deviceManager.checkVersion() {
+                return true
+            }
+            
+            let title = "🛠️ 업데이트 알림"
+            let message = "안정적인 서비스 제공을 위해\n최신 버전으로 업그레이드가 필요합니다."
+            await Alert(title: title, message: message)
+                .onAction(title: "AppStore로 이동")
+                .show(on: self)
+            
+            let appId = Env.appId
+            if let appStoreURL = URL(string: "itms-apps://itunes.apple.com/app/\(appId)") {
+                await UIApplication.shared.open(appStoreURL)
+            }
+        } catch {
+            Logger.error(error)
+        }
+        
+        return false
     }
     
 }

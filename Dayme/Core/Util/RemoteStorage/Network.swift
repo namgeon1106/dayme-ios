@@ -42,7 +42,8 @@ final class Network {
         return try response.result.get()
     }
     
-    func request(_ endpoint: Endpoint) async throws {
+    @discardableResult
+    func request(_ endpoint: Endpoint) async throws -> JSON {
         let response = await dataRequest(endpoint)
             .serializingData()
             .response
@@ -64,6 +65,8 @@ final class Network {
         if !isValid {
             throw try decoder.decode(ServerError.self, from: data)
         }
+        
+        return JSON(data)
     }
     
     // MARK: - 네트워크 설정
