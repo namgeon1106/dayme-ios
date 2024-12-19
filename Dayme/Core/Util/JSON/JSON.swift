@@ -62,6 +62,10 @@ extension JSON {
     func value<T>(_ type: T.Type) -> T? { object as? T }
     func array<E>(_ type: E.Type) -> [E] { array.orEmpty.compactMap { $0 as? E } }
     func dictionary<E>(_ type: E.Type) -> [String: E]? { object as? [String: E] }
+    func decode<T>(_ type: T.Type) throws -> T where T: Decodable {
+        let data = try JSONSerialization.data(withJSONObject: object ?? [:])
+        return try JSONDecoder().decode(T.self, from: data)
+    }
     
 }
 

@@ -17,12 +17,12 @@ final class GoalVM: VM {
     
     
     override func bind() {
-        service.goals
+        service.allGoals
             .sink { [weak self] goals in
                 self?.goals = goals
             }.store(in: &cancellables)
         
-        service.goals.map(\.isEmpty)
+        service.allGoals.map(\.isEmpty)
             .sink { [weak self] isEmpty in
                 self?.isFABHidden = isEmpty
             }.store(in: &cancellables)

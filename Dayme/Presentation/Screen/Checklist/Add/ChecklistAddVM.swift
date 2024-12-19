@@ -42,7 +42,7 @@ final class ChecklistAddVM: VM {
         .map { $0 && $1 && $2 && $3 }
         .assign(to: &$isValidate)
         
-        goalService.goals.sink { [weak self] goals in
+        goalService.ongoingGoals.sink { [weak self] goals in
             self?.goals = goals
         }.store(in: &cancellables)
         

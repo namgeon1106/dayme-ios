@@ -28,13 +28,14 @@ final class SubgoalAddVM: VM {
     
     
     override func bind() {
-        let defaultGoals = ["+", "건강", "재테크", "자기계발", "여가"]
-        goalService.goals.sink { [weak self] goals in
+        goalService.ongoingGoals.sink { [weak self] goals in
             self?.goals = goals
-            self?.categories = defaultGoals + goals
-                .flatMap(\.subgoals)
-                .map(\.category)
-                .removeDuplicates()
+        }.store(in: &cancellables)
+        
+        goalService.allGoals.sink { [weak self] goals in
+            let defaultCategories = ["+", "건강", "재테크", "자기계발", "여가"]
+            let userCategories = goals.flatMap(\.subgoals).map(\.category)
+            self?.categories = (defaultCategories + userCategories).removeDuplicates()
         }.store(in: &cancellables)
         
         Publishers.CombineLatest4(

@@ -27,7 +27,7 @@ final class GoalDetailVM: VM {
     
     override func bind() {
         let id = goal.id
-        goalService.goals
+        goalService.allGoals
             .dropFirst() // 초기값은 버리고 업데이트만 반영
             .compactMap { goals in
                 goals.first(where: { goal in goal.id == id })
@@ -36,7 +36,7 @@ final class GoalDetailVM: VM {
             }.store(in: &cancellables)
         
         if !goal.displayHome {
-            goalService.goals.map { goals in
+            goalService.allGoals.map { goals in
                 let displayCount = goals.filter(\.displayHome).count
                 let maximumCount = 3
                 return displayCount >= maximumCount

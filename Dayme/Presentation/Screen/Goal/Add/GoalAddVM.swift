@@ -49,7 +49,7 @@ final class GoalAddVM: VM {
         .combineLatest($color.map({ $0 != nil })) { $0 && $1 }
         .assign(to: &$isValidate)
         
-        service.goals.map { goals in
+        service.allGoals.map { goals in
             let displayCount = goals.filter(\.displayHome).count
             let maximumCount = 3
             return displayCount >= maximumCount

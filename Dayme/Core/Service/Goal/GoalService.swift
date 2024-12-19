@@ -12,15 +12,27 @@ class GoalService: TokenAccessible {
     
     static let shared = GoalService()
     
-    var goals: AnyPublisher<[Goal], Never> {
-        _goals.eraseToAnyPublisher()
+    var allGoals: AnyPublisher<[Goal], Never> {
+        _allGoals.eraseToAnyPublisher()
+    }
+    var ongoingGoals: AnyPublisher<[Goal], Never> {
+        _ongoingGoals.eraseToAnyPublisher()
+    }
+    var pastGoals: AnyPublisher<[Goal], Never> {
+        _pastGoals.eraseToAnyPublisher()
     }
     
-    private let _goals = CurrentValueSubject<[Goal], Never>([])
+    var cancellables: Set<AnyCancellable> = []
+    
+    private let _allGoals = CurrentValueSubject<[Goal], Never>([])
+    private let _ongoingGoals = CurrentValueSubject<[Goal], Never>([])
+    private let _pastGoals = CurrentValueSubject<[Goal], Never>([])
     private let network = Network()
     
     
-    private init() {}
+    private init() {
+        bind()
+    }
     
     // MARK: - 주요목표
     
@@ -36,10 +48,10 @@ class GoalService: TokenAccessible {
         let response: GoalResponse = try await network.request(endpoint)
         let goal = response.toDomain()
         
-        if let goal, let index = _goals.value.firstIndex(of: goal) {
-            var goals = _goals.value
+        if let goal, let index = _allGoals.value.firstIndex(of: goal) {
+            var goals = _allGoals.value
             goals[index] = goal
-            _goals.send(goals)
+            _allGoals.send(goals)
         }
         
         return goal
@@ -52,12 +64,16 @@ class GoalService: TokenAccessible {
         let endpoint = Endpoint(
             method: .get,
             baseUrl: Env.serverBaseUrl,
-            path: "/goal"
+            path: "/goal?status=ALL"
         ).withAuthorization(token)
         
-        let reponse: [GoalResponse] = try await network.request(endpoint)
-        let goals = reponse.compactMap { $0.toDomain() }
-        _goals.send(goals)
+        let json = try await network.request(endpoint)
+        let ongoingResponse = try json["IN_PROGRESS"].decode([GoalResponse].self)
+        let pastResponse = try json["DONE"].decode([GoalResponse].self)
+        
+        let goals = (ongoingResponse + pastResponse).compactMap { $0.toDomain() }
+        
+        _allGoals.send(goals)
         
         return goals
     }
@@ -88,10 +104,10 @@ class GoalService: TokenAccessible {
         
         try await network.request(endpoint)
         
-        var goals = _goals.value
+        var goals = _allGoals.value
         if let index = goals.firstIndex(of: goal) {
             goals[index] = goal
-            _goals.send(goals)
+            _allGoals.send(goals)
         }
     }
     
@@ -105,10 +121,10 @@ class GoalService: TokenAccessible {
         
         try await network.request(endpoint)
         
-        var goals = _goals.value
+        var goals = _allGoals.value
         if let index = goals.firstIndex(where: { $0.id == id }) {
             goals.remove(at: index)
-            _goals.send(goals)
+            _allGoals.send(goals)
         }
     }
     
@@ -170,6 +186,32 @@ class GoalService: TokenAccessible {
         try await network.request(endpoint)
         
         _ = try? await getGoal(id: goalId)
+    }
+    
+}
+
+extension GoalService {
+    
+    func refreshGoalsState() {
+        _allGoals.send(_allGoals.value)
+    }
+    
+    private func bind() {
+        _allGoals.sink { [weak self] goals in
+            var ongoingGoals: [Goal] = []
+            var pastGoals: [Goal] = []
+            let now = Date()
+            for goal in goals {
+                if now > goal.endDate, !now.isSameDay(with: goal.endDate) {
+                    pastGoals.append(goal)
+                } else {
+                    ongoingGoals.append(goal)
+                }
+            }
+            
+            self?._ongoingGoals.send(ongoingGoals)
+            self?._pastGoals.send(pastGoals)
+        }.store(in: &cancellables)
     }
     
 }

@@ -68,7 +68,7 @@ final class GoalEditVM: VM {
         .assign(to: &$isValidate)
         
         if !goal.displayHome {
-            service.goals.map { goals in
+            service.allGoals.map { goals in
                 let displayCount = goals.filter(\.displayHome).count
                 let maximumCount = 3
                 return displayCount >= maximumCount

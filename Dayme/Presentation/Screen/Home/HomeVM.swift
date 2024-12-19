@@ -24,7 +24,7 @@ final class HomeVM: VM {
                 self?.nickname = user.nickname
             }.store(in: &cancellables)
         
-        goalService.goals.map { $0.filter(\.displayHome) }
+        goalService.allGoals.map { $0.filter(\.displayHome) }
             .sink { [weak self] goals in
                 self?.goals = goals
             }.store(in: &cancellables)

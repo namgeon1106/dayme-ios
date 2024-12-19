@@ -20,7 +20,9 @@ final class GoalPageVC: VC {
     
     let vm = GoalPageVM()
     
-    private var currentIndex: Int = 0
+    private var currentIndex: Int = 0 {
+        didSet { vm.refresh() }
+    }
     
     // MARK: UI properties
     

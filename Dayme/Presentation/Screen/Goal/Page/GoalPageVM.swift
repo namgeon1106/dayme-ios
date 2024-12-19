@@ -16,22 +16,17 @@ final class GoalPageVM: VM {
     
     
     override func bind() {
-        service.goals.sink { [weak self] goals in
-            var ongoingGoals: [Goal] = []
-            var pastGoals: [Goal] = []
-            
-            let now = Date()
-            for goal in goals {
-                if now > goal.endDate, !now.isSameDay(with: goal.endDate) {
-                    pastGoals.append(goal)
-                } else {
-                    ongoingGoals.append(goal)
-                }
-            }
-            
-            self?.ongoingGoals = ongoingGoals
-            self?.pastGoals = pastGoals
+        service.ongoingGoals.sink { [weak self] goals in
+            self?.ongoingGoals = goals
+        }.store(in: &cancellables)
+        
+        service.pastGoals.sink { [weak self] goals in
+            self?.pastGoals = goals
         }.store(in: &cancellables)
     }
     
+    
+    func refresh() {
+        service.refreshGoalsState()
+    }
 }
