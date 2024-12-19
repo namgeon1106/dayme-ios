@@ -46,9 +46,15 @@ final class ChecklistAddVM: VM {
             self?.goals = goals
         }.store(in: &cancellables)
         
-        $title
-            .map({ !$0.isEmpty })
-            .assign(to: &$isValidate)
+        $goal.sink { [weak self] goal in
+            self?.startDate = goal.startDate
+            self?.endDate = goal.endDate
+        }.store(in: &cancellables)
+        
+        $subgoal.compactMap({ $0 }).sink { [weak self] subgoal in
+            self?.startDate = subgoal.startDate
+            self?.endDate = subgoal.endDate
+        }.store(in: &cancellables)
     }
     
 }

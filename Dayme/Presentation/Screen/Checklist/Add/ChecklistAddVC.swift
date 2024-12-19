@@ -341,7 +341,7 @@ extension ChecklistAddVC {
             }
             _ = goalTF.resignFirstResponder()
         } else if subgoalTF.isFirstResponder {
-            let row = goalPicker.selectedRow(inComponent: 0)
+            let row = subgoalPicker.selectedRow(inComponent: 0)
             if let newSubgoal = vm.goal.subgoals[orNil: row] {
                 vm.subgoal = newSubgoal
             }
