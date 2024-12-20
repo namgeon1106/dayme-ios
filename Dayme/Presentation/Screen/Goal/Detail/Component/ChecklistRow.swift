@@ -16,7 +16,7 @@ import PinLayout
 #endif
 
 protocol ChecklistRowDelegate: AnyObject {
-    func checklistRowCheckDidTap(_ checklist: Checklist)
+    func checklistRowDidTapCheck(_ checklist: Checklist)
 }
 
 typealias ChecklistItem = (goalTitle: String, checklist: Checklist)
@@ -29,8 +29,9 @@ final class ChecklistRow: Vue {
     
     // MARK: UI properties
     
-    private let checkButton = UIButton().then {
-        $0.setImage(.icCheckOff, for: .normal)
+    private lazy var checkButton = UIButton().then {
+        let isCompleted = item.checklist.isCompleted
+        $0.setImage(isCompleted ? .icCheckOn : .icCheckOff, for: .normal)
     }
     
     private let topGoalLabel = UILabel().then {
@@ -88,7 +89,7 @@ final class ChecklistRow: Vue {
     override func setupAction() {
         checkButton.onAction { [weak self] in
             guard let self else { return }
-            delegate?.checklistRowCheckDidTap(item.checklist)
+            delegate?.checklistRowDidTapCheck(item.checklist)
         }
     }
     

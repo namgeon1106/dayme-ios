@@ -25,6 +25,10 @@ final class GoalDetailVM: VM {
         try await goalService.editGoal(newGoal)
     }
     
+    func toggleChecklist(_ history: Checklist.History) async throws {
+        try await goalService.toggleChecklistHistory(goalId: goal.id, historyId: history.id)
+    }
+    
     override func bind() {
         let id = goal.id
         goalService.allGoals

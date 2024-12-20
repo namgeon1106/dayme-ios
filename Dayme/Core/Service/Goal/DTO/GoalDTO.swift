@@ -73,6 +73,7 @@ struct ChecklistResponse: Decodable {
     let startDate: String
     let endDate: String
     let repeatType: String
+    let histories: [HistoryResponse]
     
     func toDomain() -> Checklist? {
         guard let startDate = Date.string(startDate, style: .standard),
@@ -85,8 +86,25 @@ struct ChecklistResponse: Decodable {
             title: title,
             startDate: startDate,
             endDate: endDate,
-            repeatDays: repeatType.components(separatedBy: ", ")
+            repeatDays: repeatType.components(separatedBy: ", "),
+            histories: histories.compactMap { $0.toDomain() }
         )
+    }
+}
+
+extension ChecklistResponse {
+    struct HistoryResponse: Decodable {
+        let id: Int
+        let status: Bool
+        let executeDate: String
+        
+        func toDomain() -> Checklist.History? {
+            guard let executeDate = Date.string(executeDate, style: .standard) else {
+                return nil
+            }
+            
+            return .init(id: id, status: status, executeDate: executeDate)
+        }
     }
 }
 

@@ -188,6 +188,19 @@ class GoalService: TokenAccessible {
         _ = try? await getGoal(id: goalId)
     }
     
+    func toggleChecklistHistory(goalId: Int, historyId: Int) async throws {
+        let token = try getAccessToken()
+        let endpoint = Endpoint(
+            method: .patch,
+            baseUrl: Env.serverBaseUrl,
+            path: "/goal/todo/\(historyId)/toggle"
+        ).withAuthorization(token)
+        
+        try await network.request(endpoint)
+        
+        _ = try? await getGoal(id: goalId)
+    }
+    
 }
 
 extension GoalService {

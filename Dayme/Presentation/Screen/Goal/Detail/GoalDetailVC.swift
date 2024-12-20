@@ -218,6 +218,15 @@ final class GoalDetailVC: VC {
         }
     }
     
+    @MainActor
+    private func toggleChecklist(_ history: Checklist.History) async {
+        do {
+            try await vm.toggleChecklist(history)
+        } catch {
+            showAlert(title: "🚨 체크리스트 상태 변경 실패", message: error.localizedDescription)
+        }
+    }
+    
 }
 
 // MARK: - SubgoalSectionDelegate
@@ -244,6 +253,13 @@ extension GoalDetailVC: ChecklistSectionDelegate {
     
     func checklistSectionDidTapEditButton(_ checklist: Checklist) {
         
+    }
+    
+    func checklistSectionDidTapCheckButton(_ checklist: Checklist) {
+        if let history = checklist.currentHistory {
+            Haptic.impact(.light)
+            Task { await toggleChecklist(history) }
+        }
     }
     
     func checklistSectionDidTapSeeMoreButton() {

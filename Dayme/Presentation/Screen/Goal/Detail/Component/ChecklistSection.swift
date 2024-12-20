@@ -20,6 +20,7 @@ import PinLayout
 protocol ChecklistSectionDelegate: AnyObject {
     func checklistSectionDidTapAddButton(subgoal: Subgoal?)
     func checklistSectionDidTapEditButton(_ checklist: Checklist)
+    func checklistSectionDidTapCheckButton(_ checklist: Checklist)
     func checklistSectionDidTapSeeMoreButton()
 }
 
@@ -182,6 +183,7 @@ final class ChecklistSection: Vue {
             container.flex.define { flex in
                 for item in filtered {
                     let row = ChecklistRow(item: item)
+                    row.delegate = self
                     flex.addItem(row).margin(4, 24).height(52)
                 }
                 
@@ -220,6 +222,16 @@ extension ChecklistSection {
         button.configuration = config
         button.tag = tag
         return button
+    }
+    
+}
+
+// MARK: - ChecklistRowDelegate
+
+extension ChecklistSection: ChecklistRowDelegate {
+    
+    func checklistRowDidTapCheck(_ checklist: Checklist) {
+        delegate?.checklistSectionDidTapCheckButton(checklist)
     }
     
 }

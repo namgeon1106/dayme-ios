@@ -13,7 +13,18 @@ struct Checklist: Equatable, Identifiable {
     let startDate: Date
     let endDate: Date
     let repeatDays: [String]
+    let histories: [History]
     
+    var currentHistory: History? {
+        let now = Date()
+        return histories.first(where: { history in
+            now < history.executeDate || now.isSameDay(with: history.executeDate)
+        }) ?? histories.last // 기간이 모두 지난 경우 마지막 History
+    }
+    
+    var isCompleted: Bool {
+        currentHistory?.status ?? false
+    }
     
     static func == (lhs: Checklist, rhs: Checklist) -> Bool {
         lhs.id == rhs.id
@@ -30,7 +41,8 @@ struct Checklist: Equatable, Identifiable {
             title: title,
             startDate: startDate,
             endDate: endDate,
-            repeatDays: repeatDays
+            repeatDays: repeatDays,
+            histories: []
         )
     }
     
@@ -39,15 +51,25 @@ struct Checklist: Equatable, Identifiable {
         title: String? = nil,
         startDate: Date? = nil,
         endDate: Date? = nil,
-        repeatDays: [String]? = nil
+        repeatDays: [String]? = nil,
+        histories: [History]? = nil
     ) -> Checklist {
         Checklist(
             id: id ?? self.id,
             title: title ?? self.title,
             startDate: startDate ?? self.startDate,
             endDate: endDate ?? self.endDate,
-            repeatDays: repeatDays ?? self.repeatDays
+            repeatDays: repeatDays ?? self.repeatDays,
+            histories: histories ?? self.histories
         )
+    }
+}
+
+extension Checklist {
+    struct History {
+        let id: Int
+        let status: Bool
+        let executeDate: Date
     }
 }
 
@@ -58,7 +80,8 @@ let mockChecklists: [Checklist] = [
         title: "Dayme 앱 프론트 개발",
         startDate: Date().addingDays(-10),
         endDate: Date().addingDays(10),
-        repeatDays: ["월", "수", "금"]
+        repeatDays: ["월", "수", "금"],
+        histories: []
     )
 ]
 #endif

@@ -57,6 +57,9 @@ final class GoalListCell: TableViewCell {
         let percentile = String(format: "%.0f", goal.progress * 100)
         percentileLbl.text = "\(percentile)%"
         flexView.layer.borderColor = .uiColor(goal.displayHome ? .colorMain1 : .colorGrey20)
+        percentileLbl.flex.markDirty()
+        progressBar.flex.markDirty()
+        setNeedsLayout()
     }
     
     override func setup() {
