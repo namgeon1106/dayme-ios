@@ -188,6 +188,33 @@ class GoalService: TokenAccessible {
         _ = try? await getGoal(id: goalId)
     }
     
+    func editChecklist(goalId: Int, _ checklist: Checklist) async throws {
+        let token = try getAccessToken()
+        let endpoint = Endpoint(
+            method: .put,
+            baseUrl: Env.serverBaseUrl,
+            path: "/goal/todo/\(checklist.id)",
+            params: AddChecklistRequest.fromDomain(checklist).toDictionary()
+        ).withAuthorization(token)
+        
+        try await network.request(endpoint)
+        
+        _ = try? await getGoal(id: goalId)
+    }
+    
+    func deleteChecklist(goalId: Int, checklistId: Int) async throws {
+        let token = try getAccessToken()
+        let endpoint = Endpoint(
+            method: .delete,
+            baseUrl: Env.serverBaseUrl,
+            path: "/goal/todo/\(checklistId)"
+        ).withAuthorization(token)
+        
+        try await network.request(endpoint)
+        
+        _ = try? await getGoal(id: goalId)
+    }
+    
     func toggleChecklistHistory(goalId: Int, historyId: Int) async throws {
         let token = try getAccessToken()
         let endpoint = Endpoint(

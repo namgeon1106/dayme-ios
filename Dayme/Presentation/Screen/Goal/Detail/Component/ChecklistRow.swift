@@ -16,6 +16,7 @@ import PinLayout
 #endif
 
 protocol ChecklistRowDelegate: AnyObject {
+    func checklistRowDidTap(_ checklist: Checklist)
     func checklistRowDidTapCheck(_ checklist: Checklist)
 }
 
@@ -56,6 +57,15 @@ final class ChecklistRow: Vue {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    
+    // MARK: Events
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        
+        delegate?.checklistRowDidTap(item.checklist)
     }
     
     

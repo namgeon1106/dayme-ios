@@ -253,7 +253,8 @@ extension GoalDetailVC: ChecklistSectionDelegate {
     }
     
     func checklistSectionDidTapEditButton(_ checklist: Checklist) {
-        
+        let subgoal = vm.goal.subgoals.first(where: { $0.checklists.contains(checklist) })
+        coordinator?.trigger(with: .checklistEditNeeded(goal: vm.goal, subgoal: subgoal, checklist: checklist))
     }
     
     func checklistSectionDidTapCheckButton(_ checklist: Checklist) {

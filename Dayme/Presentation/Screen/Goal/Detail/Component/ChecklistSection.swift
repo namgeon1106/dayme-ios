@@ -230,6 +230,10 @@ extension ChecklistSection {
 
 extension ChecklistSection: ChecklistRowDelegate {
     
+    func checklistRowDidTap(_ checklist: Checklist) {
+        delegate?.checklistSectionDidTapEditButton(checklist)
+    }
+    
     func checklistRowDidTapCheck(_ checklist: Checklist) {
         delegate?.checklistSectionDidTapCheckButton(checklist)
     }

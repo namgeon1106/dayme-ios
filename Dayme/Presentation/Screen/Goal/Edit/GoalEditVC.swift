@@ -301,6 +301,7 @@ final class GoalEditVC: VC {
             .horizontally(24).height(buttonHeight)
         doneBtn.pin.above(of: deleteBtn).marginBottom(spacing)
             .horizontally(24).height(buttonHeight)
+        scrollView.contentInset.bottom = containerHeight
     }
     
     override func bind() {

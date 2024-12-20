@@ -35,8 +35,12 @@ final class GoalCoordinator: Coordinator {
         case .checklistAddNeeded(let goal, let subgoal):
             pushChecklistAddScreen(goal: goal, subgoal: subgoal)
             
+        case .checklistEditNeeded(let goal, let subgoal, let checklist):
+            pushChecklistEditScreen(goal: goal, subgoal: subgoal, checklist: checklist)
+            
         case .goalAddCanceled, .goalEditCanceled,
-                .goalDetailCanceled, .checklistAddCanceled:
+                .goalDetailCanceled, .checklistAddCanceled,
+                .checklistEditCanceled:
             popViewController(animated: true)
             
         case .subgoalAddCanceled, .subgoalEditCanceled:
@@ -109,6 +113,15 @@ private extension GoalCoordinator {
     func pushChecklistAddScreen(goal: Goal, subgoal: Subgoal?) {
         let vm = ChecklistAddVM(goal: goal, subgoal: subgoal)
         let vc = ChecklistAddVC(vm: vm)
+        vc.coordinator = self
+        vc.hidesBottomBarWhenPushed = true
+        nav.interactivePopGestureRecognizer?.delegate = self
+        nav.pushViewController(vc, animated: true)
+    }
+    
+    func pushChecklistEditScreen(goal: Goal, subgoal: Subgoal?, checklist: Checklist) {
+        let vm = ChecklistEditVM(goal: goal, subgoal: subgoal, checklist: checklist)
+        let vc = ChecklistEditVC(vm: vm)
         vc.coordinator = self
         vc.hidesBottomBarWhenPushed = true
         nav.interactivePopGestureRecognizer?.delegate = self
