@@ -31,6 +31,7 @@ final class GoalDetailVC: VC {
     // 주요 목표
     private let goalProgressBar = ProgressBar().then {
         $0.backgroundColor = .colorGrey10
+        $0.showIndicator = true
     }
     private let goalEmojiLbl = UILabel().then {
         $0.font(.pretendard(.semiBold, 32))

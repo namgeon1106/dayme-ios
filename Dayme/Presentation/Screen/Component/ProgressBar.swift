@@ -12,7 +12,14 @@ import PinLayout
 final class ProgressBar: Vue {
     
     var progress: CGFloat = 0 {
-        didSet { setNeedsLayout() }
+        didSet {
+            percentLabel.text = String(format: "%.0f%%달성", progress * 100)
+            setNeedsLayout()
+        }
+    }
+    
+    var showIndicator: Bool = false {
+        didSet { percentLabel.alpha = showIndicator ? 1 : 0 }
     }
     
     override var tintColor: UIColor! {
@@ -21,6 +28,10 @@ final class ProgressBar: Vue {
     }
     
     private let bar = Vue()
+    private let percentLabel = UILabel().then {
+        $0.textColor(.white).font(.pretendard(.regular, 12))
+        $0.alpha = 0
+    }
     
     override func setup() {
         backgroundColor = .colorDarkA10
@@ -29,18 +40,15 @@ final class ProgressBar: Vue {
     }
     
     override func setupFlex() {
-        addSubview(flexView)
-        
-        flexView.flex.define { flex in
-            flex.addItem(bar).grow(1)
-        }
+        addSubview(bar)
+        bar.addSubview(percentLabel)
     }
     
     override func layoutFlex() {
-        flexView.pin.all()
-        bar.pin.height(flexView.bounds.height)
-        let width = flexView.bounds.width * progress
+        let width = bounds.width * progress
         bar.pin.top().left().bottom().width(width)
+        percentLabel.sizeToFit()
+        percentLabel.pin.center()
     }
     
 }

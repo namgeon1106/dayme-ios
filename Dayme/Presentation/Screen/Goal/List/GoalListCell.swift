@@ -58,7 +58,6 @@ final class GoalListCell: TableViewCell {
         percentileLbl.text = "\(percentile)%"
         flexView.layer.borderColor = .uiColor(goal.displayHome ? .colorMain1 : .colorGrey20)
         percentileLbl.flex.markDirty()
-        progressBar.flex.markDirty()
         setNeedsLayout()
     }
     
