@@ -17,6 +17,7 @@ struct GoalResponse: Decodable {
     let color: String
     let isHomeView: Bool
     let subGoals: [SubgoalResponse]
+    let todos: [ChecklistResponse]
     
     func toDomain() -> Goal? {
         guard let startDate = Date.string(startDate, style: .standard),
@@ -33,7 +34,8 @@ struct GoalResponse: Decodable {
             hex: color,
             displayHome: isHomeView,
             progress: Double(achievementRate) / 100,
-            subgoals: subGoals.compactMap { $0.toDomain() }
+            subgoals: subGoals.compactMap { $0.toDomain() },
+            checklists: todos.compactMap { $0.toDomain() }
         )
     }
 }
@@ -45,6 +47,7 @@ struct SubgoalResponse: Decodable {
     let startDate: String
     let endDate: String
     let achievementRate: Int
+    let todos: [ChecklistResponse]
     
     func toDomain() -> Subgoal? {
         guard let startDate = Date.string(startDate, style: .standard),
@@ -58,7 +61,31 @@ struct SubgoalResponse: Decodable {
             category: category,
             startDate: startDate,
             endDate: endDate,
-            progress: Double(achievementRate) / 100
+            progress: Double(achievementRate) / 100,
+            checklists: todos.compactMap { $0.toDomain() }
+        )
+    }
+}
+
+struct ChecklistResponse: Decodable {
+    let id: Int
+    let title: String
+    let startDate: String
+    let endDate: String
+    let repeatType: String
+    
+    func toDomain() -> Checklist? {
+        guard let startDate = Date.string(startDate, style: .standard),
+              let endDate = Date.string(endDate, style: .standard) else {
+            return nil
+        }
+        
+        return Checklist(
+            id: id,
+            title: title,
+            startDate: startDate,
+            endDate: endDate,
+            repeatDays: repeatType.components(separatedBy: ", ")
         )
     }
 }

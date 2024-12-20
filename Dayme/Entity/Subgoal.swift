@@ -14,6 +14,7 @@ struct Subgoal: Equatable, Identifiable {
     let startDate: Date
     let endDate: Date
     let progress: Double
+    let checklists: [Checklist]
     
     
     static func == (lhs: Subgoal, rhs: Subgoal) -> Bool {
@@ -32,7 +33,8 @@ struct Subgoal: Equatable, Identifiable {
             category: category,
             startDate: startDate,
             endDate: endDate,
-            progress: 0
+            progress: 0,
+            checklists: []
         )
     }
     
@@ -42,7 +44,8 @@ struct Subgoal: Equatable, Identifiable {
         category: String? = nil,
         startDate: Date? = nil,
         endDate: Date? = nil,
-        progress: Double? = nil
+        progress: Double? = nil,
+        checklists: [Checklist]? = nil
     ) -> Subgoal {
         Subgoal(
             id: id ?? self.id,
@@ -50,7 +53,8 @@ struct Subgoal: Equatable, Identifiable {
             category: category ?? self.category,
             startDate: startDate ?? self.startDate,
             endDate: endDate ?? self.endDate,
-            progress: progress ?? self.progress
+            progress: progress ?? self.progress,
+            checklists: checklists ?? self.checklists
         )
     }
 }
@@ -63,7 +67,8 @@ let mockSubgoals: [Subgoal] = [
         category: "iOS",
         startDate: Date().addingDays(-20),
         endDate: Date().addingDays(30),
-        progress: 0.37
+        progress: 0.37,
+        checklists: []
     )
 ]
 #endif

@@ -13,7 +13,6 @@ struct Checklist: Equatable, Identifiable {
     let startDate: Date
     let endDate: Date
     let repeatDays: [String]
-    let isCompleted: Bool
     
     
     static func == (lhs: Checklist, rhs: Checklist) -> Bool {
@@ -31,8 +30,7 @@ struct Checklist: Equatable, Identifiable {
             title: title,
             startDate: startDate,
             endDate: endDate,
-            repeatDays: repeatDays,
-            isCompleted: false
+            repeatDays: repeatDays
         )
     }
     
@@ -41,16 +39,14 @@ struct Checklist: Equatable, Identifiable {
         title: String? = nil,
         startDate: Date? = nil,
         endDate: Date? = nil,
-        repeatDays: [String]? = nil,
-        isCompleted: Bool? = nil
+        repeatDays: [String]? = nil
     ) -> Checklist {
         Checklist(
             id: id ?? self.id,
             title: title ?? self.title,
             startDate: startDate ?? self.startDate,
             endDate: endDate ?? self.endDate,
-            repeatDays: repeatDays ?? self.repeatDays,
-            isCompleted: isCompleted ?? self.isCompleted
+            repeatDays: repeatDays ?? self.repeatDays
         )
     }
 }
@@ -62,8 +58,7 @@ let mockChecklists: [Checklist] = [
         title: "Dayme 앱 프론트 개발",
         startDate: Date().addingDays(-10),
         endDate: Date().addingDays(10),
-        repeatDays: ["월", "수", "금"],
-        isCompleted: false
+        repeatDays: ["월", "수", "금"]
     )
 ]
 #endif

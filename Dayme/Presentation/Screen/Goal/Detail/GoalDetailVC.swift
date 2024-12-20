@@ -51,9 +51,7 @@ final class GoalDetailVC: VC {
     private let subgoalSection = SubgoalSection()
     
     // 체크리스트
-    private let checklistSubtitleLbl = UILabel("체크리스트").then {
-        $0.textColor(.colorDark100).font(.pretendard(.semiBold, 16))
-    }
+    private lazy var checklistSection = ChecklistSection(goal: vm.goal)
     
     // 홈 화면 표시
     private let homeSubtitleLbl = UILabel("홈 화면 표시").then {
@@ -97,6 +95,7 @@ final class GoalDetailVC: VC {
         view.backgroundColor = .colorBackground
         scrollView.keyboardDismissMode = .interactive
         subgoalSection.delegate = self
+        checklistSection.delegate = self
     }
     
     override func setupFlex() {
@@ -134,9 +133,7 @@ final class GoalDetailVC: VC {
             flex.addItem().height(8).backgroundColor(.colorGrey20)
             
             // 체크리스트
-            flex.addItem().height(283).define { flex in
-                flex.addItem(checklistSubtitleLbl).margin(24, 24, 0, 0)
-            }
+            flex.addItem(checklistSection)
             
             flex.addItem().height(8).backgroundColor(.colorGrey20)
             
@@ -202,6 +199,8 @@ final class GoalDetailVC: VC {
         
         subgoalSection.update(subgoals: goal.subgoals)
         
+        checklistSection.update(goal: goal)
+        
         goalEmojiLbl.flex.markDirty()
         goalTitleLbl.flex.markDirty()
         goalDateLbl.flex.markDirty()
@@ -231,6 +230,24 @@ extension GoalDetailVC: SubgoalSectionDelegate {
     
     func subgoalSectionDidTapEditButton(_ subgoal: Subgoal) {
         coordinator?.trigger(with: .subgoalEditNeeded(goal: vm.goal, subgoal: subgoal))
+    }
+    
+}
+
+// MARK: - ChecklistSectionDelegate
+
+extension GoalDetailVC: ChecklistSectionDelegate {
+    
+    func checklistSectionDidTapAddButton(subgoal: Subgoal?) {
+        coordinator?.trigger(with: .checklistAddNeeded(goal: vm.goal, subgoal: subgoal))
+    }
+    
+    func checklistSectionDidTapEditButton(_ checklist: Checklist) {
+        
+    }
+    
+    func checklistSectionDidTapSeeMoreButton() {
+        view.setNeedsLayout()
     }
     
 }

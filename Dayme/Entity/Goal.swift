@@ -17,6 +17,7 @@ struct Goal: Equatable, Identifiable {
     let displayHome: Bool
     let progress: Double
     let subgoals: [Subgoal]
+    let checklists: [Checklist]
     
     
     static func == (lhs: Goal, rhs: Goal) -> Bool {
@@ -40,7 +41,8 @@ struct Goal: Equatable, Identifiable {
             hex: hex,
             displayHome: displayHome,
             progress: 0,
-            subgoals: []
+            subgoals: [],
+            checklists: []
         )
     }
     
@@ -53,7 +55,8 @@ struct Goal: Equatable, Identifiable {
         hex: String? = nil,
         displayHome: Bool? = nil,
         progress: Double? = nil,
-        subgoals: [Subgoal]? = nil
+        subgoals: [Subgoal]? = nil,
+        checklists: [Checklist]? = nil
     ) -> Goal {
         Goal(
             id: id ?? self.id,
@@ -64,7 +67,8 @@ struct Goal: Equatable, Identifiable {
             hex: hex ?? self.hex,
             displayHome: displayHome ?? self.displayHome,
             progress: progress ?? self.progress,
-            subgoals: subgoals ?? self.subgoals
+            subgoals: subgoals ?? self.subgoals,
+            checklists: checklists ?? self.checklists
         )
     }
 }
@@ -80,7 +84,8 @@ let mockGoals: [Goal] = [
         hex: "#FF0000",
         displayHome: true,
         progress: 0.5,
-        subgoals: []
+        subgoals: [],
+        checklists: (0 ..< 10).flatMap { _ in mockChecklists }
     )
 ]
 #endif
