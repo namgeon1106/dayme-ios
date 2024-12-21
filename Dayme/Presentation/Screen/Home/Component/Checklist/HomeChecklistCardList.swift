@@ -21,13 +21,22 @@ final class HomeChecklistCardList: UICollectionView {
     
     var items: [ChecklistDateItem] = [] {
         didSet {
-            DispatchQueue.main.async {
-                self.reloadData()
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                backgroundView = items.count == 0 ? emptyView : nil
+                reloadData()
             }
         }
     }
     
     let spacing: CGFloat = 16
+    
+    // MARK: UI properties
+    
+    private let emptyView = HomeChecklistEmptyView()
+    
+    
+    // MARK: Lifecycles
     
     init() {
         super.init(frame: .zero, collectionViewLayout: .init())
@@ -39,6 +48,9 @@ final class HomeChecklistCardList: UICollectionView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    
+    // MARK: Helpers
     
     private func setup() {
         backgroundColor = .clear
