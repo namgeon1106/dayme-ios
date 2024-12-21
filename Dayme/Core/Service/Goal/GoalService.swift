@@ -228,6 +228,18 @@ class GoalService: TokenAccessible {
         _ = try? await getGoal(id: goalId)
     }
     
+    // API 수정 필요
+    func getChecklists(date: Date) async throws -> JSON {
+        let token = try getAccessToken()
+        let endpoint = Endpoint(
+            method: .get,
+            baseUrl: Env.serverBaseUrl,
+            path: "/goal/todos?executeDate=\(date.string(style: .standard))"
+        ).withAuthorization(token)
+        
+        return try await network.request(endpoint)
+    }
+    
 }
 
 extension GoalService {

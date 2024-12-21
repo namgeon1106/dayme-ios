@@ -81,7 +81,10 @@ let mockChecklists: [Checklist] = [
         startDate: Date().addingDays(-10),
         endDate: Date().addingDays(10),
         repeatDays: ["월", "수", "금"],
-        histories: []
+        histories: [
+            .init(id: 2, status: true, executeDate: .now),
+            .init(id: 2, status: true, executeDate: .now.addingDays(7)),
+        ]
     )
 ]
 #endif
