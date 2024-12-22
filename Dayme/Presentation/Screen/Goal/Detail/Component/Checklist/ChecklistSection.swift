@@ -21,7 +21,7 @@ protocol ChecklistSectionDelegate: AnyObject {
     func checklistSectionDidTapAddButton(subgoal: Subgoal?)
     func checklistSectionDidTapEditButton(_ checklist: Checklist)
     func checklistSectionDidTapCheckButton(_ checklist: Checklist)
-    func checklistSectionDidTapSeeMoreButton()
+    func checklistSectionDidUpdateLayout()
 }
 
 final class ChecklistSection: Vue {
@@ -31,16 +31,24 @@ final class ChecklistSection: Vue {
     private var goal: Goal
     /// 전체 체크리스트 더보기 선택 여부
     private var isSeeMoreSelected: Bool = false
+    private var selectedTab: Int = 0
+    private var selectedSubgoalIndex: Int = 0
+    
+    private var goalChecklistItems: [ChecklistItem] = []
+    private var subgoalChecklistItems: [[ChecklistItem]] = []
     
     // MARK: - UI properties
     
     private let container = UIView()
     
-    private let scrollView = UIScrollView()
-    private let contentView = UIView()
-    
-    private let subgoalSubtitleLbl = UILabel("체크리스트").then {
+    private let subgoalCaptionLbl = UILabel("체크리스트").then {
         $0.textColor(.colorDark100).font(.pretendard(.semiBold, 16))
+    }
+    private let subgoalTitleLbl = UILabel().then {
+        $0.textColor(.colorDark100).font(.pretendard(.bold, 14))
+        $0.textAlignment = .center
+        $0.numberOfLines = 1
+        $0.lineBreakMode = .byTruncatingTail
     }
     
     private let emptyLbl = UILabel().then {
@@ -77,6 +85,19 @@ final class ChecklistSection: Vue {
         $0.configuration = config
     }
     
+    private let prevBtn = UIButton().then {
+        let config = UIImage.SymbolConfiguration(pointSize: 12, weight: .medium)
+        let image = UIImage(systemName: "chevron.left", withConfiguration: config)
+        $0.setImage(image, for: .normal)
+        $0.tintColor = .colorGrey50
+    }
+    private let nextBtn = UIButton().then {
+        let config = UIImage.SymbolConfiguration(pointSize: 12, weight: .medium)
+        let image = UIImage(systemName: "chevron.right", withConfiguration: config)
+        $0.setImage(image, for: .normal)
+        $0.tintColor = .colorGrey50
+    }
+    
     private lazy var tabAllButton = tabButton(tag: 0, title: "전체")
     private lazy var tabSubgoalsButton = tabButton(tag: 1, title: "세부목표별")
     
@@ -99,8 +120,6 @@ final class ChecklistSection: Vue {
     // MARK: Helpers
     
     override func setup() {
-        scrollView.showsHorizontalScrollIndicator = false
-        scrollView.contentInset = .init(0, 20)
         selectTab(tag: 0)
     }
     
@@ -109,7 +128,7 @@ final class ChecklistSection: Vue {
         
         flexView.flex.define { flex in
             flex.addItem().direction(.row).define { flex in
-                flex.addItem(subgoalSubtitleLbl).margin(24, 24, 8, 0)
+                flex.addItem(subgoalCaptionLbl).margin(24, 24, 8, 0)
                 
                 flex.addItem().grow(1)
                 
@@ -130,11 +149,7 @@ final class ChecklistSection: Vue {
     
     override func layoutFlex() {
         flexView.pin.all()
-        flexView.flex.layout()
-        scrollView.pin.all()
-        contentView.pin.all()
-        contentView.flex.layout(mode: .adjustWidth)
-        scrollView.contentSize = contentView.bounds.size
+        flexView.flex.layout(mode: .adjustHeight)
     }
     
     override func setupAction() {
@@ -148,28 +163,52 @@ final class ChecklistSection: Vue {
         seeMoreButton.onAction { [weak self] in
             self?.isSeeMoreSelected = true
             self?.update()
-            self?.delegate?.checklistSectionDidTapSeeMoreButton()
+            self?.delegate?.checklistSectionDidUpdateLayout()
+        }
+        
+        prevBtn.onAction { [weak self] in
+            guard let self, selectedSubgoalIndex > 0 else { return }
+            self.selectedSubgoalIndex -= 1
+            updateBySubgoal(index: selectedSubgoalIndex)
+        }
+        
+        nextBtn.onAction { [weak self] in
+            guard let self, selectedSubgoalIndex < subgoalChecklistItems.count - 1 else { return }
+            self.selectedSubgoalIndex += 1
+            updateBySubgoal(index: selectedSubgoalIndex)
         }
     }
     
     
     func update(goal: Goal? = nil) {
-        let goal = goal ?? self.goal
-        self.goal = goal
+        if let goal {
+            self.goalChecklistItems = goal.checklists.map { (goal.title, $0) }
+            self.subgoalChecklistItems = goal.subgoals
+                .filter { subgoal in !subgoal.checklists.isEmpty }
+                .map { subgoal -> [ChecklistItem] in
+                    subgoal.checklists.map { (subgoal.title, $0) }
+                }
+            
+            self.goal = goal
+        }
         
+        tabSubgoalsButton.isHidden = subgoalChecklistItems.isEmpty
+        
+        if selectedTab == 0 {
+            updateAll()
+        } else if selectedTab == 1, subgoalChecklistItems.indices ~= selectedSubgoalIndex {
+            updateBySubgoal(index: selectedSubgoalIndex)
+        }
+    }
+    
+    private func updateAll() {
         container.flex.isIncludedInLayout = false
         
-        [container, scrollView, contentView]
-            .flatMap(\.subviews)
-            .forEach { $0.removeFromSuperview() }
+        container.subviews.forEach { $0.removeFromSuperview() }
         
-        let goalChecklistItem: [ChecklistItem] = goal.checklists.map { (goal.title, $0) }
-        let subgoalChecklistItem: [ChecklistItem] = goal.subgoals.flatMap { subgoal in
-            return subgoal.checklists.map { (subgoal.title, $0) }
-        }
-        let allChecklistsItem = goalChecklistItem + subgoalChecklistItem
+        let allChecklistItems = goalChecklistItems + subgoalChecklistItems.flatMap { $0 }
         
-        if allChecklistsItem.isEmpty {
+        if allChecklistItems.isEmpty {
             container.flex.define { flex in
                 flex.addItem().alignItems(.center).justifyContent(.center).height(194).define { flex in
                     flex.addItem(emptyLbl)
@@ -178,8 +217,8 @@ final class ChecklistSection: Vue {
                 }
             }
         } else {
-            let needsSeeMore = !isSeeMoreSelected && allChecklistsItem.count > 5
-            let filtered = needsSeeMore ? Array(allChecklistsItem.prefix(5)) : allChecklistsItem
+            let needsSeeMore = !isSeeMoreSelected && allChecklistItems.count > 5
+            let filtered = needsSeeMore ? Array(allChecklistItems.prefix(5)) : allChecklistItems
             container.flex.define { flex in
                 for item in filtered {
                     let row = ChecklistRow(item: item)
@@ -196,7 +235,53 @@ final class ChecklistSection: Vue {
         }
         
         container.flex.isIncludedInLayout = true
+        delegate?.checklistSectionDidUpdateLayout()
+    }
+    
+    private func updateBySubgoal(index: Int) {
+        container.flex.isIncludedInLayout = false
+        
+        container.subviews.forEach { $0.removeFromSuperview() }
+        
+        let checklistItems = subgoalChecklistItems[index]
+        
+        let needsSeeMore = !isSeeMoreSelected && checklistItems.count > 5
+        let filtered = needsSeeMore ? Array(checklistItems.prefix(5)) : checklistItems
+        
+        subgoalTitleLbl.text = checklistItems.first?.goalTitle
+        prevBtn.isHidden = index <= 0
+        nextBtn.isHidden = index >= (subgoalChecklistItems.count - 1)
+        
+        container.flex.define { flex in
+            flex.addItem().direction(.row).marginHorizontal(12).define { flex in
+                flex.addItem(prevBtn).width(44).height(44)
+                
+                flex.addItem().grow(1)
+                
+                flex.addItem(subgoalTitleLbl).shrink(1)
+                
+                flex.addItem().grow(1)
+                
+                flex.addItem(nextBtn).width(44).height(44)
+            }
+            
+            
+            for item in filtered {
+                let row = ChecklistRow(item: item)
+                row.delegate = self
+                flex.addItem(row).margin(4, 24).height(52)
+            }
+            
+            if needsSeeMore {
+                flex.addItem(seeMoreButton).margin(8, 24, 24).height(36)
+            } else {
+                flex.addItem().height(20)
+            }
+        }
+        
+        container.flex.isIncludedInLayout = true
         setNeedsLayout()
+        delegate?.checklistSectionDidUpdateLayout()
     }
     
 }
@@ -208,7 +293,17 @@ extension ChecklistSection {
             let isSelected = button.tag == tag
             button.configuration?.baseBackgroundColor = isSelected ? .colorDark100 : .colorGrey10
             button.configuration?.baseForegroundColor = isSelected ? .white : .colorGrey50
+            button.isUserInteractionEnabled = !isSelected
         }
+        
+        if selectedTab != tag {
+            // 더보기 상태 초기화
+            isSeeMoreSelected = false
+        }
+        
+        selectedTab = tag
+        
+        update()
     }
     
     private func tabButton(tag: Int, title: String) -> UIButton {
@@ -221,6 +316,10 @@ extension ChecklistSection {
         config.baseBackgroundColor = .colorGrey10
         button.configuration = config
         button.tag = tag
+        button.onAction { [weak self] in
+            Haptic.impact(.light)
+            self?.selectTab(tag: tag)
+        }
         return button
     }
     

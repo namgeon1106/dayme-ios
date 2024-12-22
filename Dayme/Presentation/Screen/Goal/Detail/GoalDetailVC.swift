@@ -264,7 +264,7 @@ extension GoalDetailVC: ChecklistSectionDelegate {
         }
     }
     
-    func checklistSectionDidTapSeeMoreButton() {
+    func checklistSectionDidUpdateLayout() {
         view.setNeedsLayout()
     }
     

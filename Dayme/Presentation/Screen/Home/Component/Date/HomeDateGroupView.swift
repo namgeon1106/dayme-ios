@@ -40,13 +40,11 @@ final class HomeDateGroupView: Vue {
         $0.tintColor = .colorGrey50
     }
     
-    private let prevBG = Vue().then {
-        $0.isCircleRadius = true
+    private let prevBG = CircleView().then {
         $0.backgroundColor = .colorGrey20
     }
     
-    private let nextBG = Vue().then {
-        $0.isCircleRadius = true
+    private let nextBG = CircleView().then {
         $0.backgroundColor = .colorGrey20
     }
     

@@ -84,7 +84,7 @@ let mockGoals: [Goal] = [
         hex: "#FF0000",
         displayHome: true,
         progress: 0.5,
-        subgoals: [],
+        subgoals: mockSubgoals,
         checklists: (0 ..< 10).flatMap { _ in mockChecklists }
     )
 ]

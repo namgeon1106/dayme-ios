@@ -68,7 +68,16 @@ let mockSubgoals: [Subgoal] = [
         startDate: Date().addingDays(-20),
         endDate: Date().addingDays(30),
         progress: 0.37,
-        checklists: []
+        checklists: (0 ..< 10).flatMap { _ in mockChecklists }
+    ),
+    Subgoal(
+        id: 2,
+        title: "Dayme 웹 프론트 개발",
+        category: "React",
+        startDate: Date().addingDays(-20),
+        endDate: Date().addingDays(30),
+        progress: 0.37,
+        checklists: (0 ..< 10).flatMap { _ in mockChecklists }
     )
 ]
 #endif
