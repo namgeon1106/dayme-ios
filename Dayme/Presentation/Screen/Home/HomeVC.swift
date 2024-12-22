@@ -58,6 +58,7 @@ final class HomeVC: VC {
         navigationItem.leftBarButtonItem = .init(customView: logo)
         navigationItem.rightBarButtonItem = .init(customView: userSV)
         scrollView.showsVerticalScrollIndicator = false
+        dashboard.delegate = self
         dateGroupView.delegate = self
         checklistCardList.cardDelegate = self
     }
@@ -127,6 +128,16 @@ extension HomeVC {
         } catch {
             showAlert(title: "🚨 체크리스트 상태 변경 실패", message: error.localizedDescription)
         }
+    }
+    
+}
+
+// MARK: - HomeDateGroupViewDelegate
+
+extension HomeVC: HomeDashboardDelegate {
+    
+    func homeDashboardDidTapGoalButton() {
+        tabBarController?.selectedIndex = 1
     }
     
 }

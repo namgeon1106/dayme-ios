@@ -7,7 +7,13 @@
 
 import UIKit
 
+protocol HomeDashboardDelegate: AnyObject {
+    func homeDashboardDidTapGoalButton()
+}
+
 final class HomeDashboard: Vue {
+    
+    weak var delegate: HomeDashboardDelegate?
     
     private(set) var nickname: String = "OOO"
     private(set) var goals: [Goal] = []
@@ -60,6 +66,12 @@ final class HomeDashboard: Vue {
     override func layoutFlex() {
         flexView.pin.all()
         flexView.flex.layout(mode: .adjustHeight)
+    }
+    
+    override func setupAction() {
+        manageGoalBtn.onAction { [weak self] in
+            self?.delegate?.homeDashboardDidTapGoalButton()
+        }
     }
     
     
