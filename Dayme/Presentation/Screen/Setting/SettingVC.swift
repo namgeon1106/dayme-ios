@@ -119,6 +119,7 @@ private extension SettingVC {
             Haptic.noti(.success)
         } catch {
             Logger.error(error)
+            showAlert(title: "🚨 회원탈퇴 실패", message: error.localizedDescription)
         }
     }
     
