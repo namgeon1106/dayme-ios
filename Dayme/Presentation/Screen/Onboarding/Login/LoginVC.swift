@@ -65,8 +65,10 @@ final class LoginVC: VC {
             
             // 소셜 로그인 영역
             flex.addItem().padding(0, 16).marginVertical(26).define { flex in
-                flex.addItem(googleBtn).height(56)
-                flex.addItem(kakaoBtn).height(56).marginTop(8)
+                flex.addItem(kakaoBtn).height(56)
+                
+                flex.addItem(googleBtn).height(56).marginTop(8)
+                
                 flex.addItem(appleBtn).height(56).marginTop(8)
             }
         }
