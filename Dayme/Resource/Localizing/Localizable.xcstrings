@@ -3,12 +3,6 @@
   "strings" : {
     "login.apple_login" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sign in with Apple"
-          }
-        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -19,12 +13,6 @@
     },
     "login.google_login" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sign in with Google"
-          }
-        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -35,12 +23,6 @@
     },
     "login.kakao_login" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sign in with KakaoTalk"
-          }
-        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
