@@ -35,7 +35,7 @@ final class HomeVM: VM {
             }.store(in: &cancellables)
         
         let backgroundQueue = DispatchQueue.global(qos: .userInitiated)
-        Publishers.CombineLatest($goals, $selectedDate)
+        Publishers.CombineLatest(goalService.allGoals, $selectedDate)
             .subscribe(on: backgroundQueue)
             .map { goals, date -> AnyPublisher<[ChecklistDateItem], Never> in
                 Just(goals.compactMap { goal in
