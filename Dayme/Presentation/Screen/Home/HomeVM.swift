@@ -29,7 +29,7 @@ final class HomeVM: VM {
                 self?.nickname = user.nickname
             }.store(in: &cancellables)
         
-        goalService.allGoals.map { $0.filter(\.displayHome) }
+        goalService.allGoals.map { $0.filter { $0.displayHome && $0.endDate.timeIntervalSinceNow > -24 * 3600 } }
             .sink { [weak self] goals in
                 self?.goals = goals
             }.store(in: &cancellables)
