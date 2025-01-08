@@ -33,7 +33,7 @@ final class GoalListEmptyView: Vue {
         config.imagePadding = 4
         config.cornerStyle = .capsule
         config.baseBackgroundColor = .colorDark100
-        config.contentInsets = .init(top: 0, leading: 16, bottom: 0, trailing: 16)
+        config.contentInsets = .init(top: 0, leading: 56, bottom: 0, trailing: 56)
         $0.configuration = config
     }
     
@@ -52,7 +52,7 @@ final class GoalListEmptyView: Vue {
         flexView.flex.alignItems(.center).justifyContent(.center).paddingBottom(30).define { flex in
             flex.addItem(messageLbl)
             
-            flex.addItem(addBtn).marginTop(12).height(40)
+            flex.addItem(addBtn).marginTop(12).height(50)
         }
     }
     
