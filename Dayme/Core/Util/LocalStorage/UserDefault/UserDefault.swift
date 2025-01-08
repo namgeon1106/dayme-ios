@@ -16,4 +16,7 @@ enum UserDefault {
     
     @UserDefaultCodable(key: .socialLogin)
     static var socialLogin: OAuthProvider?
+    
+    @UserDefaultPrimitive(key: .finishedOnboarding, defaultValue: false)
+    static var finishedOnboarding: Bool!
 }

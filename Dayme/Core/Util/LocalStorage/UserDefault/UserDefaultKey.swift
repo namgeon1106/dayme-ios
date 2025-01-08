@@ -11,6 +11,7 @@ enum UserDefaultKey: String {
     case socialLogin
     case loggedIn
     case visitCount
+    case finishedOnboarding
     
     var path: String {
         "dayme_userdefaults_\(rawValue)"
