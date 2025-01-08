@@ -33,7 +33,7 @@ final class HomeChecklistCardList: UICollectionView {
     
     // MARK: UI properties
     
-    private let emptyView = HomeChecklistEmptyView()
+    private let emptyView = GoalListEmptyView()
     
     
     // MARK: Lifecycles
