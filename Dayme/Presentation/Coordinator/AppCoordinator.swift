@@ -22,7 +22,7 @@ final class AppCoordinator: Coordinator {
             splashVC.coordinator = self
             nav.viewControllers = [splashVC]
         } else {
-            startOnboardingFlow(animated: false)
+            startLoginFlow(animated: false)
         }
     }
     
@@ -34,7 +34,7 @@ final class AppCoordinator: Coordinator {
             
         case .logout, .userDeleted:
             children.removeAll()
-            startOnboardingFlow(animated: true)
+            startLoginFlow(animated: true)
             
         default:
             break
@@ -50,8 +50,8 @@ private extension AppCoordinator {
         startFlow(child, animated: animated)
     }
     
-    func startOnboardingFlow(animated: Bool) {
-        let child = OnboardingCoordinator(nav: nav)
+    func startLoginFlow(animated: Bool) {
+        let child = LoginCoordinator(nav: nav)
         startFlow(child, animated: animated)
     }
     

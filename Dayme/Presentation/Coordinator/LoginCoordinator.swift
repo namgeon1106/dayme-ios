@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class OnboardingCoordinator: Coordinator {
+final class LoginCoordinator: Coordinator {
     
     private var oAuthSignupInfo: OAuthSignupInfo?
     
@@ -52,7 +52,7 @@ final class OnboardingCoordinator: Coordinator {
 
 // MARK: - Navigate
 
-private extension OnboardingCoordinator {
+private extension LoginCoordinator {
     
     func pushTermsScreen() {
         let termsVC = TermsVC()
