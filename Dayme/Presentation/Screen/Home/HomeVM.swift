@@ -14,6 +14,7 @@ final class HomeVM: VM {
     @Published var goals: [Goal] = []
     @Published var weekDates: [Date] = Calendar.current.weekDates(from: Date())
     @Published private(set) var checklistDateItems: [ChecklistDateItem] = []
+    @Published var finishedOnboarding = UserDefault.finishedOnboarding!
     
     private let userService: UserService = .shared
     private let goalService: GoalService = .shared
@@ -30,8 +31,13 @@ final class HomeVM: VM {
             }.store(in: &cancellables)
         
         goalService.allGoals.map { $0.filter { $0.displayHome && $0.endDate.timeIntervalSinceNow > -24 * 3600 } }
-            .sink { [weak self] goals in
-                self?.goals = goals
+            .combineLatest($finishedOnboarding)
+            .sink { [weak self] goals, finishedOnboarding in
+                if finishedOnboarding {
+                    self?.goals = goals
+                } else {
+                    print("onboarding")
+                }
             }.store(in: &cancellables)
         
         let backgroundQueue = DispatchQueue.global(qos: .userInitiated)

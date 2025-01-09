@@ -17,8 +17,8 @@ final class GoalListEmptyView: Vue {
     
     // MARK: UI properties
     
-    private let messageLbl = UILabel("첫 목표를 생성해보세요 !").then {
-        $0.textColor(.colorGrey50).font(.pretendard(.medium, 16))
+    private let messageLbl = UILabel("첫 목표를 설정해 보세요 !").then {
+        $0.textColor(.colorGrey50).font(.pretendard(.medium, 15))
     }
     
     private let addBtn = UIButton().then {
@@ -49,8 +49,8 @@ final class GoalListEmptyView: Vue {
     override func setupFlex() {
         addSubview(flexView)
         
-        flexView.flex.alignItems(.center).justifyContent(.center).paddingBottom(30).define { flex in
-            flex.addItem(messageLbl)
+        flexView.flex.alignItems(.center).justifyContent(.center).define { flex in
+            flex.addItem(messageLbl).height(23)
             
             flex.addItem(addBtn).marginTop(12).height(50)
         }

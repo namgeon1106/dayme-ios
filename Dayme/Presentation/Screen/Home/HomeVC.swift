@@ -9,6 +9,7 @@ import UIKit
 import FlexLayout
 import PinLayout
 import Combine
+import Then
 
 #if DEBUG
 #Preview {
@@ -28,6 +29,16 @@ final class HomeVC: VC {
     private let dashboard = HomeDashboard()
     private let dateGroupView = HomeDateGroupView()
     private let checklistCardList = HomeChecklistCardList()
+    
+    private let onboardingBackgroundView = UIView().then {
+        $0.backgroundColor = .black.withAlphaComponent(0.4)
+    }
+    
+    private let onboardingGoalListEmptyView = GoalListEmptyView().then {
+        $0.backgroundColor = .colorSnow
+        $0.layer.cornerRadius = 16
+        $0.clipsToBounds = true
+    }
     
     private let logo = UILabel("DAYME").then {
         $0.textColor(.colorMain1)
@@ -67,6 +78,9 @@ final class HomeVC: VC {
         view.addSubview(flexView)
         flexView.addSubview(scrollView)
         scrollView.addSubview(contentView)
+        tabBarController?.view.addSubview(onboardingBackgroundView)
+        
+        onboardingBackgroundView.addSubview(onboardingGoalListEmptyView)
         
         contentView.flex.define { flex in
             flex.addItem(dashboard).margin(15)
@@ -83,6 +97,15 @@ final class HomeVC: VC {
         contentView.pin.all()
         contentView.flex.layout(mode: .adjustHeight)
         scrollView.contentSize = contentView.bounds.size
+        
+        onboardingBackgroundView.pin.all()
+        
+        onboardingGoalListEmptyView.pin
+            .top(to: dateGroupView.edge.bottom)
+            .bottom(to: view.edge.bottom)
+            .marginTop(100)
+            .height(133)
+            .horizontally(24)
     }
     
     override func bind() {
@@ -114,6 +137,11 @@ final class HomeVC: VC {
                     let checklists = item.checklists
                     Logger.debug("\(item.goal.title) - \(checklists)")
                 }
+            }.store(in: &cancellables)
+        
+        vm.$finishedOnboarding
+            .sink { [weak self] finishedOnboarding in
+                self?.onboardingBackgroundView.isHidden = finishedOnboarding
             }.store(in: &cancellables)
     }
     
