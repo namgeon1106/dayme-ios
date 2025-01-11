@@ -9,7 +9,7 @@ import Foundation
 
 enum FlowEvent {
     
-    // MARK: Onboarding
+    // MARK: Login
     case loginFinished
     case signupNeeded(OAuthSignupInfo)
     case signupCanceled

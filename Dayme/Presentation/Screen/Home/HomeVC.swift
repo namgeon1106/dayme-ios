@@ -60,6 +60,11 @@ final class HomeVC: VC {
     private let profileIV = UIImageView(image: .icProfileDefault)
     
     
+    private let onboardingGuideView = OnboardingGuideView(
+        message: "1. '목표 만들기'를\n    클릭해서 목표를 설정해 보세요!",
+        tailOffset: -8
+    )
+    
     // MARK: Helpers
     
     override func setup() {
@@ -80,7 +85,9 @@ final class HomeVC: VC {
         scrollView.addSubview(contentView)
         tabBarController?.view.addSubview(onboardingBackgroundView)
         
-        onboardingBackgroundView.addSubview(onboardingGoalListEmptyView)
+        [onboardingGoalListEmptyView,
+         onboardingGuideView]
+            .forEach(onboardingBackgroundView.addSubview(_:))
         
         contentView.flex.define { flex in
             flex.addItem(dashboard).margin(15)
@@ -106,6 +113,14 @@ final class HomeVC: VC {
             .marginTop(100)
             .height(133)
             .horizontally(24)
+        
+        onboardingGuideView.pin
+            .width(227)
+            .hCenter(8)
+            .top(to: onboardingGoalListEmptyView.edge.top)
+            .marginTop(-74)
+            .height(83)
+        
     }
     
     override func bind() {
