@@ -5,68 +5,67 @@
 //  Created by 정동천 on 12/4/24.
 //
 
-import UIKit
+import Combine
 import FlexLayout
 import PinLayout
-import Combine
 import Then
+import UIKit
 
 #if DEBUG
-#Preview {
-    UINavigationController(rootViewController: HomeVC())
-}
+    #Preview {
+        UINavigationController(rootViewController: HomeVC())
+    }
 #endif
 
 final class HomeVC: VC {
-    
+
     private let vm = HomeVM()
-    
+
     // MARK: UI Properties
-    
+
     private let scrollView = UIScrollView()
     private let contentView = UIView()
-    
+
     private let dashboard = HomeDashboard()
     private let dateGroupView = HomeDateGroupView()
     private let checklistCardList = HomeChecklistCardList()
-    
+
     private let onboardingBackgroundView = UIView().then {
         $0.backgroundColor = .black.withAlphaComponent(0.4)
     }
-    
+
     private let onboardingGoalListEmptyView = GoalListEmptyView().then {
         $0.backgroundColor = .colorSnow
         $0.layer.cornerRadius = 16
         $0.clipsToBounds = true
     }
-    
+
     private let logo = UILabel("DAYME").then {
         $0.textColor(.colorMain1)
             .font(.montserrat(.black, 20))
     }
-    
+
     private let userSV = UIStackView().then {
         $0.axis = .horizontal
         $0.spacing = 8
         $0.alignment = .center
         $0.distribution = .fill
     }
-    
+
     private let nicknameLbl = UILabel().then {
         $0.textColor(.colorGrey50)
             .font(.pretendard(.semiBold, 16))
     }
-    
+
     private let profileIV = UIImageView(image: .icProfileDefault)
-    
-    
+
     private let onboardingGuideView = OnboardingGuideView(
         message: "1. '목표 만들기'를\n    클릭해서 목표를 설정해 보세요!",
         tailOffset: -8
     )
-    
+
     // MARK: Helpers
-    
+
     override func setup() {
         view.backgroundColor = .colorSnow
         userSV.addArrangedSubview(nicknameLbl)
@@ -77,52 +76,60 @@ final class HomeVC: VC {
         dashboard.delegate = self
         dateGroupView.delegate = self
         checklistCardList.cardDelegate = self
+
+        let tapGesture = UITapGestureRecognizer()
+        tapGesture.addTarget(self, action: #selector(goalListEmptyViewDidTapAddGoal))
+        
+        onboardingBackgroundView.addGestureRecognizer(tapGesture)
+        onboardingGoalListEmptyView.delegate = self
     }
-    
+
     override func setupFlex() {
         view.addSubview(flexView)
         flexView.addSubview(scrollView)
         scrollView.addSubview(contentView)
         tabBarController?.view.addSubview(onboardingBackgroundView)
-        
-        [onboardingGoalListEmptyView,
-         onboardingGuideView]
-            .forEach(onboardingBackgroundView.addSubview(_:))
-        
+
+        [
+            onboardingGoalListEmptyView,
+            onboardingGuideView,
+        ]
+        .forEach(onboardingBackgroundView.addSubview(_:))
+
         contentView.flex.define { flex in
             flex.addItem(dashboard).margin(15)
-            
+
             flex.addItem(dateGroupView).marginTop(15)
-            
+
             flex.addItem(checklistCardList).marginVertical(20).height(294)
         }
     }
-    
+
     override func layoutFlex() {
         flexView.pin.all()
         scrollView.pin.all()
         contentView.pin.all()
         contentView.flex.layout(mode: .adjustHeight)
         scrollView.contentSize = contentView.bounds.size
-        
+
         onboardingBackgroundView.pin.all()
-        
+
         onboardingGoalListEmptyView.pin
             .top(to: dateGroupView.edge.bottom)
             .bottom(to: view.edge.bottom)
             .marginTop(100)
             .height(133)
             .horizontally(24)
-        
+
         onboardingGuideView.pin
             .width(227)
             .hCenter(8)
             .top(to: onboardingGoalListEmptyView.edge.top)
             .marginTop(-74)
             .height(83)
-        
+
     }
-    
+
     override func bind() {
         vm.$nickname.receive(on: RunLoop.main)
             .sink { [weak self] nickname in
@@ -130,70 +137,80 @@ final class HomeVC: VC {
                 self?.dashboard.update(nickname: nickname)
             }.store(in: &cancellables)
         
-        vm.$nickname.combineLatest(vm.$goals)
+        vm.$nickname
+            .combineLatest(vm.$goals)
+            .combineLatest(vm.$finishedOnboarding)
             .receive(on: RunLoop.main)
-            .sink { [weak self] nickname, goals in
-                self?.dashboard.update(nickname: nickname, goals: goals)
+            .sink { [weak self] tuple, finishedOnboarding in
+                let nickname = tuple.0
+                let goals = tuple.1
+                
+                if finishedOnboarding {
+                    self?.dashboard.update(nickname: nickname, goals: goals)
+                }
                 self?.view.setNeedsLayout()
             }.store(in: &cancellables)
-        
-        
+
         vm.$selectedDate.combineLatest(vm.$weekDates)
             .receive(on: RunLoop.main)
             .sink { [weak self] selectedDate, weekDates in
-                self?.dateGroupView.updateWeekDates(selectedDate: selectedDate, weekDates: weekDates)
+                self?.dateGroupView.updateWeekDates(
+                    selectedDate: selectedDate, weekDates: weekDates)
             }.store(in: &cancellables)
-        
+
         vm.$checklistDateItems.receive(on: RunLoop.main)
             .sink { [weak self] items in
                 self?.checklistCardList.items = items
-                
+
                 for item in items {
                     let checklists = item.checklists
                     Logger.debug("\(item.goal.title) - \(checklists)")
                 }
             }.store(in: &cancellables)
-        
+
         vm.$finishedOnboarding
             .sink { [weak self] finishedOnboarding in
                 self?.onboardingBackgroundView.isHidden = finishedOnboarding
             }.store(in: &cancellables)
     }
     
+    deinit {
+        onboardingBackgroundView.removeFromSuperview()
+    }
 }
 
 extension HomeVC {
-    
+
     @MainActor
     private func toggleChecklist(goalId: Int, historyId: Int) async {
         do {
             try await vm.toggleChecklist(goalId: goalId, historyId: historyId)
         } catch {
-            showAlert(title: "🚨 체크리스트 상태 변경 실패", message: error.localizedDescription)
+            showAlert(
+                title: "🚨 체크리스트 상태 변경 실패", message: error.localizedDescription)
         }
     }
-    
+
 }
 
 // MARK: - HomeDateGroupViewDelegate
 
 extension HomeVC: HomeDashboardDelegate {
-    
     func homeDashboardDidTapGoalButton() {
         tabBarController?.selectedIndex = 1
     }
-    
+
 }
 
 // MARK: - HomeDateGroupViewDelegate
 
 extension HomeVC: HomeDateGroupViewDelegate {
-    
+
     func homeDateGroupViewDidSelectItem(date: Date) {
         vm.selectedDate = date
         Haptic.impact(.light)
     }
-    
+
     func homeDateGroupViewDidTapPrev() {
         if let startDate = vm.weekDates.first {
             let prevDate = startDate.addingDays(-7)
@@ -201,7 +218,7 @@ extension HomeVC: HomeDateGroupViewDelegate {
             Haptic.impact(.light)
         }
     }
-    
+
     func homeDateGroupViewDidTapNext() {
         if let startDate = vm.weekDates.first {
             let nextDate = startDate.addingDays(7)
@@ -216,12 +233,23 @@ extension HomeVC: HomeDateGroupViewDelegate {
 // MARK: - HomeChecklistCardRowDelegate
 
 extension HomeVC: HomeChecklistCardRowDelegate {
-    
+
     func homeChecklistCardRowDidCheck(goal: Goal, checklist: Checklist) {
         if let history = checklist.currentHistory {
             Haptic.impact(.light)
-            Task { await toggleChecklist(goalId: goal.id, historyId: history.id) }
+            Task {
+                await toggleChecklist(goalId: goal.id, historyId: history.id)
+            }
         }
     }
-    
+
+}
+
+// MARK: - Onboarding
+extension HomeVC: GoalListEmptyViewDelegate {
+    @objc
+    func goalListEmptyViewDidTapAddGoal() {
+        vm.hideOnboardingGuide()
+        coordinator?.trigger(with: .onboarding1Finished)
+    }
 }

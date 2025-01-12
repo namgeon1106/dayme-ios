@@ -31,13 +31,8 @@ final class HomeVM: VM {
             }.store(in: &cancellables)
         
         goalService.allGoals.map { $0.filter { $0.displayHome && $0.endDate.timeIntervalSinceNow > -24 * 3600 } }
-            .combineLatest($finishedOnboarding)
-            .sink { [weak self] goals, finishedOnboarding in
-                if finishedOnboarding {
-                    self?.goals = goals
-                } else {
-                    print("onboarding")
-                }
+            .sink { [weak self] goals in
+                self?.goals = goals
             }.store(in: &cancellables)
         
         let backgroundQueue = DispatchQueue.global(qos: .userInitiated)
@@ -50,6 +45,9 @@ final class HomeVM: VM {
             }
             .switchToLatest()
             .assign(to: &$checklistDateItems)
-        
+    }
+    
+    func hideOnboardingGuide() {
+        finishedOnboarding = true
     }
 }

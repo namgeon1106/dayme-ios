@@ -10,9 +10,20 @@ import UIKit
 final class HomeCoordinator: Coordinator {
     
     override func start(animated: Bool) {
-        nav.viewControllers = [HomeVC()]
+        let homeVC = HomeVC()
+        homeVC.coordinator = self
+        nav.viewControllers = [homeVC]
         
         setupNavigationBar()
+    }
+    
+    override func trigger(with event: FlowEvent) {
+        switch event {
+        case .onboarding1Finished:
+            pushGoalAddScreen()
+        default:
+            break
+        }
     }
     
     private func setupNavigationBar() {
@@ -24,4 +35,15 @@ final class HomeCoordinator: Coordinator {
         nav.navigationBar.prefersLargeTitles = false
     }
     
+}
+
+// MARK: - navigation
+private extension HomeCoordinator {
+    func pushGoalAddScreen() {
+        let goalAddVC = GoalAddVC()
+        goalAddVC.coordinator = self
+        goalAddVC.hidesBottomBarWhenPushed = true
+        nav.interactivePopGestureRecognizer?.delegate = self
+        nav.pushViewController(goalAddVC, animated: false)
+    }
 }
