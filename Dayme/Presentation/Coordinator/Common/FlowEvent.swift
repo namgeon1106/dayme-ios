@@ -43,4 +43,13 @@ enum FlowEvent {
     case logout
     case userDeleted
     
+    // MARK: - Onboarding
+    case onboarding1Finished
+    case onboarding2Finished
+    case onboarding3Finished
+    case onboarding4Finished
+    case onboarding4_1Finished
+    case onboarding5Finished
+    case onboarding5_1Finished
+    case onbaordingAllFinished
 }
