@@ -8,7 +8,7 @@
 import UIKit
 
 protocol GoalListEmptyViewDelegate: AnyObject {
-    func goalListEmptyViewDidTapAddGoal()
+    func didTapOnboardingGuide()
 }
 
 final class GoalListEmptyView: Vue {
@@ -42,7 +42,7 @@ final class GoalListEmptyView: Vue {
     
     override func setupAction() {
         addBtn.onAction { [weak self] in
-            self?.delegate?.goalListEmptyViewDidTapAddGoal()
+            self?.delegate?.didTapOnboardingGuide()
         }
     }
     

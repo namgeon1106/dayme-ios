@@ -78,10 +78,9 @@ final class HomeVC: VC {
         checklistCardList.cardDelegate = self
 
         let tapGesture = UITapGestureRecognizer()
-        tapGesture.addTarget(self, action: #selector(goalListEmptyViewDidTapAddGoal))
+        tapGesture.addTarget(self, action: #selector(didTapOnboardingGuide))
         
         onboardingBackgroundView.addGestureRecognizer(tapGesture)
-        onboardingGoalListEmptyView.delegate = self
     }
 
     override func setupFlex() {
@@ -246,9 +245,9 @@ extension HomeVC: HomeChecklistCardRowDelegate {
 }
 
 // MARK: - Onboarding
-extension HomeVC: GoalListEmptyViewDelegate {
+extension HomeVC {
     @objc
-    func goalListEmptyViewDidTapAddGoal() {
+    func didTapOnboardingGuide() {
         vm.hideOnboardingGuide()
         coordinator?.trigger(with: .onboarding1Finished)
     }

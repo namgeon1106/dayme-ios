@@ -124,6 +124,22 @@ final class GoalAddVC: VC {
         $0.alpha = 0
     }
     
+    private let onboardingBackgroundView = UIView().then {
+        $0.backgroundColor = .black.withAlphaComponent(0.4)
+    }
+    
+    private let onboardingTitleTF = BorderedTF("제목을 입력해주세요").then {
+        $0.contentInsets = UIEdgeInsets(0, 12, 0, 6)
+        $0.isUserInteractionEnabled = false
+        $0.returnKeyType = .next
+        $0.clearButtonMode = .whileEditing
+        $0.backgroundColor = .white
+    }
+    
+    private let onboardingGuideView = OnboardingGuideView(
+        message: "2. 목표와 각 항목을 입력해주세요."
+    )
+    
     
     // MARK: Helpers
     
@@ -142,6 +158,7 @@ final class GoalAddVC: VC {
         scrollView.keyboardDismissMode = .interactive
         titleTF.delegate = self
         palleteView.delegate = self
+        onboardingTitleTF.delegate = self
     }
     
     override func setupFlex() {
@@ -151,6 +168,8 @@ final class GoalAddVC: VC {
         
         view.addSubview(doneBtnContainer)
         doneBtnContainer.addSubview(doneBtn)
+        tabBarController?.view.addSubview(onboardingBackgroundView)
+        [onboardingTitleTF, onboardingGuideView].forEach(onboardingBackgroundView.addSubview(_:))
         
         contentView.flex.define { flex in
             flex.addItem(emojiCaptionLbl).margin(20, 24, 0, 0)
@@ -229,6 +248,20 @@ final class GoalAddVC: VC {
         let containerHeight = buttonHeight + bottomInset + 8 * 2
         doneBtnContainer.pin.horizontally().bottom().height(containerHeight)
         doneBtn.pin.bottom(bottomInset + 8).horizontally(24).height(buttonHeight)
+        
+        onboardingBackgroundView.pin.all()
+        onboardingTitleTF.pin
+            .top(to: titleTF.edge.top)
+            .left(to: titleTF.edge.left)
+            .right(to: titleTF.edge.right)
+            .bottom(to: titleTF.edge.bottom)
+        
+        onboardingGuideView.pin
+            .width(230)
+            .height(67)
+            .hCenter()
+            .bottom(to: onboardingTitleTF.edge.bottom)
+            .marginBottom(42)
     }
     
     override func setupAction() {
@@ -288,6 +321,11 @@ final class GoalAddVC: VC {
         doneBtn.onAction { [weak self] in
             await self?.addGoal()
         }
+        
+        let tapGesture = UITapGestureRecognizer()
+        tapGesture.addTarget(self, action: #selector(didTapOnboardingGuide))
+        
+        onboardingBackgroundView.addGestureRecognizer(tapGesture)
     }
     
     override func bind() {
@@ -317,6 +355,12 @@ final class GoalAddVC: VC {
             .sink { [weak self] validate in
                 self?.doneBtn.isEnabled = validate
             }.store(in: &cancellables)
+        
+        vm.$finishedOnboarding.receive(on: RunLoop.main)
+            .sink { [weak self] finishedOnboarding in
+                self?.onboardingBackgroundView.isHidden = finishedOnboarding
+            }
+            .store(in: &cancellables)
     }
     
     override func keyboardWillShow(_ height: CGFloat) {
@@ -387,6 +431,10 @@ extension GoalAddVC: UITextFieldDelegate {
         
         return true
     }
+    
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        return textField != onboardingTitleTF
+    }
 }
 
 // MARK: - ElegantEmojiPickerDelegate
@@ -410,4 +458,13 @@ extension GoalAddVC: PalleteViewDelegate {
         vm.color = color
     }
     
+}
+
+extension GoalAddVC {
+    @objc
+    func didTapOnboardingGuide() {
+        tabBarController?.selectedIndex = 1
+        vm.hideOnboardingGuide()
+        coordinator?.trigger(with: .onboarding2Finished)
+    }
 }

@@ -199,7 +199,7 @@ extension GoalVC: GoalFloatingMenuDelegate {
 
 extension GoalVC: GoalListEmptyViewDelegate {
     
-    func goalListEmptyViewDidTapAddGoal() {
+    func didTapOnboardingGuide() {
         coordinator?.trigger(with: .goalAddNeeded)
     }
     

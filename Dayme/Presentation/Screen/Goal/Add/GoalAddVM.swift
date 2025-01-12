@@ -18,6 +18,7 @@ final class GoalAddVM: VM {
     @Published var isDisplayLimited: Bool = false
     
     @Published private(set) var isValidate: Bool = false
+    @Published private(set) var finishedOnboarding = UserDefault.finishedOnboarding!
     
     private let service: GoalService = .shared
     
@@ -59,4 +60,7 @@ final class GoalAddVM: VM {
         }.store(in: &cancellables)
     }
     
+    func hideOnboardingGuide() {
+        finishedOnboarding = true
+    }
 }

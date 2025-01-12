@@ -46,6 +46,9 @@ final class GoalCoordinator: Coordinator {
         case .subgoalAddCanceled, .subgoalEditCanceled:
             dismissPresentedViewController(animated: true)
             
+        case .onboarding2Finished:
+            dismissPresentedViewController(animated: false)
+            
         default: break
         }
     }
