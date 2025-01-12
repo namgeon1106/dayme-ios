@@ -89,3 +89,6 @@ let mockGoals: [Goal] = [
     )
 ]
 #endif
+
+let onboarding3DummyGoal = Goal(
+    id: 0, title: "주요목표 타이틀", emoji: "⛰️", startDate: Date.now, endDate: Date.now.addingTimeInterval(365 * 24 * 3600), hex: "000000", displayHome: false, progress: 0, subgoals: [], checklists: [])

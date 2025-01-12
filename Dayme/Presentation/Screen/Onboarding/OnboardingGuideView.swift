@@ -23,9 +23,12 @@ class OnboardingGuideView: UIView {
     
     private let tailView = UIImageView(image: UIImage.messageTail)
     private let tailOffset: CGFloat
+    private let reversed: Bool
     
-    init(message: String, tailOffset: CGFloat = 0) {
+    init(message: String, tailOffset: CGFloat = 0, reversed: Bool = false) {
         self.tailOffset = tailOffset
+        self.reversed = reversed
+        
         super.init(frame: .zero)
         messageLabel.text = message
         
@@ -39,9 +42,15 @@ class OnboardingGuideView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        if reversed {
+            tailView.transform = .init(rotationAngle: Double.pi)
+            bubbleView.pin.top(17).left().right().bottom()
+            tailView.pin.width(23).height(24).hCenter(tailOffset).top()
+        } else {
+            bubbleView.pin.top().left().right().bottom(17)
+            tailView.pin.width(23).height(24).hCenter(tailOffset).bottom()
+        }
         
-        bubbleView.pin.top().left().right().bottom(17)
         messageLabel.pin.vertically(12).horizontally(17)
-        tailView.pin.width(23).height(24).hCenter(tailOffset).bottom()
     }
 }

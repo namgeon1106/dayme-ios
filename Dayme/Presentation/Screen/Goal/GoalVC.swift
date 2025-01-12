@@ -60,6 +60,18 @@ final class GoalVC: VC {
     
     private let pageVC = GoalPageVC()
     
+    private let onboardingBackgroundView = UIView().then {
+        $0.backgroundColor = .black.withAlphaComponent(0.4)
+    }
+    
+    private let dummyCellView = DummyGoalListCellView().then {
+        $0.bind(onboarding3DummyGoal)
+    }
+    
+    private let onboardingGuideView = OnboardingGuideView(
+        message: "3. 주요 목표가 설정되었어요!\n     주요 목표를 이루기 위한 세부 목표,\n     세부 목표 달성을 위한 체크리스트를 세워 보세요 :)",
+        reversed: true
+    )
     
     // MARK: Helpers
     
@@ -110,6 +122,22 @@ final class GoalVC: VC {
         }
         
         pageVC.didMove(toParent: self)
+        
+        tabBarController?.view.addSubview(onboardingBackgroundView)
+        onboardingBackgroundView.pin.all()
+        [dummyCellView, onboardingGuideView].forEach(onboardingBackgroundView.addSubview(_:))
+        
+        dummyCellView.pin
+            .top(165)
+            .horizontally()
+            .height(110)
+        
+        onboardingGuideView.pin
+            .top(to: dummyCellView.edge.top)
+            .marginTop(95)
+            .width(329)
+            .hCenter()
+            .height(104)
     }
     
     override func layoutFlex() {

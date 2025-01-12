@@ -415,6 +415,9 @@ final class GoalAddVC: VC {
         }
     }
     
+    deinit {
+        onboardingBackgroundView.removeFromSuperview()
+    }
 }
 
 // MARK: - UITextFieldDelegate

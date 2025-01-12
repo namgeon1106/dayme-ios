@@ -11,14 +11,21 @@ import Combine
 final class GoalPageVM: VM {
     @Published var ongoingGoals: [Goal] = []
     @Published var pastGoals: [Goal] = []
+    @Published var finishedOnboarding = UserDefault.finishedOnboarding!
+    @Published var fetchedOngoingGoals: [Goal] = []
     
     private let service: GoalService = .shared
     
     
     override func bind() {
-        service.ongoingGoals.sink { [weak self] goals in
-            self?.ongoingGoals = goals
-        }.store(in: &cancellables)
+        service.ongoingGoals
+            .assign(to: &$fetchedOngoingGoals)
+        
+        $fetchedOngoingGoals.combineLatest($finishedOnboarding)
+            .map { fetchedOngoingGoals, finishedOnboarding in
+                finishedOnboarding ? fetchedOngoingGoals : [onboarding3DummyGoal]
+            }
+            .assign(to: &$ongoingGoals)
         
         service.pastGoals.sink { [weak self] goals in
             self?.pastGoals = goals
