@@ -8,9 +8,17 @@
 import Foundation
 import Combine
 
+enum OnboardingPhase {
+    case phase4
+    case phase4_1
+    case phase5
+    case phase6
+}
+
 final class GoalDetailVM: VM {
     @Published private(set) var goal: Goal
     @Published private(set) var isDisplayLimited: Bool = false
+    @Published private(set) var onboardingPhase: OnboardingPhase? = UserDefault.finishedOnboarding ? nil : .phase4
     
     private let goalService: GoalService = .shared
     

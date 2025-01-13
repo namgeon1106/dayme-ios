@@ -36,6 +36,30 @@ class OnboardingGuideView: UIView {
         bubbleView.addSubview(messageLabel)
     }
     
+    init(mainMessage: String, subMessage: String, tailOffset: CGFloat = 0, reversed: Bool = false) {
+        self.tailOffset = tailOffset
+        self.reversed = reversed
+        
+        super.init(frame: .zero)
+        let attributedText = NSMutableAttributedString(
+            string: mainMessage, attributes: [
+                .font: UIFont.pretendard(.bold, 14),
+                .foregroundColor: UIColor.white
+            ]
+        )
+        
+        attributedText.append(NSAttributedString(
+            string: subMessage, attributes: [
+                .font: UIFont.pretendard(.medium, 14),
+                .foregroundColor: UIColor(red: 0xDC, green: 0xDC, blue: 0xDC, alpha: 1)
+            ]
+        ))
+        
+        self.messageLabel.attributedText = attributedText
+        [bubbleView, tailView].forEach(addSubview(_:))
+        bubbleView.addSubview(messageLabel)
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

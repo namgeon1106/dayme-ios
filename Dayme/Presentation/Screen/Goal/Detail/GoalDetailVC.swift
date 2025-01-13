@@ -75,6 +75,18 @@ final class GoalDetailVC: VC {
         $0.alpha = 0
     }
     
+    // MARK: - onboarding UI
+    private let onboardingBackgroundView = UIView().then {
+        $0.backgroundColor = .black.withAlphaComponent(0.4)
+    }
+    
+    private let onboardingSubgoalView = OnboardingSubgoalView()
+    
+    private let onboardingPhase4GuideView = OnboardingGuideView(
+        mainMessage: "4. '세부목표'를 작성해 보세요.\n",
+        subMessage: "[ 세부목표: 최종 목표를 위한 중간 단계 목표 ]"
+    )
+    
     
     // MARK: Lifecycles
     
@@ -160,6 +172,22 @@ final class GoalDetailVC: VC {
         contentView.pin.width(of: scrollView)
         contentView.flex.layout(mode: .adjustHeight)
         scrollView.contentSize = contentView.bounds.size
+        
+        tabBarController?.view.addSubview(onboardingBackgroundView)
+        onboardingBackgroundView.pin.all()
+        [onboardingSubgoalView, onboardingPhase4GuideView].forEach(onboardingBackgroundView.addSubview(_:))
+        
+        onboardingSubgoalView.pin
+            .top(to: subgoalSection.edge.top)
+            .marginTop(79)
+            .horizontally(24)
+            .height(120)
+        
+        onboardingPhase4GuideView.pin
+            .top(to: subgoalSection.edge.top)
+            .hCenter()
+            .width(285)
+            .height(88)
     }
     
     override func setupAction() {
@@ -185,6 +213,16 @@ final class GoalDetailVC: VC {
         vm.$goal.receive(on: RunLoop.main)
             .sink { [weak self] goal in
                 self?.updateGoal(goal)
+            }.store(in: &cancellables)
+        
+        vm.$onboardingPhase.receive(on: RunLoop.main)
+            .sink { [weak self] onboardingPhase in
+                self?.onboardingBackgroundView.isHidden = onboardingPhase == nil
+                
+                self?.onboardingSubgoalView.isHidden = onboardingPhase != .phase4
+                self?.onboardingPhase4GuideView.isHidden = onboardingPhase != .phase4
+                
+                
             }.store(in: &cancellables)
     }
     
@@ -228,6 +266,9 @@ final class GoalDetailVC: VC {
         }
     }
     
+    deinit {
+        onboardingBackgroundView.removeFromSuperview()
+    }
 }
 
 // MARK: - SubgoalSectionDelegate
