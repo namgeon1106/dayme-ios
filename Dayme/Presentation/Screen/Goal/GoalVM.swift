@@ -36,4 +36,8 @@ final class GoalVM: VM {
                 self?.isFABHidden = isEmpty
             }.store(in: &cancellables)
     }
+    
+    func hideOnboardingGuide() {
+        finishedOnboarding = true
+    }
 }

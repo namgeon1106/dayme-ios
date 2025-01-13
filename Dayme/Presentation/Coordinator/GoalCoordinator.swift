@@ -48,6 +48,9 @@ final class GoalCoordinator: Coordinator {
             
         case .onboarding2Finished:
             dismissPresentedViewController(animated: false)
+        
+        case .onboarding3Finished:
+            pushGoalDetailScreen(goal: onboarding4DummyGoal, animated: false)
             
         default: break
         }
@@ -76,13 +79,13 @@ private extension GoalCoordinator {
         nav.pushViewController(goalEditVC, animated: true)
     }
     
-    func pushGoalDetailScreen(goal: Goal) {
+    func pushGoalDetailScreen(goal: Goal, animated: Bool = true) {
         let goalDetailVM = GoalDetailVM(goal: goal)
         let goalDetailVC = GoalDetailVC(vm: goalDetailVM)
         goalDetailVC.coordinator = self
         goalDetailVC.hidesBottomBarWhenPushed = true
         nav.interactivePopGestureRecognizer?.delegate = self
-        nav.pushViewController(goalDetailVC, animated: true)
+        nav.pushViewController(goalDetailVC, animated: animated)
     }
     
     func presentSubgoalAddScreen(goal: Goal) {

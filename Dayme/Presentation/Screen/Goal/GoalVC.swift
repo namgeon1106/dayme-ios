@@ -94,6 +94,11 @@ final class GoalVC: VC {
                 await self?.hideMenu()
             }
         }
+        
+        let tapGesture = UITapGestureRecognizer()
+        tapGesture.addTarget(self, action: #selector(didTapOnboardingGuide))
+        
+        onboardingBackgroundView.addGestureRecognizer(tapGesture)
     }
     
     override func setupFlex() {
@@ -152,6 +157,11 @@ final class GoalVC: VC {
             .sink { [weak self] isHidden in
                 self?.floatingBtn.isHidden = isHidden
             }.store(in: &cancellables)
+        
+        vm.$finishedOnboarding.receive(on: RunLoop.main)
+            .sink { [weak self] finishedOnboarding in
+                self?.onboardingBackgroundView.isHidden = finishedOnboarding
+            }.store(in: &cancellables)
     }
     
     private func showMenu() async {
@@ -190,6 +200,9 @@ final class GoalVC: VC {
         }
     }
     
+    deinit {
+        onboardingBackgroundView.removeFromSuperview()
+    }
 }
 
 // MARK: - GoalFloatingMenuDelegate
@@ -226,9 +239,10 @@ extension GoalVC: GoalFloatingMenuDelegate {
 // MARK: - GoalListEmptyViewDelegate
 
 extension GoalVC: GoalListEmptyViewDelegate {
-    
+    @objc
     func didTapOnboardingGuide() {
-        coordinator?.trigger(with: .goalAddNeeded)
+        vm.hideOnboardingGuide()
+        coordinator?.trigger(with: .onboarding3Finished)
     }
     
 }
