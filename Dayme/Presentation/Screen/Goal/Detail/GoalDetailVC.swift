@@ -194,7 +194,7 @@ final class GoalDetailVC: VC {
         contentView.flex.layout(mode: .adjustHeight)
         scrollView.contentSize = contentView.bounds.size
         
-        tabBarController?.view.addSubview(onboardingBackgroundView)
+        view.addSubview(onboardingBackgroundView)
         onboardingBackgroundView.pin.all()
         [
             onboardingEmptySubgoalView,
@@ -376,8 +376,9 @@ extension GoalDetailVC: ChecklistSectionDelegate {
 extension GoalDetailVC {
     @objc
     private func progressOnboardingPhase() {
+        if vm.onboardingPhase == .phase5 {
+            coordinator?.trigger(with: .onboarding5Finished)
+        }
         vm.progressOnboardingPhase()
-        coordinator?.trigger(with: .onboarding4Finished)
-        
     }
 }

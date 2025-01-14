@@ -52,6 +52,9 @@ final class GoalCoordinator: Coordinator {
         case .onboarding3Finished:
             pushGoalDetailScreen(goal: onboarding4DummyGoal, animated: false)
             
+        case .onboarding5Finished:
+            pushChecklistAddScreen(goal: onboarding4DummyGoal, subgoal: nil, animated: false)
+            
         default: break
         }
     }
@@ -116,13 +119,13 @@ private extension GoalCoordinator {
         nav.present(vc, animated: true)
     }
     
-    func pushChecklistAddScreen(goal: Goal, subgoal: Subgoal?) {
+    func pushChecklistAddScreen(goal: Goal, subgoal: Subgoal?, animated: Bool = true) {
         let vm = ChecklistAddVM(goal: goal, subgoal: subgoal)
         let vc = ChecklistAddVC(vm: vm)
         vc.coordinator = self
         vc.hidesBottomBarWhenPushed = true
         nav.interactivePopGestureRecognizer?.delegate = self
-        nav.pushViewController(vc, animated: true)
+        nav.pushViewController(vc, animated: animated)
     }
     
     func pushChecklistEditScreen(goal: Goal, subgoal: Subgoal?, checklist: Checklist) {

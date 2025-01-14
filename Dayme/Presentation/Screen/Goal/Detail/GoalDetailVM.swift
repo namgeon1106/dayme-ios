@@ -72,5 +72,9 @@ final class GoalDetailVM: VM {
         case nil:
             break
         }
+        
+        if onboardingPhase == .phase5 {
+            goal.subgoals.append(onboarding5Subgoal)
+        }
     }
 }

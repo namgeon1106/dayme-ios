@@ -16,7 +16,7 @@ struct Goal: Equatable, Identifiable {
     let hex: String
     let displayHome: Bool
     let progress: Double
-    let subgoals: [Subgoal]
+    var subgoals: [Subgoal]
     let checklists: [Checklist]
     
     
@@ -103,5 +103,15 @@ let onboarding4DummyGoal = Goal(
     displayHome: false,
     progress: 0,
     subgoals: [],
+    checklists: []
+)
+
+let onboarding5Subgoal = Subgoal(
+    id: 0,
+    title: "월 10회 이상 유산소 운동(러닝, 자전거 등) 진행하기",
+    category: "건강",
+    startDate: Date.now,
+    endDate: Date.now.addingTimeInterval(183 * 24 * 3600),
+    progress: 0.49,
     checklists: []
 )
