@@ -18,6 +18,7 @@ final class ChecklistAddVM: VM {
     @Published var subgoal: Subgoal?
     @Published private(set) var goals: [Goal] = []
     @Published private(set) var isValidate: Bool = false
+    @Published private(set) var finishedOnboarding = UserDefault.finishedOnboarding!
     
     let weekDays: [Int] = [2, 3, 4, 5, 6, 7, 1] // 월 ~ 일
     private let goalService: GoalService = .shared

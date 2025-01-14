@@ -123,6 +123,99 @@ final class ChecklistAddVC: VC {
         $0.isTranslucent = false
     }
     
+    // MARK: - onboarding UI
+    private let onboardingBackgroundView = UIView().then {
+        $0.backgroundColor = .black.withAlphaComponent(0.4)
+    }
+    
+    private let onboardingContainerView = UIView().then {
+        $0.layer.cornerRadius = 24
+        $0.backgroundColor = .white
+    }
+    
+    private let onboardingTitleCaptionLbl = UILabel("제목").then {
+        $0.textColor(.colorDark100).font(.pretendard(.semiBold, 16))
+    }
+    
+    private let onboardingTitleTF = BorderedTF("체크리스트 제목을 작성해주세요").then {
+        $0.contentInsets = UIEdgeInsets(0, 12, 0, 6)
+        $0.returnKeyType = .next
+        $0.clearButtonMode = .whileEditing
+    }
+    
+    private let onboardingHighGoalCaptionLbl = UILabel("상위목표 설정").then {
+        $0.textColor(.colorDark100).font(.pretendard(.semiBold, 16))
+    }
+    
+    // 주요 목표
+    private let onboardingGoalCaptionLbl = UILabel("주요목표").then {
+        $0.textColor(.colorDark70).font(.pretendard(.medium, 16))
+    }
+    private lazy var onboardingGoalTF = BorderedTF("주요목표 선택").then {
+        $0.contentInsets = UIEdgeInsets(0, 12, 0, 6)
+        $0.inputView = goalPicker
+        $0.inputAccessoryView = toolbar
+    }
+    private lazy var onboardingGoalPicker = UIPickerView().then {
+        $0.tintColor = .colorMain1
+        $0.backgroundColor = .white
+        $0.dataSource = self
+        $0.delegate = self
+    }
+    
+    // 세부 목표
+    private let onboardingSubgoalCaptionLbl = UILabel("세부목표").then {
+        $0.textColor(.colorDark70).font(.pretendard(.medium, 16))
+    }
+    private lazy var onboardingSubgoalTF = BorderedTF("세부목표 선택").then {
+        $0.contentInsets = UIEdgeInsets(0, 12, 0, 6)
+        $0.inputView = subgoalPicker
+        $0.inputAccessoryView = toolbar
+    }
+    private lazy var onboardingSubgoalPicker = UIPickerView().then {
+        $0.tintColor = .colorMain1
+        $0.backgroundColor = .white
+        $0.dataSource = self
+        $0.delegate = self
+    }
+    
+    // 기간
+    private let onboardingDurationCaptionLbl = UILabel("기간").then {
+        $0.textColor(.colorDark100).font(.pretendard(.semiBold, 16))
+    }
+    private lazy var onboardingDurationStartTF = BorderedTF("시작일").then {
+        $0.textAlignment = .center
+        $0.inputView = onboardingDatePicker
+        $0.inputAccessoryView = toolbar
+    }
+    private lazy var onboardingDurationEndTF = BorderedTF("목표일").then {
+        $0.textAlignment = .center
+        $0.inputView = onboardingDatePicker
+        $0.inputAccessoryView = toolbar
+    }
+    private let onboardingDurationTildeLbl = UILabel("~").then {
+        $0.textColor(.colorGrey30).font(.pretendard(.medium, 16))
+    }
+    private let onboardingDatePicker = UIDatePicker().then {
+        $0.datePickerMode = .date
+        $0.preferredDatePickerStyle = .inline
+        $0.tintColor = .colorMain1
+        $0.backgroundColor = .white
+    }
+    
+    // 반복
+    private let onboardingRepeatCaptionLbl = UILabel("반복").then {
+        $0.textColor(.colorDark100).font(.pretendard(.semiBold, 16))
+    }
+    private let onboardingRepeatContainer = UIView()
+    private var onboardingDateItemViews: [ChecklistDateItemView] = []
+    
+    private let onboardingGuideView = OnboardingGuideView(
+        mainMessage: "5-1. '체크리스트'를 추가해 보세요.\n",
+        subMessage: "[ 체크리스트: 매일 또는 특정일에 실행해야 할 일 ]",
+        reversed: true
+    )
+    
     
     // MARK: - Lifecycles
     
@@ -153,9 +246,18 @@ final class ChecklistAddVC: VC {
         scrollView.keyboardDismissMode = .interactive
         titleTF.delegate = self
         dateItemViews = vm.weekDays.map(ChecklistDateItemView.init)
+        onboardingDateItemViews = vm.weekDays.map(ChecklistDateItemView.init)
         dateItemViews.forEach {
             $0.isSelected = vm.selectedWeekDays.contains($0.weekDay)
             $0.delegate = self
+        }
+        
+        [
+            onboardingTitleTF,
+            onboardingGoalTF,
+            onboardingSubgoalTF
+        ].forEach { tf in
+            tf.isUserInteractionEnabled = false
         }
     }
     
@@ -166,6 +268,29 @@ final class ChecklistAddVC: VC {
         
         view.addSubview(doneBtnContainer)
         doneBtnContainer.addSubview(doneBtn)
+        view.addSubview(onboardingBackgroundView)
+        [
+            onboardingContainerView,
+            onboardingGuideView
+        ].forEach(onboardingBackgroundView.addSubview(_:))
+        
+        [
+            onboardingTitleCaptionLbl,
+            onboardingTitleTF,
+            onboardingHighGoalCaptionLbl,
+            onboardingSubgoalCaptionLbl,
+            onboardingSubgoalTF,
+            onboardingGoalCaptionLbl,
+            onboardingGoalTF,
+            onboardingDurationCaptionLbl,
+            onboardingDurationStartTF,
+            onboardingDurationEndTF,
+            onboardingDurationTildeLbl,
+            onboardingRepeatCaptionLbl,
+            onboardingRepeatContainer
+        ].forEach(onboardingContainerView.addSubview(_:))
+        
+        onboardingDateItemViews.forEach(onboardingRepeatContainer.addSubview(_:))
         
         contentView.flex.padding(33, 24).define { flex in
             flex.addItem(titleCaptionLbl)
@@ -214,6 +339,51 @@ final class ChecklistAddVC: VC {
         let containerHeight = buttonHeight + bottomInset + 8 * 2
         doneBtnContainer.pin.horizontally().bottom().height(containerHeight)
         doneBtn.pin.bottom(bottomInset + 8).horizontally(24).height(buttonHeight)
+        
+        onboardingBackgroundView.pin.all()
+        onboardingContainerView.pin
+            .top(to: titleCaptionLbl.edge.top)
+            .marginTop(-20)
+            .horizontally(8)
+            .bottom(to: repeatContainer.edge.bottom)
+            .marginBottom(-34)
+        
+        [
+            (titleCaptionLbl, onboardingTitleCaptionLbl),
+            (titleTF, onboardingTitleTF),
+            (highGoalCaptionLbl, onboardingHighGoalCaptionLbl),
+            (subgoalCaptionLbl, onboardingSubgoalCaptionLbl),
+            (subgoalTF, onboardingSubgoalTF),
+            (goalCaptionLbl, onboardingGoalCaptionLbl),
+            (goalTF, onboardingGoalTF),
+            (durationCaptionLbl, onboardingDurationCaptionLbl),
+            (durationStartTF, onboardingDurationStartTF),
+            (durationEndTF, onboardingDurationEndTF),
+            (durationTildeLbl, onboardingDurationTildeLbl),
+            (repeatCaptionLbl, onboardingRepeatCaptionLbl),
+            (repeatContainer, onboardingRepeatContainer)
+        ].forEach { originalView, onboardingView in
+            onboardingView.pin
+                .top(to: originalView.edge.top)
+                .left(to: originalView.edge.left)
+                .right(to: originalView.edge.right)
+                .bottom(to: originalView.edge.bottom)
+        }
+        
+        for (originalWeekDayView, onboardingWeekDayView) in zip(dateItemViews, onboardingDateItemViews) {
+            onboardingWeekDayView.pin
+                .top(to: originalWeekDayView.edge.top)
+                .left(to: originalWeekDayView.edge.left)
+                .right(to: originalWeekDayView.edge.right)
+                .bottom(to: originalWeekDayView.edge.bottom)
+        }
+        
+        onboardingGuideView.pin
+            .bottom()
+            .marginBottom(153)
+            .hCenter()
+            .width(305)
+            .height(85)
     }
     
     override func setupAction() {
@@ -260,6 +430,11 @@ final class ChecklistAddVC: VC {
         doneBtn.onAction { [weak self] in
             await self?.addChecklist()
         }
+        
+        let tapGesture = UITapGestureRecognizer()
+        tapGesture.addTarget(self, action: #selector(progressOnboarding))
+        
+        onboardingBackgroundView.addGestureRecognizer(tapGesture)
     }
     
     override func bind() {
@@ -295,6 +470,12 @@ final class ChecklistAddVC: VC {
         vm.$isValidate.receive(on: RunLoop.main)
             .sink { [weak self] validate in
                 self?.doneBtn.isEnabled = validate
+            }.store(in: &cancellables)
+        
+        vm.$finishedOnboarding.receive(on: RunLoop.main)
+            .sink { [weak self] finishedOnboarding in
+                self?.onboardingBackgroundView.isHidden = finishedOnboarding
+                self?.backBtn.isEnabled = finishedOnboarding
             }.store(in: &cancellables)
     }
     
@@ -419,4 +600,11 @@ extension ChecklistAddVC: ChecklistDateItemViewDelegate {
         }
     }
     
+}
+
+extension ChecklistAddVC {
+    @objc
+    func progressOnboarding() {
+        coordinator?.trigger(with: .onboarding5_1Finished)
+    }
 }

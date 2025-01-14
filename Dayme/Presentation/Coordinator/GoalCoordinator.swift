@@ -55,6 +55,9 @@ final class GoalCoordinator: Coordinator {
         case .onboarding5Finished:
             pushChecklistAddScreen(goal: onboarding4DummyGoal, subgoal: nil, animated: false)
             
+        case .onboarding5_1Finished:
+            popViewController(animated: false)
+            
         default: break
         }
     }
