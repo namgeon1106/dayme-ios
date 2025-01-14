@@ -80,7 +80,11 @@ final class GoalDetailVC: VC {
         $0.backgroundColor = .black.withAlphaComponent(0.4)
     }
     
-    private let onboardingEmptySubgoalView = OnboardingSubgoalView()
+    private let onboardingEmptySubgoalView = OnboardingFocusedView(
+        message: "세부 목표가 설정되지 않았어요.\n세부목표를 정하고 목표를 관리해보세요!",
+        buttonTitle: "세부목표 작성하기",
+        buttonWidth: 110
+    )
     
     private let onboardingPhase4GuideView = OnboardingGuideView(
         mainMessage: "4. '세부목표'를 작성해 보세요.\n",
@@ -93,6 +97,17 @@ final class GoalDetailVC: VC {
     )
     
     private let onboardingAddSubgoalImageView = UIImageView(image: UIImage(named: "AddSubGoalPageSheet"))
+    
+    private let onboardingEmptyChecklistView = OnboardingFocusedView(
+        message: "체크리스트가 설정되지 않았어요.\n체크리스트를 작성하고 목표를 관리해보세요.",
+        buttonTitle: "체크리스트 작성하기",
+        buttonWidth: 121
+    )
+    
+    private let onboardingPhase5GuideView = OnboardingGuideView(
+        mainMessage: "5. '체크리스트'를 작성해 보세요.\n",
+        subMessage: "[ 체크리스트: 매일 또는 특정일에 실행해야 할 일 ]"
+    )
     
     // MARK: Lifecycles
     
@@ -185,7 +200,9 @@ final class GoalDetailVC: VC {
             onboardingEmptySubgoalView,
             onboardingPhase4GuideView,
             onboardingAddSubgoalImageView,
-            onboardingPhase4_1GuideView
+            onboardingPhase4_1GuideView,
+            onboardingEmptyChecklistView,
+            onboardingPhase5GuideView
         ].forEach(onboardingBackgroundView.addSubview(_:))
         
         onboardingEmptySubgoalView.pin
@@ -210,6 +227,19 @@ final class GoalDetailVC: VC {
             .horizontally(8)
             .bottom(72)
             .height(570)
+        
+        onboardingEmptyChecklistView.pin
+            .top(to: checklistSection.edge.top)
+            .marginTop(117)
+            .horizontally(24)
+            .height(120)
+        
+        onboardingPhase5GuideView.pin
+            .bottom(to: onboardingEmptyChecklistView.edge.bottom)
+            .marginBottom(110)
+            .height(85)
+            .hCenter()
+            .width(305)
     }
     
     override func setupAction() {
@@ -251,6 +281,9 @@ final class GoalDetailVC: VC {
                 
                 self?.onboardingAddSubgoalImageView.isHidden = onboardingPhase != .phase4_1
                 self?.onboardingPhase4_1GuideView.isHidden = onboardingPhase != .phase4_1
+                
+                self?.onboardingEmptyChecklistView.isHidden = onboardingPhase != .phase5
+                self?.onboardingPhase5GuideView.isHidden = onboardingPhase != .phase5
             }.store(in: &cancellables)
     }
     
