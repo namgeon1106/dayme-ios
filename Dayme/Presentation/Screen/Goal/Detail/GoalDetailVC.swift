@@ -80,13 +80,19 @@ final class GoalDetailVC: VC {
         $0.backgroundColor = .black.withAlphaComponent(0.4)
     }
     
-    private let onboardingSubgoalView = OnboardingSubgoalView()
+    private let onboardingEmptySubgoalView = OnboardingSubgoalView()
     
     private let onboardingPhase4GuideView = OnboardingGuideView(
         mainMessage: "4. '세부목표'를 작성해 보세요.\n",
         subMessage: "[ 세부목표: 최종 목표를 위한 중간 단계 목표 ]"
     )
     
+    private let onboardingPhase4_1GuideView = OnboardingGuideView(
+        mainMessage: "4-1. '세부목표' 내용을 추가해 보세요.\n",
+        subMessage: "[ 세부목표: 최종 목표를 위한 중간 단계 목표 ]"
+    )
+    
+    private let onboardingAddSubgoalImageView = UIImageView(image: UIImage(named: "AddSubGoalPageSheet"))
     
     // MARK: Lifecycles
     
@@ -175,9 +181,14 @@ final class GoalDetailVC: VC {
         
         tabBarController?.view.addSubview(onboardingBackgroundView)
         onboardingBackgroundView.pin.all()
-        [onboardingSubgoalView, onboardingPhase4GuideView].forEach(onboardingBackgroundView.addSubview(_:))
+        [
+            onboardingEmptySubgoalView,
+            onboardingPhase4GuideView,
+            onboardingAddSubgoalImageView,
+            onboardingPhase4_1GuideView
+        ].forEach(onboardingBackgroundView.addSubview(_:))
         
-        onboardingSubgoalView.pin
+        onboardingEmptySubgoalView.pin
             .top(to: subgoalSection.edge.top)
             .marginTop(79)
             .horizontally(24)
@@ -188,6 +199,17 @@ final class GoalDetailVC: VC {
             .hCenter()
             .width(285)
             .height(88)
+        
+        onboardingPhase4_1GuideView.pin
+            .bottom(633)
+            .hCenter()
+            .width(285)
+            .height(88)
+        
+        onboardingAddSubgoalImageView.pin
+            .horizontally(8)
+            .bottom(72)
+            .height(570)
     }
     
     override func setupAction() {
@@ -207,6 +229,11 @@ final class GoalDetailVC: VC {
                 await toggleDisplayHome()
             }
         }
+        
+        let tapGesture = UITapGestureRecognizer()
+        tapGesture.addTarget(self, action: #selector(progressOnboardingPhase))
+        
+        onboardingBackgroundView.addGestureRecognizer(tapGesture)
     }
     
     override func bind() {
@@ -219,10 +246,11 @@ final class GoalDetailVC: VC {
             .sink { [weak self] onboardingPhase in
                 self?.onboardingBackgroundView.isHidden = onboardingPhase == nil
                 
-                self?.onboardingSubgoalView.isHidden = onboardingPhase != .phase4
+                self?.onboardingEmptySubgoalView.isHidden = onboardingPhase != .phase4
                 self?.onboardingPhase4GuideView.isHidden = onboardingPhase != .phase4
                 
-                
+                self?.onboardingAddSubgoalImageView.isHidden = onboardingPhase != .phase4_1
+                self?.onboardingPhase4_1GuideView.isHidden = onboardingPhase != .phase4_1
             }.store(in: &cancellables)
     }
     
@@ -309,4 +337,14 @@ extension GoalDetailVC: ChecklistSectionDelegate {
         view.setNeedsLayout()
     }
     
+}
+
+// MARK: - onboarding action
+extension GoalDetailVC {
+    @objc
+    private func progressOnboardingPhase() {
+        vm.progressOnboardingPhase()
+        coordinator?.trigger(with: .onboarding4Finished)
+        
+    }
 }

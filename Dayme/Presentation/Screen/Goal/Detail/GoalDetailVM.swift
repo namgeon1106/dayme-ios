@@ -58,4 +58,19 @@ final class GoalDetailVM: VM {
             }.store(in: &cancellables)
         }
     }
+    
+    func progressOnboardingPhase() {
+        switch onboardingPhase {
+        case .phase4:
+            onboardingPhase = .phase4_1
+        case .phase4_1:
+            onboardingPhase = .phase5
+        case .phase5:
+            onboardingPhase = .phase6
+        case .phase6:
+            onboardingPhase = nil
+        case nil:
+            break
+        }
+    }
 }
