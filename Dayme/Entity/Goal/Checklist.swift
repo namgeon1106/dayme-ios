@@ -88,3 +88,12 @@ let mockChecklists: [Checklist] = [
     )
 ]
 #endif
+
+let onboarding6Checklist = Checklist(
+    id: 1,
+    title: "하루 7천보 걷기",
+    startDate: Date.now,
+    endDate: Date.now.addingDays(10),
+    repeatDays: [],
+    histories: []
+)

@@ -76,5 +76,9 @@ final class GoalDetailVM: VM {
         if onboardingPhase == .phase5 {
             goal.subgoals.append(onboarding5Subgoal)
         }
+        
+        if onboardingPhase == .phase6 {
+            goal.subgoals[0].checklists.append(onboarding6Checklist)
+        }
     }
 }
