@@ -288,7 +288,10 @@ final class ChecklistAddVC: VC {
             onboardingDurationTildeLbl,
             onboardingRepeatCaptionLbl,
             onboardingRepeatContainer
-        ].forEach(onboardingContainerView.addSubview(_:))
+        ].forEach { [weak self] in
+            self?.onboardingContainerView.addSubview($0)
+            $0.isUserInteractionEnabled = false
+        }
         
         onboardingDateItemViews.forEach(onboardingRepeatContainer.addSubview(_:))
         
