@@ -109,6 +109,35 @@ final class GoalDetailVC: VC {
         subMessage: "[ 체크리스트: 매일 또는 특정일에 실행해야 할 일 ]"
     )
     
+    private let onboardingPhase6GuideView = UIView().then {
+        $0.backgroundColor = UIColor.hex("33373A")
+        $0.layer.cornerRadius = 12
+    }
+    
+    private let onboardingPhase6ImageView = UIImageView(image: UIImage(named: "img_timo_face"))
+    
+    private let onboardingPhase6MessageLbl = UILabel()
+        .text("이제 DAYME와 함께\n당신의 목표를 설정해보세요!")
+        .textAlignment(.center)
+        .numberOfLines(2)
+        .font(.pretendard(.bold, 14))
+        .then {
+            $0.textColor = .white
+        }
+    
+    private let finishOnboardingButton = UIButton(configuration: .plain()).then {
+        $0.setAttributedTitle(
+            .init(
+                string: "시작하기",
+                attributes: [
+                    .foregroundColor: UIColor.colorMain1,
+                    .font: UIFont.pretendard(.bold, 16)
+                ]
+            ),
+            for: []
+        )
+    }
+    
     // MARK: Lifecycles
     
     init(vm: GoalDetailVM) {
@@ -184,15 +213,6 @@ final class GoalDetailVC: VC {
             
             flex.addItem(homeWarningLbl).margin(15, 24, 20, 0)
         }
-    }
-    
-    override func layoutFlex() {
-        flexView.pin.all()
-        scrollView.pin.all()
-        contentView.pin.all()
-        contentView.pin.width(of: scrollView)
-        contentView.flex.layout(mode: .adjustHeight)
-        scrollView.contentSize = contentView.bounds.size
         
         view.addSubview(onboardingBackgroundView)
         onboardingBackgroundView.pin.all()
@@ -202,8 +222,24 @@ final class GoalDetailVC: VC {
             onboardingAddSubgoalImageView,
             onboardingPhase4_1GuideView,
             onboardingEmptyChecklistView,
-            onboardingPhase5GuideView
+            onboardingPhase5GuideView,
+            onboardingPhase6GuideView,
         ].forEach(onboardingBackgroundView.addSubview(_:))
+        
+        [
+            onboardingPhase6ImageView,
+            onboardingPhase6MessageLbl,
+            finishOnboardingButton
+        ].forEach(onboardingPhase6GuideView.addSubview(_:))
+    }
+    
+    override func layoutFlex() {
+        flexView.pin.all()
+        scrollView.pin.all()
+        contentView.pin.all()
+        contentView.pin.width(of: scrollView)
+        contentView.flex.layout(mode: .adjustHeight)
+        scrollView.contentSize = contentView.bounds.size
         
         onboardingEmptySubgoalView.pin
             .top(to: subgoalSection.edge.top)
@@ -240,6 +276,28 @@ final class GoalDetailVC: VC {
             .height(85)
             .hCenter()
             .width(305)
+        
+        onboardingPhase6GuideView.pin
+            .center()
+            .width(237)
+            .height(202)
+        
+        onboardingPhase6ImageView.pin
+            .hCenter()
+            .width(68)
+            .height(66)
+            .top(24)
+        
+        onboardingPhase6MessageLbl.pin
+            .horizontally(22)
+            .top(to: onboardingPhase6ImageView.edge.bottom)
+            .marginTop(12)
+            .height(40)
+        
+        finishOnboardingButton.pin
+            .horizontally(22)
+            .height(24)
+            .bottom(16)
     }
     
     override func setupAction() {
@@ -264,6 +322,9 @@ final class GoalDetailVC: VC {
         tapGesture.addTarget(self, action: #selector(progressOnboardingPhase))
         
         onboardingBackgroundView.addGestureRecognizer(tapGesture)
+        finishOnboardingButton.onAction { [weak self] in
+            self?.finishOnboarding()
+        }
     }
     
     override func bind() {
@@ -284,6 +345,8 @@ final class GoalDetailVC: VC {
                 
                 self?.onboardingEmptyChecklistView.isHidden = onboardingPhase != .phase5
                 self?.onboardingPhase5GuideView.isHidden = onboardingPhase != .phase5
+                
+                self?.onboardingPhase6GuideView.isHidden = onboardingPhase != .phase6
             }.store(in: &cancellables)
     }
     
@@ -376,9 +439,20 @@ extension GoalDetailVC: ChecklistSectionDelegate {
 extension GoalDetailVC {
     @objc
     private func progressOnboardingPhase() {
+        if vm.onboardingPhase == .phase6 {
+            return
+        }
+        
         if vm.onboardingPhase == .phase5 {
             coordinator?.trigger(with: .onboarding5Finished)
         }
         vm.progressOnboardingPhase()
+    }
+    
+    @objc
+    private func finishOnboarding() {
+        vm.progressOnboardingPhase()
+        tabBarController?.selectedIndex = 0
+        coordinator?.trigger(with: .onboardingAllFinished)
     }
 }

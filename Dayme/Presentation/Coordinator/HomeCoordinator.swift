@@ -21,6 +21,8 @@ final class HomeCoordinator: Coordinator {
         switch event {
         case .onboarding1Finished:
             pushGoalAddScreen()
+        case .onboarding2Finished:
+            popViewController(animated: false)
         default:
             break
         }

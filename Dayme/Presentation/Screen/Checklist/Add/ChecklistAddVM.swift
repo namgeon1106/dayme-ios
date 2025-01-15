@@ -86,4 +86,7 @@ extension ChecklistAddVM {
         )
     }
     
+    func progressOnboarding() {
+        UserDefault.finishedOnboarding = true
+    }
 }

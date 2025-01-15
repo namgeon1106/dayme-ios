@@ -57,7 +57,9 @@ final class GoalCoordinator: Coordinator {
             
         case .onboarding5_1Finished:
             popViewController(animated: false)
-            
+        
+        case .onboardingAllFinished:
+            popViewController(animated: false)
         default: break
         }
     }

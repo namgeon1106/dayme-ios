@@ -605,6 +605,8 @@ extension ChecklistAddVC: ChecklistDateItemViewDelegate {
 extension ChecklistAddVC {
     @objc
     func progressOnboarding() {
-        coordinator?.trigger(with: .onboarding5_1Finished)
+        vm.progressOnboarding()
+        coordinator?.trigger(with: .onboardingAllFinished)
+        tabBarController?.selectedIndex = 0
     }
 }

@@ -51,5 +51,5 @@ enum FlowEvent {
     case onboarding4_1Finished
     case onboarding5Finished
     case onboarding5_1Finished
-    case onbaordingAllFinished
+    case onboardingAllFinished
 }
