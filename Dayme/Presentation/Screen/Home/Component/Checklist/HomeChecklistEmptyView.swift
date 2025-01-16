@@ -10,7 +10,7 @@ import PinLayout
 
 final class HomeChecklistEmptyView: Vue {
     
-    private let emptyLabel = UILabel("목록없음").then {
+    private let emptyLabel = UILabel("체크리스트 없음").then {
         $0.textColor(.colorGrey30).font(.pretendard(.medium, 14))
     }
     

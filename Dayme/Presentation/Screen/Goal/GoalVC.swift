@@ -239,12 +239,15 @@ extension GoalVC: GoalFloatingMenuDelegate {
 // MARK: - GoalListEmptyViewDelegate
 
 extension GoalVC: GoalListEmptyViewDelegate {
+    func didTapAddButton() {
+        coordinator?.trigger(with: .goalAddNeeded)
+    }
+    
     @objc
     func didTapOnboardingGuide() {
         vm.hideOnboardingGuide()
         coordinator?.trigger(with: .onboarding3Finished)
     }
-    
 }
 
 // MARK: - GoalListCellDelegate

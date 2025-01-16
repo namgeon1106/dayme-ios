@@ -19,10 +19,14 @@ final class HomeCoordinator: Coordinator {
     
     override func trigger(with event: FlowEvent) {
         switch event {
+        case .goalAddNeeded:
+            pushGoalAddScreen()
         case .onboarding1Finished:
             pushGoalAddScreen()
         case .onboarding2Finished:
             popViewController(animated: false)
+        case .goalAddCanceled:
+            popViewController(animated: true)
         default:
             break
         }

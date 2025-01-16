@@ -33,7 +33,7 @@ final class HomeChecklistCardList: UICollectionView {
     
     // MARK: UI properties
     
-    private let emptyView = GoalListEmptyView()
+    private let emptyView = HomeChecklistEmptyView()
     
     
     // MARK: Lifecycles
@@ -41,7 +41,6 @@ final class HomeChecklistCardList: UICollectionView {
     init() {
         super.init(frame: .zero, collectionViewLayout: .init())
         collectionViewLayout = createLayout()
-        
         setup()
     }
     

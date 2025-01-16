@@ -29,6 +29,7 @@ final class HomeVC: VC {
     private let dashboard = HomeDashboard()
     private let dateGroupView = HomeDateGroupView()
     private let checklistCardList = HomeChecklistCardList()
+    private let goalListEmptyView = GoalListEmptyView()
 
     private let onboardingBackgroundView = UIView().then {
         $0.backgroundColor = .black.withAlphaComponent(0.4)
@@ -76,6 +77,7 @@ final class HomeVC: VC {
         dashboard.delegate = self
         dateGroupView.delegate = self
         checklistCardList.cardDelegate = self
+        goalListEmptyView.delegate = self
 
         let tapGesture = UITapGestureRecognizer()
         tapGesture.addTarget(self, action: #selector(didTapOnboardingGuide))
@@ -102,6 +104,8 @@ final class HomeVC: VC {
 
             flex.addItem(checklistCardList).marginVertical(20).height(294)
         }
+        
+        contentView.addSubview(goalListEmptyView)
     }
 
     override func layoutFlex() {
@@ -112,6 +116,11 @@ final class HomeVC: VC {
         scrollView.contentSize = contentView.bounds.size
 
         onboardingBackgroundView.pin.all()
+        goalListEmptyView.pin
+            .top(to: checklistCardList.edge.top)
+            .left(to: checklistCardList.edge.left)
+            .right(to: checklistCardList.edge.right)
+            .bottom(to: checklistCardList.edge.bottom)
 
         onboardingGoalListEmptyView.pin
             .top(to: dateGroupView.edge.bottom)
@@ -146,7 +155,11 @@ final class HomeVC: VC {
                 
                 if finishedOnboarding {
                     self?.dashboard.update(nickname: nickname, goals: goals)
+                    self?.checklistCardList.items = goals.compactMap({ goal in
+                        ChecklistDateItem(goal: goal, date: .now)
+                    })
                 }
+                self?.goalListEmptyView.isHidden = !goals.isEmpty
                 self?.view.setNeedsLayout()
             }.store(in: &cancellables)
 
@@ -250,5 +263,11 @@ extension HomeVC {
     func didTapOnboardingGuide() {
         vm.hideOnboardingGuide()
         coordinator?.trigger(with: .onboarding1Finished)
+    }
+}
+
+extension HomeVC: GoalListEmptyViewDelegate {
+    func didTapAddButton() {
+        coordinator?.trigger(with: .goalAddNeeded)
     }
 }
