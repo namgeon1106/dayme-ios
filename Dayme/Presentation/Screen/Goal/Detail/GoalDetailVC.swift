@@ -347,6 +347,8 @@ final class GoalDetailVC: VC {
                 self?.onboardingPhase5GuideView.isHidden = onboardingPhase != .phase5
                 
                 self?.onboardingPhase6GuideView.isHidden = onboardingPhase != .phase6
+                
+                self?.backBtn.isEnabled = onboardingPhase == nil
             }.store(in: &cancellables)
     }
     
