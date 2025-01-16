@@ -12,6 +12,7 @@ enum AuthError: LocalizedError {
     case emptyRefreshToken
     case failedKakaoLogin
     case canceled
+    case refreshTokenExpired
     
     var errorDescription: String? {
         switch self {
@@ -23,6 +24,8 @@ enum AuthError: LocalizedError {
             "알 수 없는 이유로 카카오 로그인에 실패하였습니다."
         case .canceled:
             "로그인을 취소했습니다."
+        case .refreshTokenExpired:
+            "로그인이 만료되었습니다."
         }
     }
 }

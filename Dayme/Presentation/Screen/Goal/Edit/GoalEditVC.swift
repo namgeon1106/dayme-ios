@@ -418,6 +418,9 @@ final class GoalEditVC: VC {
         } catch {
             Loader.dismiss()
             showAlert(title: "🚨 목표 삭제 실패", message: error.localizedDescription)
+            if error as? AuthError == .refreshTokenExpired {
+                coordinator?.parent?.trigger(with: .logout)
+            }
         }
     }
     

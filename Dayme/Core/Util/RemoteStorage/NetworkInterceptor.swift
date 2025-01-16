@@ -35,7 +35,7 @@ final class NetworkInterceptor: RequestInterceptor {
                     try await AuthService().refreshToken()
                     completion(.retry)
                 } catch {
-                    completion(.doNotRetry)
+                    completion(.doNotRetryWithError(AuthError.refreshTokenExpired))
                 }
             }
         }
