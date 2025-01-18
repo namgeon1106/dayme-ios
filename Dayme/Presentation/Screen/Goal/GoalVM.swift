@@ -15,6 +15,10 @@ final class GoalVM: VM {
     @Published var finishedOnboarding = UserDefault.finishedOnboarding!
     @Published var fetchedGoals: [Goal] = []
     
+    @Published var ongoingGoals: [Goal] = []
+    @Published var pastGoals: [Goal] = []
+    @Published var fetchedOngoingGoals: [Goal] = []
+    
     
     private let service: GoalService = .shared
     
@@ -35,9 +39,27 @@ final class GoalVM: VM {
             .sink { [weak self] isEmpty in
                 self?.isFABHidden = isEmpty
             }.store(in: &cancellables)
+        
+        service.ongoingGoals
+            .assign(to: &$fetchedOngoingGoals)
+        
+        $fetchedOngoingGoals.combineLatest($finishedOnboarding)
+            .map { fetchedOngoingGoals, finishedOnboarding in
+                print(finishedOnboarding ? fetchedOngoingGoals : [onboarding3DummyGoal])
+                return finishedOnboarding ? fetchedOngoingGoals : [onboarding3DummyGoal]
+            }
+            .assign(to: &$ongoingGoals)
+        
+        service.pastGoals.sink { [weak self] goals in
+            self?.pastGoals = goals
+        }.store(in: &cancellables)
     }
     
     func hideOnboardingGuide() {
         finishedOnboarding = true
+    }
+    
+    func refresh() {
+        service.refreshGoalsState()
     }
 }

@@ -58,7 +58,7 @@ final class GoalVC: VC {
         $0.alpha = 0
     }
     
-    private let pageVC = GoalPageVC()
+    private lazy var pageVC = GoalPageVC(vm: vm)
     
     private let onboardingBackgroundView = UIView().then {
         $0.backgroundColor = .black.withAlphaComponent(0.4)

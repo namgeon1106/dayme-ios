@@ -18,7 +18,7 @@ final class GoalPageVC: VC {
     
     weak var cellDelegate: GoalListCellDelegate?
     
-    let vm = GoalPageVM()
+    let vm: GoalVM
     
     private var currentIndex: Int = 0 {
         didSet { vm.refresh() }
@@ -50,6 +50,14 @@ final class GoalPageVC: VC {
         [ongoingBtn, pastBtn]
     }
     
+    init(vm: GoalVM) {
+        self.vm = vm
+        super.init(nibName: nil, bundle: .main)
+    }
+    
+    @MainActor required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: Helpers
     
