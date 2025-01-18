@@ -411,17 +411,27 @@ final class GoalEditVC: VC {
         
         do {
             Loader.show(in: view)
-            print("parent: ")
-            print(coordinator!.parent)
             try await vm.deleteGoal()
             Loader.dismiss()
             Haptic.noti(.success)
             coordinator?.trigger(with: .goalEditCanceled)
         } catch {
             Loader.dismiss()
-            showAlert(title: "🚨 목표 삭제 실패", message: error.localizedDescription)
             if error.localizedDescription == "만료된 토큰입니다." {
-                coordinator?.parent?.trigger(with: .logout)
+                do {
+                    try await AuthService().refreshToken()
+                    try await vm.deleteGoal()
+                    Loader.dismiss()
+                    Haptic.noti(.success)
+                    coordinator?.trigger(with: .goalEditCanceled)
+                } catch {
+                    showAlert(title: "🚨 목표 삭제 실패", message: error.localizedDescription)
+                    if error.localizedDescription == "만료된 토큰입니다." {
+                        coordinator?.parent?.trigger(with: .logout)
+                    }
+                }
+            } else {
+                showAlert(title: "🚨 목표 삭제 실패", message: error.localizedDescription)
             }
         }
     }
