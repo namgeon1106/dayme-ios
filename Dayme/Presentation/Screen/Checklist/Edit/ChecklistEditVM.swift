@@ -78,7 +78,7 @@ extension ChecklistEditVM {
         
         let repeatDays = weekDays
             .filter(selectedWeekDays.contains)
-            .compactMap { weekDaysTitle[orNil: $0 - 1] }
+            .compactMap { weekDaysTitle[orNil: ($0 + 5) % 7] }
         
         let newChecklist = checklist.copyWith(
             title: title,
