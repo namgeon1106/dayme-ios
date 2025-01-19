@@ -19,7 +19,7 @@ final class ChecklistEditVM: VM {
     @Published private(set) var goals: [Goal] = []
     @Published private(set) var isValidate: Bool = false
     
-    let weekDaysTitle = ["일", "월", "화", "수", "목", "금", "토"]
+    let weekDaysTitle = ["월", "화", "수", "목", "금", "토", "일"]
     let weekDays: [Int] = [2, 3, 4, 5, 6, 7, 1] // 월 ~ 일
     private let checklist: Checklist
     private let goalService: GoalService = .shared
