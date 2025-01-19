@@ -269,7 +269,11 @@ final class ChecklistEditVC: VC {
         }
         
         doneBtn.onAction { [weak self] in
-            await self?.addChecklist()
+            await self?.editChecklist()
+        }
+        
+        deleteBtn.onAction { [weak self] in
+            await self?.deleteChecklist()
         }
     }
     
@@ -366,7 +370,7 @@ extension ChecklistEditVC {
     }
     
     @MainActor
-    private func addChecklist() async {
+    private func editChecklist() async {
         do {
             Loader.show(in: view)
             try await vm.editChecklist()
@@ -379,6 +383,19 @@ extension ChecklistEditVC {
         }
     }
     
+    @MainActor
+    private func deleteChecklist() async {
+        do {
+            Loader.show(in: view)
+            try await vm.deleteChecklist()
+            Loader.dismiss()
+            Haptic.noti(.success)
+            coordinator?.trigger(with: .checklistEditCanceled)
+        } catch {
+            Loader.dismiss()
+            showAlert(title: "🚨 체크리스트 삭제 실패", message: error.localizedDescription)
+        }
+    }
 }
 
 // MARK: - UITextFieldDelegate
