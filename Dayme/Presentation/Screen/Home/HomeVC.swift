@@ -183,6 +183,8 @@ final class HomeVC: VC {
         vm.$finishedOnboarding
             .sink { [weak self] finishedOnboarding in
                 self?.onboardingBackgroundView.isHidden = finishedOnboarding
+                
+                self?.checklistCardList.isHidden = !finishedOnboarding
             }.store(in: &cancellables)
     }
     
