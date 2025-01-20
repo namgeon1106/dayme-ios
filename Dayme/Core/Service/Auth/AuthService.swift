@@ -56,6 +56,9 @@ class AuthService: NSObject {
         UserDefault.loggedIn = true
         UserDefault.socialLogin = provider
         
+        let goals = try await GoalService.shared.getGoals()
+        UserDefault.finishedOnboarding = !goals.isEmpty
+        
         return oAuthToken
     }
     
@@ -76,6 +79,9 @@ class AuthService: NSObject {
         UserDefault.loggedIn = true
         UserDefault.socialLogin = nil
         
+        let goals = try await GoalService.shared.getGoals()
+        UserDefault.finishedOnboarding = !goals.isEmpty
+        
         return oAuthToken
     }
     
@@ -90,6 +96,8 @@ class AuthService: NSObject {
         ).withAuthorization(info.token)
         
         try await network.request(endpoint)
+        
+        UserDefault.finishedOnboarding = false
     }
     
     func signup(email: String, password: String, nickname: String) async throws {
@@ -101,6 +109,8 @@ class AuthService: NSObject {
             intercept: false
         )
         try await network.request(endpoint)
+        
+        UserDefault.finishedOnboarding = false
     }
     
     func logout() async throws {
