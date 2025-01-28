@@ -8,6 +8,7 @@
 import UIKit
 import FlexLayout
 import PinLayout
+import MessageUI
 
 #if DEBUG
 #Preview {
@@ -34,8 +35,7 @@ final class SettingVC: VC {
     }
     private let headerView = UIView()
     private let tableView = UITableView()
-    private let logoutBtn = FilledButton("로그아웃")
-    private let withdrawBtn = FilledButton("회원 탈퇴")
+
     
     
     // MARK: Helpers
@@ -123,6 +123,36 @@ private extension SettingVC {
         }
     }
     
+    func sendFeedback() {
+        if MFMailComposeViewController.canSendMail() {
+            let composeViewController = MFMailComposeViewController()
+            composeViewController.mailComposeDelegate = self
+            
+            composeViewController.setToRecipients(["dayme.note24@gmail.com"])
+            composeViewController.setSubject("[DAYME 문의]")
+            composeViewController.setMessageBody("", isHTML: false)
+            
+            self.present(composeViewController, animated: true, completion: nil)
+        } else {
+            print("메일 보내기 실패")
+            let sendMailErrorAlert = UIAlertController(title: "메일 전송 실패", message: "메일을 보내려면 'Mail' 앱이 필요합니다. App Store에서 해당 앱을 복원하거나 이메일 설정을 확인하고 다시 시도해주세요.", preferredStyle: .alert)
+            let goAppStoreAction = UIAlertAction(title: "App Store로 이동하기", style: .default) { _ in
+                // 앱스토어로 이동하기(Mail)
+                if let url = URL(string: "https://apps.apple.com/kr/app/mail/id1108187098"), UIApplication.shared.canOpenURL(url) {
+                    if #available(iOS 10.0, *) {
+                        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                    } else {
+                        UIApplication.shared.openURL(url)
+                    }
+                }
+            }
+            let cancleAction = UIAlertAction(title: "취소", style: .destructive, handler: nil)
+            
+            sendMailErrorAlert.addAction(goAppStoreAction)
+            sendMailErrorAlert.addAction(cancleAction)
+            self.present(sendMailErrorAlert, animated: true, completion: nil)
+        }
+    }
 }
 
 // MARK: - UITableViewDataSource
@@ -178,7 +208,9 @@ extension SettingVC: UITableViewDelegate {
             
         case .withdraw:
             Task { await withdraw() }
-            
+        
+        case .sendFeedback:
+            sendFeedback()
         case .version:
             break
         }
@@ -195,4 +227,10 @@ extension SettingVC: UITableViewDelegate {
         44
     }
     
+}
+
+extension SettingVC: MFMailComposeViewControllerDelegate {
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        self.dismiss(animated: true, completion: nil)
+    }
 }

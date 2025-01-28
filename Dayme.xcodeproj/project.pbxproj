@@ -15,10 +15,11 @@
 		9A7BFB412CD5247F00E48C31 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 9A7BFB402CD5247F00E48C31 /* GoogleSignIn */; };
 		9A7BFB712CD5FBD800E48C31 /* KakaoSDKAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 9A7BFB702CD5FBD800E48C31 /* KakaoSDKAuth */; };
 		9A7BFB732CD5FBD800E48C31 /* KakaoSDKUser in Frameworks */ = {isa = PBXBuildFile; productRef = 9A7BFB722CD5FBD800E48C31 /* KakaoSDKUser */; };
-		9AB0EC782CF06B7000BD01E1 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 9AB0EC772CF06B7000BD01E1 /* FirebaseAuth */; };
-		9AD2B3132CFB34F200BB4EB6 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 9AD2B3122CFB34F200BB4EB6 /* FirebaseMessaging */; };
-		9AD80C9B2D12E40900394FF5 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 9AD80C9A2D12E40900394FF5 /* FirebaseCrashlytics */; };
 		9AE8B91C2D03474E00D7672D /* ElegantEmojiPicker in Frameworks */ = {isa = PBXBuildFile; productRef = 9AE8B91B2D03474E00D7672D /* ElegantEmojiPicker */; };
+		AB1D17C32D3E9B760034E95C /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = AB1D17C22D3E9B760034E95C /* FirebaseAnalyticsWithoutAdIdSupport */; };
+		AB1D17C52D3E9B760034E95C /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = AB1D17C42D3E9B760034E95C /* FirebaseAuth */; };
+		AB1D17C72D3E9B760034E95C /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = AB1D17C62D3E9B760034E95C /* FirebaseCore */; };
+		AB1D17C92D3E9B760034E95C /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = AB1D17C82D3E9B760034E95C /* FirebaseMessaging */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -69,17 +70,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				9A1E35422CD3DEEA00753F8A /* PinLayout in Frameworks */,
+				AB1D17C32D3E9B760034E95C /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
 				9AE8B91C2D03474E00D7672D /* ElegantEmojiPicker in Frameworks */,
 				9A33A2832CF6CE8600D40F2D /* Then in Frameworks */,
-				9AD2B3132CFB34F200BB4EB6 /* FirebaseMessaging in Frameworks */,
 				9A1E35452CD3DF0200753F8A /* FlexLayout in Frameworks */,
 				9A7BFB412CD5247F00E48C31 /* GoogleSignIn in Frameworks */,
 				9A32AF502CDBA2E000F9CBF1 /* Alamofire in Frameworks */,
+				AB1D17C52D3E9B760034E95C /* FirebaseAuth in Frameworks */,
+				AB1D17C92D3E9B760034E95C /* FirebaseMessaging in Frameworks */,
 				9A1069EA2CF0BE9100221178 /* JGProgressHUD in Frameworks */,
 				9A7BFB732CD5FBD800E48C31 /* KakaoSDKUser in Frameworks */,
-				9AD80C9B2D12E40900394FF5 /* FirebaseCrashlytics in Frameworks */,
+				AB1D17C72D3E9B760034E95C /* FirebaseCore in Frameworks */,
 				9A7BFB712CD5FBD800E48C31 /* KakaoSDKAuth in Frameworks */,
-				9AB0EC782CF06B7000BD01E1 /* FirebaseAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -141,12 +143,13 @@
 				9A7BFB702CD5FBD800E48C31 /* KakaoSDKAuth */,
 				9A7BFB722CD5FBD800E48C31 /* KakaoSDKUser */,
 				9A32AF4F2CDBA2E000F9CBF1 /* Alamofire */,
-				9AB0EC772CF06B7000BD01E1 /* FirebaseAuth */,
 				9A1069E92CF0BE9100221178 /* JGProgressHUD */,
 				9A33A2822CF6CE8600D40F2D /* Then */,
-				9AD2B3122CFB34F200BB4EB6 /* FirebaseMessaging */,
 				9AE8B91B2D03474E00D7672D /* ElegantEmojiPicker */,
-				9AD80C9A2D12E40900394FF5 /* FirebaseCrashlytics */,
+				AB1D17C22D3E9B760034E95C /* FirebaseAnalyticsWithoutAdIdSupport */,
+				AB1D17C42D3E9B760034E95C /* FirebaseAuth */,
+				AB1D17C62D3E9B760034E95C /* FirebaseCore */,
+				AB1D17C82D3E9B760034E95C /* FirebaseMessaging */,
 			);
 			productName = Dayme;
 			productReference = 9A1E35222CD3CA4700753F8A /* Dayme.app */;
@@ -182,10 +185,10 @@
 				9A7BFB3F2CD5247F00E48C31 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				9A7BFB6F2CD5FBD800E48C31 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */,
 				9A32AF4E2CDBA2E000F9CBF1 /* XCRemoteSwiftPackageReference "Alamofire" */,
-				9AB0EC742CF06B7000BD01E1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				9A1069E82CF0BE9100221178 /* XCRemoteSwiftPackageReference "JGProgressHUD" */,
 				9A33A2812CF6CE8600D40F2D /* XCRemoteSwiftPackageReference "Then" */,
 				9AE8B91A2D03474E00D7672D /* XCRemoteSwiftPackageReference "Elegant-Emoji-Picker" */,
+				AB1D17C12D3E9B760034E95C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9A1E35232CD3CA4700753F8A /* Products */;
@@ -253,7 +256,7 @@
 				CODE_SIGN_ENTITLEMENTS = Dayme/Dayme.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 34;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = K6MUDP7694;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -293,7 +296,7 @@
 				CODE_SIGN_ENTITLEMENTS = Dayme/Dayme.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 34;
 				DEVELOPMENT_TEAM = K6MUDP7694;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -526,20 +529,20 @@
 				minimumVersion = 2.23.0;
 			};
 		};
-		9AB0EC742CF06B7000BD01E1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 11.5.0;
-			};
-		};
 		9AE8B91A2D03474E00D7672D /* XCRemoteSwiftPackageReference "Elegant-Emoji-Picker" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Finalet/Elegant-Emoji-Picker.git";
 			requirement = {
 				branch = main;
 				kind = branch;
+			};
+		};
+		AB1D17C12D3E9B760034E95C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.7.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -585,25 +588,30 @@
 			package = 9A7BFB6F2CD5FBD800E48C31 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
 			productName = KakaoSDKUser;
 		};
-		9AB0EC772CF06B7000BD01E1 /* FirebaseAuth */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9AB0EC742CF06B7000BD01E1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAuth;
-		};
-		9AD2B3122CFB34F200BB4EB6 /* FirebaseMessaging */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9AB0EC742CF06B7000BD01E1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseMessaging;
-		};
-		9AD80C9A2D12E40900394FF5 /* FirebaseCrashlytics */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9AB0EC742CF06B7000BD01E1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseCrashlytics;
-		};
 		9AE8B91B2D03474E00D7672D /* ElegantEmojiPicker */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 9AE8B91A2D03474E00D7672D /* XCRemoteSwiftPackageReference "Elegant-Emoji-Picker" */;
 			productName = ElegantEmojiPicker;
+		};
+		AB1D17C22D3E9B760034E95C /* FirebaseAnalyticsWithoutAdIdSupport */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AB1D17C12D3E9B760034E95C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsWithoutAdIdSupport;
+		};
+		AB1D17C42D3E9B760034E95C /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AB1D17C12D3E9B760034E95C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		AB1D17C62D3E9B760034E95C /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AB1D17C12D3E9B760034E95C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		AB1D17C82D3E9B760034E95C /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AB1D17C12D3E9B760034E95C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

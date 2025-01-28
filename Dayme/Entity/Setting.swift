@@ -8,7 +8,7 @@
 import Foundation
 
 enum Setting: String, CaseIterable {
-    case privacyPolicy, logout, withdraw, version
+    case privacyPolicy, logout, withdraw, sendFeedback, version
     
     var title: String {
         switch self {
@@ -18,6 +18,8 @@ enum Setting: String, CaseIterable {
             "로그아웃"
         case .withdraw:
             "탈퇴하기"
+        case .sendFeedback:
+            "피드백 보내기"
         case .version:
             "앱 버전"
         }
