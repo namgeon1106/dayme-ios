@@ -194,14 +194,25 @@ final class HomeVC: VC {
 }
 
 extension HomeVC {
-
     @MainActor
     private func toggleChecklist(goalId: Int, historyId: Int) async {
         do {
             try await vm.toggleChecklist(goalId: goalId, historyId: historyId)
         } catch {
-            showAlert(
-                title: "🚨 체크리스트 상태 변경 실패", message: error.localizedDescription)
+            if error.localizedDescription == "만료된 토큰입니다." {
+                do {
+                    try await AuthService().refreshToken()
+                    try await vm.toggleChecklist(goalId: goalId, historyId: historyId)
+                } catch {
+                    showAlert(title: "🚨 체크리스트 상태 변경 실패", message: error.localizedDescription)
+                    if error.localizedDescription == "만료된 토큰입니다." {
+                        coordinator?.parent?.trigger(with: .logout)
+                    }
+                }
+            } else {
+                showAlert(
+                    title: "🚨 체크리스트 상태 변경 실패", message: error.localizedDescription)
+            }
         }
     }
 
