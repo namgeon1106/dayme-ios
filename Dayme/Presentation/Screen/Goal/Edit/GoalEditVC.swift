@@ -399,13 +399,28 @@ final class GoalEditVC: VC {
     
     @MainActor
     private func deleteGoal() async {
-        let message = "주요 목표를 모두 삭제하시겠습니까?\n삭제를 진행하면 연결된 세부 목표와 체크리스트도 함께 삭제됩니다."
-        let selection = await Alert(title: "‼️ 삭제 알림", message: message)
-            .onDestructive(title: "삭제")
-            .onCancel(title: "취소")
-            .show(on: self)
+        let message = NSMutableAttributedString(
+            string: "주요 목표를 모두 삭제하시겠습니까?\n",
+            attributes: [
+                .font: UIFont.pretendard(.medium, 16),
+                .foregroundColor: UIColor.colorDark100
+            ]
+        )
         
-        if selection == "취소" {
+        message.append(
+            NSAttributedString(
+                string: "연결된 세부 목표와 체크리스트도 삭제됩니다.",
+                attributes: [
+                    .font: UIFont.pretendard(.medium, 14),
+                    .foregroundColor: UIColor.colorDark70
+                ]
+            )
+        )
+        
+        let selection = await CustomConfirmAlert(message: message, primaryTitle: "삭제", isCancellable: true)
+            .show(on: tabBarController!)
+        
+        if selection == .cancel {
             return
         }
         
