@@ -430,6 +430,7 @@ final class GoalEditVC: VC {
             Loader.dismiss()
             Haptic.noti(.success)
             coordinator?.trigger(with: .goalEditCanceled)
+            CustomMessageAlert(message: "주요목표가 삭제되었습니다.").show(on: tabBarController!)
         } catch {
             Loader.dismiss()
             if error.localizedDescription == "만료된 토큰입니다." {
