@@ -102,14 +102,14 @@ private extension SettingVC {
     
     @MainActor
     func withdraw() async {
-        let title = "회원탈퇴"
-        let message = "삭제하시겠습니까?\n모든 정보가 삭제됩니다."
-        let selectedAction = await Alert(title: title, message: message)
-            .onCancel(title: "취소")
-            .onDestructive(title: "탈퇴하기")
-            .show(on: self)
+        let selectedAction = await CustomConfirmAlert(
+            title: "회원탈퇴",
+            message: "삭제하시겠습니까?\n모든 정보가 삭제됩니다.",
+            primaryTitle: "탈퇴",
+            isCancellable: true
+        ).show(on: self)
         
-        if selectedAction == "취소" {
+        if selectedAction == .cancel {
             return
         }
         

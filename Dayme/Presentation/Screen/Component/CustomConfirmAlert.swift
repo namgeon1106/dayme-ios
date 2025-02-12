@@ -122,7 +122,8 @@ final class CustomConfirmAlert: Vue, Anchor {
             messageLabel.pin.top(32).height(48).horizontally(24)
         }
         
-        horizontalDivider.pin.top(to: messageLabel.edge.bottom).marginTop(32)
+        let messageLabelBottomMargin: CGFloat = titleLabel.text == nil ? 32 : 16
+        horizontalDivider.pin.top(to: messageLabel.edge.bottom).marginTop(messageLabelBottomMargin)
             .horizontally(24).height(1)
         
         if isCancellable {
