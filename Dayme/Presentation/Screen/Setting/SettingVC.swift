@@ -107,7 +107,7 @@ private extension SettingVC {
             message: "삭제하시겠습니까?\n모든 정보가 삭제됩니다.",
             primaryTitle: "탈퇴",
             isCancellable: true
-        ).show(on: self)
+        ).show(on: window!)
         
         if selectedAction == .cancel {
             return
@@ -117,6 +117,8 @@ private extension SettingVC {
             try await vm.deleteUser()
             coordinator?.trigger(with: .userDeleted)
             Haptic.noti(.success)
+            CustomMessageAlert(message: "회원탈퇴가 완료되었습니다.")
+                .show(on: window!)
         } catch {
             Logger.error(error)
             showAlert(title: "🚨 회원탈퇴 실패", message: error.localizedDescription)

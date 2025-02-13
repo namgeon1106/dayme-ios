@@ -387,9 +387,23 @@ extension ChecklistEditVC {
     private func deleteChecklist() async {
         do {
             Loader.show(in: view)
+            let alertAction = await CustomConfirmAlert(
+                title: "체크리스트 삭제",
+                message: "모든 데이터가 삭제됩니다.\n계속하시겠습니까?",
+                primaryTitle: "삭제",
+                isCancellable: true
+            ).show(on: window!)
+            
+            if alertAction == .cancel {
+                return
+            }
+            
             try await vm.deleteChecklist()
             Loader.dismiss()
             Haptic.noti(.success)
+            
+            CustomMessageAlert(message: "\(vm.checklist.title)\n체크리스트가 삭제되었습니다.")
+                .show(on: window!)
             coordinator?.trigger(with: .checklistEditCanceled)
         } catch {
             Loader.dismiss()

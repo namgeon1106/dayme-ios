@@ -21,7 +21,7 @@ final class ChecklistEditVM: VM {
     
     let weekDaysTitle = ["월", "화", "수", "목", "금", "토", "일"]
     let weekDays: [Int] = [2, 3, 4, 5, 6, 7, 1] // 월 ~ 일
-    private let checklist: Checklist
+    let checklist: Checklist
     private let goalService: GoalService = .shared
     
     

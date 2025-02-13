@@ -83,9 +83,9 @@ final class SplashVC: VC {
             
             let title = "🛠️ 업데이트 알림"
             let message = "안정적인 서비스 제공을 위해\n최신 버전으로 업그레이드가 필요합니다."
-            await Alert(title: title, message: message)
-                .onAction(title: "AppStore로 이동")
-                .show(on: self)
+            
+            await CustomConfirmAlert(title: title, message: message, primaryTitle: "확인", isCancellable: false)
+                .show(on: window!)
             
             let appId = Env.appId
             if let appStoreURL = URL(string: "itms-apps://itunes.apple.com/app/\(appId)") {

@@ -115,12 +115,10 @@ extension VC {
         }
     }
     
-    func showAlert(title: String, message: String) {
+    func showAlert(title: String?, message: String) {
         Haptic.noti(.warning)
         
-        Alert(title: title, message: message)
-            .onAction(title: "확인")
-            .show(on: self)
+        CustomConfirmAlert(title: title, message: message, primaryTitle: "확인", isCancellable: false)
+            .show(on: window!)
     }
-    
 }

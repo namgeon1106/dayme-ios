@@ -301,7 +301,7 @@ extension SubgoalAddVC {
             coordinator?.trigger(with: .subgoalAddCanceled)
         } catch {
             Loader.dismiss()
-            showAlert(title: "🚨 세부목표 추가 실패", message: error.localizedDescription)
+            showAlert(title: nil, message: error.localizedDescription)
         }
     }
     

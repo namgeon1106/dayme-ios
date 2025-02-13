@@ -149,13 +149,14 @@ final class CustomConfirmAlert: Vue, Anchor {
         continuation = nil
     }
     
-    func show(on vc: UIViewController) {
-        vc.view.addSubview(self)
+    func show(on view: UIView) {
+        view.addSubview(self)
     }
     
+    @discardableResult
     @MainActor
-    func show(on vc: UIViewController) async -> Action {
-        vc.view.addSubview(self)
+    func show(on view: UIView) async -> Action {
+        view.addSubview(self)
         return await withCheckedContinuation { [weak self] continuation in
             if let self {
                 self.continuation = continuation

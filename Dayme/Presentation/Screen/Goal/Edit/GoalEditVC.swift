@@ -400,7 +400,7 @@ final class GoalEditVC: VC {
     @MainActor
     private func deleteGoal() async {
         let message = NSMutableAttributedString(
-            string: "주요 목표를 모두 삭제하시겠습니까?\n",
+            string: "주요 목표를 삭제하시겠습니까?\n",
             attributes: [
                 .font: UIFont.pretendard(.medium, 16),
                 .foregroundColor: UIColor.colorDark100
@@ -418,7 +418,7 @@ final class GoalEditVC: VC {
         )
         
         let selection = await CustomConfirmAlert(message: message, primaryTitle: "삭제", isCancellable: true)
-            .show(on: tabBarController!)
+            .show(on: tabBarController!.view)
         
         if selection == .cancel {
             return
@@ -429,8 +429,8 @@ final class GoalEditVC: VC {
             try await vm.deleteGoal()
             Loader.dismiss()
             Haptic.noti(.success)
+            CustomMessageAlert(message: "\(vm.goal.title)\n 주요목표가 삭제되었습니다.").show(on: window!)
             coordinator?.trigger(with: .goalEditCanceled)
-            CustomMessageAlert(message: "주요목표가 삭제되었습니다.").show(on: tabBarController!)
         } catch {
             Loader.dismiss()
             if error.localizedDescription == "만료된 토큰입니다." {

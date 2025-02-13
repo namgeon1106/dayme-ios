@@ -34,22 +34,30 @@ class CustomMessageAlert: Vue {
     
     override func setupFlex() {
         self.addSubview(alertView)
-        alertView.addSubview(messageLabel)
+        self.addSubview(messageLabel)
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
         self.pin.all()
+        
+        messageLabel.pin
+            .center()
+            .horizontally(48)
+            .sizeToFit(.content)
+            
+        
         alertView.pin.minHeight(88)
-            .vCenter()
             .horizontally(24)
-        messageLabel.pin.minHeight(24).maxHeight(48)
-            .horizontally(24)
-            .vertically(32)
+            .top(to: messageLabel.edge.top)
+            .marginTop(-32)
+            .bottom(to: messageLabel.edge.bottom)
+            .marginBottom(-32)
+        
     }
     
-    func show(on vc: UIViewController) {
-        vc.view.addSubview(self)
+    func show(on view: UIView) {
+        view.addSubview(self)
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
             self?.removeFromSuperview()
         }

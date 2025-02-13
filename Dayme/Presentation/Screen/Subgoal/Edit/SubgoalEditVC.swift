@@ -326,9 +326,17 @@ extension SubgoalEditVC {
     private func deleteSubgoal() async {
         do {
             Loader.show(in: view)
+            let alertAction = await CustomConfirmAlert(message: "\(vm.goal.title) 목표를\n삭제하시겠습니까?", primaryTitle: "삭제", isCancellable: true)
+                .show(on: window!)
+            
+            if alertAction == .cancel {
+                return
+            }
             try await vm.deleteSubgoal()
             Loader.dismiss()
             Haptic.noti(.success)
+            CustomMessageAlert(message: "\(vm.goal.title)\n 목표가 삭제되었습니다.")
+                .show(on: window!)
             coordinator?.trigger(with: .subgoalEditCanceled)
         } catch {
             Loader.dismiss()
