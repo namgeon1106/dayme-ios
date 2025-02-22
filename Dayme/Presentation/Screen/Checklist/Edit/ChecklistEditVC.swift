@@ -379,14 +379,30 @@ extension ChecklistEditVC {
             coordinator?.trigger(with: .checklistEditCanceled)
         } catch {
             Loader.dismiss()
-            showAlert(title: "🚨 체크리스트 수정 실패", message: error.localizedDescription)
+            if let startDate = vm.startDate,
+               let endDate = vm.endDate {
+                let targetStartDate = vm.subgoal?.startDate ?? vm.goal.startDate
+                let targetEndDate = vm.subgoal?.endDate ?? vm.goal.endDate
+                let targetGoalText = vm.subgoal == nil ? "주요목표" : "세부목표"
+                if startDate < targetStartDate || endDate > targetEndDate {
+                    await CustomConfirmAlert(
+                        message: "체크리스트의 시작/종료일을\n\(targetGoalText) 기간 내로 설정해 주세요.",
+                        primaryTitle: "확인",
+                        isCancellable: false
+                    )
+                    .show(on: window!)
+                } else {
+                    showAlert(title: nil, message: error.localizedDescription)
+                }
+            } else {
+                showAlert(title: nil, message: error.localizedDescription)
+            }
         }
     }
     
     @MainActor
     private func deleteChecklist() async {
         do {
-            Loader.show(in: view)
             let alertAction = await CustomConfirmAlert(
                 title: "체크리스트 삭제",
                 message: "모든 데이터가 삭제됩니다.\n계속하시겠습니까?",
@@ -398,6 +414,7 @@ extension ChecklistEditVC {
                 return
             }
             
+            Loader.show(in: view)
             try await vm.deleteChecklist()
             Loader.dismiss()
             Haptic.noti(.success)

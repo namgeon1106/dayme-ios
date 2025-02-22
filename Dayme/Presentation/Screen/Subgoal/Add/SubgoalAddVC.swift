@@ -301,7 +301,18 @@ extension SubgoalAddVC {
             coordinator?.trigger(with: .subgoalAddCanceled)
         } catch {
             Loader.dismiss()
-            showAlert(title: nil, message: error.localizedDescription)
+            if let startDate = vm.startDate,
+               let endDate = vm.endDate,
+               startDate < vm.goal.startDate
+                || endDate > vm.goal.endDate {
+                await CustomConfirmAlert(
+                    message: "세부목표의 시작/종료일을\n주요목표 기간 내로 설정해 주세요.",
+                    primaryTitle: "확인",
+                    isCancellable: false
+                ).show(on: window!)
+            } else {
+                showAlert(title: nil, message: error.localizedDescription)
+            }
         }
     }
     
