@@ -39,9 +39,23 @@ final class HomeVM: VM {
         Publishers.CombineLatest(goalService.allGoals, $selectedDate)
             .subscribe(on: backgroundQueue)
             .map { goals, date -> AnyPublisher<[ChecklistDateItem], Never> in
-                Just(goals.compactMap { goal in
-                    ChecklistDateItem(goal: goal, date: date)
-                }).eraseToAnyPublisher()
+                var items = [ChecklistDateItem?]()
+                for goal in goals {
+                    for subgoal in goal.subgoals {
+                        items.append(
+                            ChecklistDateItem(
+                                subgoal: subgoal,
+                                goalId: goal.id,
+                                goalEmoji: goal.emoji,
+                                goalTitle: goal.title,
+                                hex: goal.hex,
+                                date: date
+                            )
+                        )
+                    }
+                }
+                
+                return Just(items.compactMap { $0 }).eraseToAnyPublisher()
             }
             .switchToLatest()
             .assign(to: &$checklistDateItems)

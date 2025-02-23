@@ -76,7 +76,7 @@ final class HomeAllChecklistCard: CollectionViewCell {
         
         checklistContainer.subviews.forEach { $0.removeFromSuperview() }
         let rowItems: [RowItem] = all.flatMap { item in
-            item.checklists.map { (goal: item.goal, checklist: $0) }
+            item.checklists.map { (goalId: item.goalId, hex: item.hex, checklist: $0) }
         }
         checklistContainer.flex.define { flex in
             for rowItem in rowItems.prefix(4) {

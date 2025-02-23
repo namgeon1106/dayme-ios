@@ -97,20 +97,23 @@ final class HomeChecklistCard: CollectionViewCell {
     
     /// 주요목표별 체크리스트
     func bind(item: ChecklistDateItem) {
-        emojiLabel.text = item.goal.emoji
+        emojiLabel.text = item.goalEmoji
         emojiLabel.flex.markDirty()
-        titleLabel.text = item.goal.title
+        titleLabel.text = item.subgoal.title
+        goalCaptionLabel.text = item.goalTitle
         titleLabel.flex.markDirty()
-        progressLbl.text(String(format: "%.0f", item.goal.progress * 100))
+        
+        let progress = Double(item.checklists.filter(\.isCompleted).count) / Double(item.checklists.count)
+        progressLbl.text(String(format: "%.0f", progress * 100))
         progressLbl.flex.markDirty()
-        progressBar.progress = item.goal.progress
-        progressBar.tintColor = .hex(item.goal.hex)
+        progressBar.progress = progress
+        progressBar.tintColor = .hex(item.hex)
         
         checklistContainer.subviews.forEach { $0.removeFromSuperview() }
         checklistContainer.flex.define { flex in
             
             let rowItems: [RowItem] = item.checklists.map { checklist in
-                (goal: item.goal, checklist: checklist)
+                (goalId: item.goalId, hex: item.hex, checklist: checklist)
             }
             
             for rowItem in rowItems.prefix(4) {

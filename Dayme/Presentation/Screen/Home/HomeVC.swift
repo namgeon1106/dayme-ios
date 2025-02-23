@@ -155,9 +155,23 @@ final class HomeVC: VC {
                 
                 if finishedOnboarding {
                     self?.dashboard.update(nickname: nickname, goals: goals)
-                    self?.checklistCardList.items = goals.compactMap({ goal in
-                        ChecklistDateItem(goal: goal, date: .now)
-                    })
+                    
+                    var items = [ChecklistDateItem?]()
+                    for goal in goals {
+                        for subgoal in goal.subgoals {
+                            items.append(
+                                ChecklistDateItem(
+                                    subgoal: subgoal,
+                                    goalId: goal.id,
+                                    goalEmoji: goal.emoji,
+                                    goalTitle: goal.title,
+                                    hex: goal.hex,
+                                    date: .now
+                                )
+                            )
+                        }
+                    }
+                    self?.checklistCardList.items = items.compactMap { $0 }
                 }
                 self?.goalListEmptyView.isHidden = !goals.isEmpty
                 self?.view.setNeedsLayout()
@@ -176,7 +190,7 @@ final class HomeVC: VC {
 
                 for item in items {
                     let checklists = item.checklists
-                    Logger.debug("\(item.goal.title) - \(checklists)")
+                    Logger.debug("\(item.goalTitle) - \(checklists)")
                 }
             }.store(in: &cancellables)
 
@@ -259,11 +273,11 @@ extension HomeVC: HomeDateGroupViewDelegate {
 
 extension HomeVC: HomeChecklistCardRowDelegate {
 
-    func homeChecklistCardRowDidCheck(goal: Goal, checklist: Checklist) {
+    func homeChecklistCardRowDidCheck(goalId: Int, checklist: Checklist) {
         if let history = checklist.currentHistory {
             Haptic.impact(.light)
             Task {
-                await toggleChecklist(goalId: goal.id, historyId: history.id)
+                await toggleChecklist(goalId: goalId, historyId: history.id)
             }
         }
     }

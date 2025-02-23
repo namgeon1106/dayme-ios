@@ -10,7 +10,7 @@ import UIKit
 #if DEBUG
 #Preview(traits: .fixedLayout(width: 375, height: 295)) {
     let cardList = HomeChecklistCardList()
-    cardList.items = mockChecklistDateItem
+    // cardList.items = mockChecklistDateItem
     return cardList
 }
 #endif

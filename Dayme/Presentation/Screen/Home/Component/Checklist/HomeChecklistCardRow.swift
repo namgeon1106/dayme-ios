@@ -9,10 +9,10 @@ import UIKit
 import FlexLayout
 import PinLayout
 
-typealias RowItem = (goal: Goal, checklist: Checklist)
+typealias RowItem = (goalId: Int, hex: String, checklist: Checklist)
 
 protocol HomeChecklistCardRowDelegate: AnyObject {
-    func homeChecklistCardRowDidCheck(goal: Goal, checklist: Checklist)
+    func homeChecklistCardRowDidCheck(goalId: Int, checklist: Checklist)
 }
 
 final class HomeChecklistCardRow: Vue {
@@ -56,7 +56,7 @@ final class HomeChecklistCardRow: Vue {
         addSubview(flexView)
         
         flexView.flex.direction(.row).alignItems(.center).define { flex in
-            flex.addItem().width(3).height(16).backgroundColor(.hex(item.goal.hex))
+            flex.addItem().width(3).height(16).backgroundColor(.hex(item.hex))
             
             flex.addItem(titleLabel).marginLeft(6).grow(1)
             
@@ -72,7 +72,7 @@ final class HomeChecklistCardRow: Vue {
     override func setupAction() {
         checkButton.onAction { [weak self] in
             guard let self else { return }
-            delegate?.homeChecklistCardRowDidCheck(goal: item.goal, checklist: item.checklist)
+            delegate?.homeChecklistCardRowDidCheck(goalId: item.goalId, checklist: item.checklist)
         }
     }
     
