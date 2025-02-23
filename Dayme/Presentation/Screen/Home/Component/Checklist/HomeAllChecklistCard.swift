@@ -25,6 +25,7 @@ final class HomeAllChecklistCard: CollectionViewCell {
     }
     
     private let checklistContainer = UIView()
+    private let allChecklistButton = FilledSecondaryButton("전체 체크리스트 확인")
     
     // MARK: Helpers
     
@@ -56,11 +57,14 @@ final class HomeAllChecklistCard: CollectionViewCell {
             
             flex.addItem(checklistContainer).marginTop(8).grow(1)
         }
+        
+        flexView.addSubview(allChecklistButton)
     }
     
     override func layoutFlex() {
         flexView.pin.all()
         flexView.flex.layout()
+        allChecklistButton.pin.bottom(20).hCenter().width(124).height(38)
     }
     
     
@@ -71,11 +75,10 @@ final class HomeAllChecklistCard: CollectionViewCell {
         checklistContainer.flex.isIncludedInLayout = false
         
         checklistContainer.subviews.forEach { $0.removeFromSuperview() }
+        let rowItems: [RowItem] = all.flatMap { item in
+            item.checklists.map { (goal: item.subgoal, checklist: $0) }
+        }
         checklistContainer.flex.define { flex in
-            let rowItems: [RowItem] = all.flatMap { item in
-                item.checklists.map { (goal: item.goal, checklist: $0) }
-            }
-            
             for rowItem in rowItems.prefix(4) {
                 let row = HomeChecklistCardRow(item: rowItem)
                 row.delegate = delegate
@@ -84,6 +87,7 @@ final class HomeAllChecklistCard: CollectionViewCell {
         }
         
         checklistContainer.flex.isIncludedInLayout = true
+        allChecklistButton.isHidden = rowItems.count <= 4
         
         setNeedsLayout()
     }
