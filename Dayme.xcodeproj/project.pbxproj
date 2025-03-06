@@ -20,6 +20,8 @@
 		AB1D17C52D3E9B760034E95C /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = AB1D17C42D3E9B760034E95C /* FirebaseAuth */; };
 		AB1D17C72D3E9B760034E95C /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = AB1D17C62D3E9B760034E95C /* FirebaseCore */; };
 		AB1D17C92D3E9B760034E95C /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = AB1D17C82D3E9B760034E95C /* FirebaseMessaging */; };
+		AB39C7A22D79B4E500B154A7 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = AB39C7A12D79B4E500B154A7 /* FirebaseAnalytics */; };
+		AB39C7A42D79B4E500B154A7 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = AB39C7A32D79B4E500B154A7 /* FirebaseCrashlytics */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -69,6 +71,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AB39C7A22D79B4E500B154A7 /* FirebaseAnalytics in Frameworks */,
 				9A1E35422CD3DEEA00753F8A /* PinLayout in Frameworks */,
 				AB1D17C32D3E9B760034E95C /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
 				9AE8B91C2D03474E00D7672D /* ElegantEmojiPicker in Frameworks */,
@@ -80,6 +83,7 @@
 				AB1D17C92D3E9B760034E95C /* FirebaseMessaging in Frameworks */,
 				9A1069EA2CF0BE9100221178 /* JGProgressHUD in Frameworks */,
 				9A7BFB732CD5FBD800E48C31 /* KakaoSDKUser in Frameworks */,
+				AB39C7A42D79B4E500B154A7 /* FirebaseCrashlytics in Frameworks */,
 				AB1D17C72D3E9B760034E95C /* FirebaseCore in Frameworks */,
 				9A7BFB712CD5FBD800E48C31 /* KakaoSDKAuth in Frameworks */,
 			);
@@ -150,6 +154,8 @@
 				AB1D17C42D3E9B760034E95C /* FirebaseAuth */,
 				AB1D17C62D3E9B760034E95C /* FirebaseCore */,
 				AB1D17C82D3E9B760034E95C /* FirebaseMessaging */,
+				AB39C7A12D79B4E500B154A7 /* FirebaseAnalytics */,
+				AB39C7A32D79B4E500B154A7 /* FirebaseCrashlytics */,
 			);
 			productName = Dayme;
 			productReference = 9A1E35222CD3CA4700753F8A /* Dayme.app */;
@@ -612,6 +618,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AB1D17C12D3E9B760034E95C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseMessaging;
+		};
+		AB39C7A12D79B4E500B154A7 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AB1D17C12D3E9B760034E95C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		AB39C7A32D79B4E500B154A7 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AB1D17C12D3E9B760034E95C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

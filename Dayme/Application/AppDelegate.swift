@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseCore
+import FirebaseAnalytics
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,6 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
         noticationService.configure()
+        Analytics.logEvent("start", parameters: nil)
         UserDefault.visitCount += 1
         return true
     }
