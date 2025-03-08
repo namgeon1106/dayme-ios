@@ -42,9 +42,13 @@ final class HomeVM: VM {
                 var items = [ChecklistDateItem?]()
                 for goal in goals {
                     for subgoal in goal.subgoals {
+                        let filteredChecklists = subgoal.checklists.filter { checklist in
+                            checklist.startDate <= .now && .now <= checklist.endDate
+                        }
+                        
                         items.append(
                             ChecklistDateItem(
-                                subgoal: subgoal,
+                                subgoal: subgoal.copyWith(checklists: filteredChecklists),
                                 goalId: goal.id,
                                 goalEmoji: goal.emoji,
                                 goalTitle: goal.title,

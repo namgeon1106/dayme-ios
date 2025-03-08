@@ -155,25 +155,20 @@ final class HomeVC: VC {
                 
                 if finishedOnboarding {
                     self?.dashboard.update(nickname: nickname, goals: goals)
-                    
-                    var items = [ChecklistDateItem?]()
-                    for goal in goals {
-                        for subgoal in goal.subgoals {
-                            items.append(
-                                ChecklistDateItem(
-                                    subgoal: subgoal,
-                                    goalId: goal.id,
-                                    goalEmoji: goal.emoji,
-                                    goalTitle: goal.title,
-                                    hex: goal.hex,
-                                    date: .now
-                                )
-                            )
-                        }
-                    }
+                }
+                
+                self?.goalListEmptyView.isHidden = !goals.isEmpty
+                self?.view.setNeedsLayout()
+            }
+            .store(in: &cancellables)
+        
+        vm.$checklistDateItems
+            .combineLatest(vm.$finishedOnboarding)
+            .receive(on: RunLoop.main)
+            .sink { [weak self] items, finishedOnboarding in
+                if finishedOnboarding {
                     self?.checklistCardList.items = items.compactMap { $0 }
                 }
-                self?.goalListEmptyView.isHidden = !goals.isEmpty
                 self?.view.setNeedsLayout()
             }.store(in: &cancellables)
 
