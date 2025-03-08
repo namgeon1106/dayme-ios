@@ -43,7 +43,7 @@ final class HomeVM: VM {
                 for goal in goals {
                     for subgoal in goal.subgoals {
                         let filteredChecklists = subgoal.checklists.filter { checklist in
-                            checklist.startDate <= .now && .now <= checklist.endDate
+                            checklist.startDate <= .now && .now <= checklist.endDate && checklist.repeatDays.contains(["일", "월", "화", "수", "목", "금", "토", ][Calendar.current.component(.weekday, from: date) - 1])
                         }
                         
                         items.append(
