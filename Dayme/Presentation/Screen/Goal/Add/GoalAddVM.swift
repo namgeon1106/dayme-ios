@@ -50,12 +50,13 @@ final class GoalAddVM: VM {
         .combineLatest($color.map({ $0 != nil })) { $0 && $1 }
         .assign(to: &$isValidate)
         
-        service.allGoals.map { goals in
+        service.ongoingGoals.map { goals in
             let displayCount = goals.filter(\.displayHome).count
             let maximumCount = 3
             return displayCount >= maximumCount
         }
         .sink { [weak self] limited in
+            self?.displayeHome = !limited
             self?.isDisplayLimited = limited
         }.store(in: &cancellables)
     }
